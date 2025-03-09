@@ -25,7 +25,25 @@ interface Account {
   id: string;
   name: string;
   logo?: string;
+  address_line1?: string;
+  address_line2?: string;
+  city?: string;
+  state?: string;
+  postal_code?: string;
+  country?: string;
   // other fields...
+}
+
+// Form data interface for account creation
+interface AccountFormData {
+  name: string;
+  logo?: string;
+  address_line1?: string;
+  address_line2?: string;
+  city?: string;
+  state?: string;
+  postal_code?: string;
+  country?: string;
 }
 
 export default function DashboardLayout({
@@ -40,6 +58,19 @@ export default function DashboardLayout({
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [selectedAccount, setSelectedAccount] = useState<Account | null>(null);
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
+  const [showAccountSetupModal, setShowAccountSetupModal] = useState(false);
+  const [formData, setFormData] = useState<AccountFormData>({
+    name: "",
+    logo: "",
+    address_line1: "",
+    address_line2: "",
+    city: "",
+    state: "",
+    postal_code: "",
+    country: ""
+  });
+  const [creatingAccount, setCreatingAccount] = useState(false);
+  const [formError, setFormError] = useState("");
 
   // Check if user is authenticated and load accounts
   useEffect(() => {
@@ -80,6 +111,9 @@ export default function DashboardLayout({
               setSelectedAccount(accountsData.data[0]);
               localStorage.setItem("selected_account_id", accountsData.data[0].id);
             }
+          } else {
+            // No accounts found, show the account setup modal
+            setShowAccountSetupModal(true);
           }
         } else {
           console.error("Failed to fetch accounts:", accountsResponse.statusText);
@@ -107,6 +141,72 @@ export default function DashboardLayout({
     setAccountMenuOpen(false);
   };
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleAccountSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!formData.name.trim()) {
+      setFormError("Account name is required");
+      return;
+    }
+    
+    setCreatingAccount(true);
+    setFormError("");
+    
+    // Prepare the data, only including fields with values
+    const submitData: Record<string, string> = {};
+    Object.entries(formData).forEach(([key, value]) => {
+      if (value.trim()) {
+        submitData[key] = value.trim();
+      }
+    });
+    
+    try {
+      const sessionId = localStorage.getItem("session_id");
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://api.commerce.bitvora.com";
+      
+      const response = await fetch(`${apiUrl}/account`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Session-ID": sessionId || ""
+        },
+        body: JSON.stringify(submitData)
+      });
+      
+      if (response.ok) {
+        const result = await response.json();
+        
+        // Add the new account to the accounts list
+        const newAccount = result.data;
+        const updatedAccounts = [...accounts, newAccount];
+        
+        setAccounts(updatedAccounts);
+        setSelectedAccount(newAccount);
+        localStorage.setItem("accounts", JSON.stringify(updatedAccounts));
+        localStorage.setItem("selected_account_id", newAccount.id);
+        
+        // Close the modal
+        setShowAccountSetupModal(false);
+      } else {
+        const errorData = await response.json();
+        setFormError(errorData.message || "Failed to create account");
+      }
+    } catch (error) {
+      console.error("Error creating account:", error);
+      setFormError("An error occurred while creating your account");
+    } finally {
+      setCreatingAccount(false);
+    }
+  };
+
   // Show loading state while checking authentication
   if (loading) {
     return (
@@ -118,6 +218,151 @@ export default function DashboardLayout({
 
   return (
     <div className="min-h-screen bg-gray-900 flex">
+      {/* Account Setup Modal */}
+      {showAccountSetupModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
+          <div className="bg-gray-800 rounded-lg p-8 max-w-md w-full">
+            <h2 className="text-xl font-bold text-white mb-6">Set Up Your Account</h2>
+            <form onSubmit={handleAccountSubmit}>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-1">
+                    Account Name <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    className="w-full bg-gray-700 rounded-md py-2 px-3 text-white border border-gray-600 focus:border-purple-500 focus:outline-none"
+                    placeholder="Your business or organization name"
+                    required
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-1">
+                    Logo URL
+                  </label>
+                  <input
+                    type="text"
+                    name="logo"
+                    value={formData.logo}
+                    onChange={handleInputChange}
+                    className="w-full bg-gray-700 rounded-md py-2 px-3 text-white border border-gray-600 focus:border-purple-500 focus:outline-none"
+                    placeholder="https://example.com/logo.png"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-1">
+                    Address Line 1
+                  </label>
+                  <input
+                    type="text"
+                    name="address_line1"
+                    value={formData.address_line1}
+                    onChange={handleInputChange}
+                    className="w-full bg-gray-700 rounded-md py-2 px-3 text-white border border-gray-600 focus:border-purple-500 focus:outline-none"
+                    placeholder="Street address"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-1">
+                    Address Line 2
+                  </label>
+                  <input
+                    type="text"
+                    name="address_line2"
+                    value={formData.address_line2}
+                    onChange={handleInputChange}
+                    className="w-full bg-gray-700 rounded-md py-2 px-3 text-white border border-gray-600 focus:border-purple-500 focus:outline-none"
+                    placeholder="Apt, Suite, etc."
+                  />
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-1">
+                      City
+                    </label>
+                    <input
+                      type="text"
+                      name="city"
+                      value={formData.city}
+                      onChange={handleInputChange}
+                      className="w-full bg-gray-700 rounded-md py-2 px-3 text-white border border-gray-600 focus:border-purple-500 focus:outline-none"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-1">
+                      State/Province
+                    </label>
+                    <input
+                      type="text"
+                      name="state"
+                      value={formData.state}
+                      onChange={handleInputChange}
+                      className="w-full bg-gray-700 rounded-md py-2 px-3 text-white border border-gray-600 focus:border-purple-500 focus:outline-none"
+                    />
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-1">
+                      Postal Code
+                    </label>
+                    <input
+                      type="text"
+                      name="postal_code"
+                      value={formData.postal_code}
+                      onChange={handleInputChange}
+                      className="w-full bg-gray-700 rounded-md py-2 px-3 text-white border border-gray-600 focus:border-purple-500 focus:outline-none"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-1">
+                      Country
+                    </label>
+                    <input
+                      type="text"
+                      name="country"
+                      value={formData.country}
+                      onChange={handleInputChange}
+                      className="w-full bg-gray-700 rounded-md py-2 px-3 text-white border border-gray-600 focus:border-purple-500 focus:outline-none"
+                    />
+                  </div>
+                </div>
+                
+                {formError && (
+                  <div className="text-red-500 text-sm py-2">
+                    {formError}
+                  </div>
+                )}
+                
+                <div className="pt-2">
+                  <button
+                    type="submit"
+                    disabled={creatingAccount}
+                    className="w-full py-3 bg-gradient-to-r from-purple-500 to-amber-400 hover:from-purple-600 hover:to-amber-500 rounded-md text-white font-medium focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-800 disabled:opacity-70 disabled:cursor-not-allowed"
+                  >
+                    {creatingAccount ? 'Creating Account...' : 'Create Account'}
+                  </button>
+                </div>
+                
+                <div className="text-xs text-gray-400 text-center pt-2">
+                  Only account name is required. All other fields are optional.
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
       {/* Sidebar */}
       <div className="w-64 bg-gray-800 border-r border-gray-700 flex-shrink-0">
         <div className="p-4 border-b border-gray-700">
