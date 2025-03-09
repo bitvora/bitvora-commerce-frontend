@@ -3,7 +3,7 @@ import { NextRouter } from "next/router";
 // API utility for authenticated requests
 const api = {
   fetch: async (url: string, options: RequestInit = {}, router: NextRouter | null = null) => {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:2121";
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://api.commerce.bitvora.com";
     const sessionId = localStorage.getItem("session_id");
     
     if (!sessionId && router) {

@@ -72,7 +72,7 @@ export default function ProductsPage() {
         return;
       }
 
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:2121";
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://api.commerce.bitvora.com";
       const endpoint = selectedAccountId 
         ? `${apiUrl}/product/account/${selectedAccountId}`
         : `${apiUrl}/product`;
@@ -212,7 +212,7 @@ export default function ProductsPage() {
         return;
       }
 
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:2121";
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://api.commerce.bitvora.com";
       
       // Prepare the data
       const productData = {
@@ -269,7 +269,7 @@ export default function ProductsPage() {
         return;
       }
 
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:2121";
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://api.commerce.bitvora.com";
       const response = await fetch(`${apiUrl}/product/${id}`, {
         method: 'DELETE',
         headers: {

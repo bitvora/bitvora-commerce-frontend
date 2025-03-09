@@ -53,7 +53,7 @@ export default function DashboardLayout({
     // Fetch accounts directly
     const fetchAccounts = async (sessionId: string) => {
       try {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:2121";
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://api.commerce.bitvora.com";
         const accountsResponse = await fetch(`${apiUrl}/account`, {
           headers: {
             "Session-ID": sessionId

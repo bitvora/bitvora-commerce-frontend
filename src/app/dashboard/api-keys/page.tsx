@@ -84,7 +84,7 @@ export default function ApiKeysPage() {
         return;
       }
 
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:2121";
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://api.commerce.bitvora.com";
       const endpoint = `${apiUrl}/api-key/account/${selectedAccountId}`;
       
       const response = await fetch(endpoint, {
@@ -205,7 +205,7 @@ export default function ApiKeysPage() {
         return;
       }
 
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:2121";
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://api.commerce.bitvora.com";
       
       const apiKeyData = {
         ...formData,
@@ -259,7 +259,7 @@ export default function ApiKeysPage() {
         return;
       }
 
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:2121";
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://api.commerce.bitvora.com";
       const response = await fetch(`${apiUrl}/api-key/${id}`, {
         method: 'DELETE',
         headers: {
@@ -294,7 +294,7 @@ export default function ApiKeysPage() {
         return;
       }
 
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:2121";
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://api.commerce.bitvora.com";
       const response = await fetch(`${apiUrl}/api-key/${id}/lock`, {
         method: 'POST',
         headers: {

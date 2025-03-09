@@ -71,7 +71,7 @@ export default function CheckoutsPage() {
         return;
       }
 
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:2121";
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://api.commerce.bitvora.com";
       const endpoint = selectedAccountId 
         ? `${apiUrl}/checkout/account/${selectedAccountId}`
         : `${apiUrl}/checkout`;
@@ -112,7 +112,7 @@ export default function CheckoutsPage() {
         return;
       }
 
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:2121";
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://api.commerce.bitvora.com";
       const response = await fetch(`${apiUrl}/customer/account/${selectedAccountId}`, {
         headers: {
           "Session-ID": sessionId
@@ -200,7 +200,7 @@ export default function CheckoutsPage() {
         return;
       }
 
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:2121";
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://api.commerce.bitvora.com";
       
       const checkoutData = {
         ...formData,
@@ -250,7 +250,7 @@ export default function CheckoutsPage() {
         return;
       }
 
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:2121";
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://api.commerce.bitvora.com";
       const response = await fetch(`${apiUrl}/checkout/${checkoutId}`, {
         headers: {
           "Session-ID": sessionId

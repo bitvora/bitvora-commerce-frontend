@@ -70,7 +70,7 @@ export default function CheckoutPage() {
   // New useEffect for polling payment status
   useEffect(() => {
     const pollPaymentStatus = async () => {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:2121";
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://api.commerce.bitvora.com";
       const response = await fetch(`${apiUrl}/c/${params.id}/poll`);
 
       if (response.ok) {
@@ -93,7 +93,7 @@ export default function CheckoutPage() {
 
   const fetchCheckoutData = async () => {
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:2121";
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://api.commerce.bitvora.com";
       const response = await fetch(`${apiUrl}/c/${params.id}`); // Updated endpoint
 
       if (!response.ok) {

@@ -96,7 +96,7 @@ export default function CustomersPage() {
         return;
       }
 
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:2121";
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://api.commerce.bitvora.com";
       const endpoint = selectedAccountId 
         ? `${apiUrl}/customer/account/${selectedAccountId}`
         : `${apiUrl}/customer`;
@@ -228,7 +228,7 @@ export default function CustomersPage() {
         return;
       }
 
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:2121";
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://api.commerce.bitvora.com";
       
       const customerData = {
         ...formData,
@@ -277,7 +277,7 @@ export default function CustomersPage() {
         return;
       }
 
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:2121";
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://api.commerce.bitvora.com";
       const response = await fetch(`${apiUrl}/customer/${id}`, {
         method: 'DELETE',
         headers: {
@@ -312,7 +312,7 @@ export default function CustomersPage() {
         return;
       }
 
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:2121";
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://api.commerce.bitvora.com";
       const response = await fetch(`${apiUrl}/customer/${customerId}`, {
         headers: {
           "Session-ID": sessionId

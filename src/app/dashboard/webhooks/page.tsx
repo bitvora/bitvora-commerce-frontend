@@ -86,7 +86,7 @@ export default function WebhooksPage() {
         return;
       }
 
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:2121";
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://api.commerce.bitvora.com";
       const endpoint = `${apiUrl}/webhook/account/${selectedAccountId}`;
       
       const response = await fetch(endpoint, {
@@ -120,7 +120,7 @@ export default function WebhooksPage() {
         return;
       }
 
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:2121";
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://api.commerce.bitvora.com";
       const endpoint = `${apiUrl}/webhook/${webhookId}/deliveries`;
       
       const response = await fetch(endpoint, {
@@ -262,7 +262,7 @@ export default function WebhooksPage() {
         return;
       }
 
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:2121";
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://api.commerce.bitvora.com";
       
       const webhookData = {
         ...formData,
@@ -314,7 +314,7 @@ export default function WebhooksPage() {
         return;
       }
 
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:2121";
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://api.commerce.bitvora.com";
       const response = await fetch(`${apiUrl}/webhook/${id}`, {
         method: 'DELETE',
         headers: {
