@@ -11,7 +11,8 @@ const mainNavItems = [
   { name: "Customers", path: "/dashboard/customers", icon: "👥" },
   { name: "Subscriptions", path: "/dashboard/subscriptions", icon: "🔄" },
   { name: "Checkouts", path: "/dashboard/checkouts", icon: "🛒" },
-  { name: "Payment Links", path: "/dashboard/payment-links", icon: "🔗" }
+  { name: "Payment Links", path: "/dashboard/payment-links", icon: "🔗" },
+  { name: "Wallet", path: "/dashboard/wallet", icon: "👛" }
 ];
 
 const developerNavItems = [
