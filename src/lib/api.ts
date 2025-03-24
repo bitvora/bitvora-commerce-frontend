@@ -1,40 +1,41 @@
-import { NextRouter } from "next/router";
+import { app_routes } from '@/lib/constants';
+import { NextRouter } from 'next/router';
 
 // API utility for authenticated requests
 const api = {
   fetch: async (url: string, options: RequestInit = {}, router: NextRouter | null = null) => {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://api.commerce.bitvora.com";
-    const sessionId = localStorage.getItem("session_id");
-    
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api.commerce.bitvora.com';
+    const sessionId = localStorage.getItem('session_id');
+
     if (!sessionId && router) {
-      router.push("/login");
+      router.push('/login');
       return null;
     }
-    
+
     const headers = {
       ...options.headers,
-      "Session-ID": sessionId || "",
+      'Session-ID': sessionId || ''
     };
-    
+
     try {
       const response = await fetch(`${apiUrl}${url}`, {
         ...options,
-        headers,
+        headers
       });
-      
+
       // Handle authentication errors
       if (response.status === 401 && router) {
-        localStorage.removeItem("session_id");
-        router.push("/login");
+        localStorage.removeItem('session_id');
+        router.push(app_routes.login);
         return null;
       }
-      
+
       return response;
     } catch (error) {
-      console.error("API request failed:", error);
+      console.error('API request failed:', error);
       throw error;
     }
   }
 };
 
-export default api; 
+export default api;

@@ -59,7 +59,7 @@ export default function ProductsPage() {
     fetchProducts();
   }, []);
 
-  const fetchProducts = async () => {
+  constfetchProducts = async () => {
     setLoading(true);
     setError(null);
     
