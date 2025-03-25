@@ -1,3 +1,5 @@
+'use client';
+
 export const LoadingIcon = ({ className }: { className?: string }) => {
   return (
     <div

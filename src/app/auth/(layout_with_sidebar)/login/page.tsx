@@ -73,7 +73,7 @@ export default function Page() {
               </Link>
             </div>
 
-            <div className="flex flex-col gap-2 absolute lg:relative bottom-4 lg:bottom-[unset] max-w-[500px] mx-auto lg:mx-[unset] w-full lg:w-[unset] left-0 lg:left-[unset] right-0 lg:right-[unset] mt-6">
+            <div className="flex flex-col gap-2 absolute lg:relative bottom-6 lg:bottom-[unset] max-w-[500px] mx-auto lg:mx-[unset] w-full lg:w-[unset] left-0 lg:left-[unset] right-0 lg:right-[unset] mt-6">
               <div className="mt-4 pt-4 w-full">
                 <PrimaryButton
                   className="w-full h-12"

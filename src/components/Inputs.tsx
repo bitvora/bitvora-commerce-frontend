@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, type ChangeEvent, type HTMLAttributes } from 'react';
 import { type FormikErrors, type FormikTouched } from 'formik';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
