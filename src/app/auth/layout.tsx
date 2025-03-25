@@ -10,7 +10,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
     <Suspense>
       <div className="w-screen h-screen px-3 py-3 overflow-hidden flex flex-col lg:grid lg:grid-cols-3 gap-4">
         <div
-          className="lg:col-span-1 h-[200px] lg:h-full rounded-xl flex flex-col px-8 py-8 relative justify-center"
+          className="lg:col-span-1 h-[150px] lg:h-full rounded-xl flex flex-col px-8 py-8 relative justify-center"
           id="auth-section">
           <header className="absolute top-10 left-4 lg:left-7">
             <Logo />
@@ -39,7 +39,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           </div>
         </div>
 
-        <div className="w-full h-full lg:col-span-2 lg:py-10 px-4 lg:px-10 flex lg:justify-center lg:items-center relative">
+        <div className="w-full h-full lg:col-span-2 lg:py-10 px-4 lg:px-10 flex lg:justify-center lg:items-center relative overflow-auto">
           {children}
         </div>
       </div>

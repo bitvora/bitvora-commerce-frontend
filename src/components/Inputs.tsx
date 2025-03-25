@@ -67,7 +67,7 @@ export const Input = ({
           {type === 'password' ? (
             <button
               onClick={togglePasswordVisibility}
-              className="text-light-400 focus:text-primary-500 hover:text-primary-500"
+              className="text-light-400 focus:text-primary-500 hover:text-primary-500 cursor-pointer"
               type="button"
               aria-label={inputType === 'password' ? 'Show password' : 'Hide password'}>
               <FontAwesomeIcon

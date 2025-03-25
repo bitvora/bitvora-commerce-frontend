@@ -12,7 +12,7 @@ export default function Page() {
   return (
     <div className="max-w-[500px] w-full mx-auto lg:mx-[unset] flex flex-col justify-start text-left gap-6">
       <div>
-        <SemiboldHeader3 className="text-light-900">Login</SemiboldHeader3>
+        <SemiboldHeader3 className="text-light-900">Log In</SemiboldHeader3>
       </div>
 
       <Formik
@@ -80,7 +80,7 @@ export default function Page() {
                   loading={isSubmitting}
                   type="submit"
                   disabled={!isValid || !dirty}>
-                  Login
+                  Log In
                 </PrimaryButton>
               </div>
 
