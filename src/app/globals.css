@@ -73,6 +73,26 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-#auth-section {
-  background: url('/auth-bg.svg');
+@media (min-width: 640px) and (max-width: 767.98px) {
+}
+
+@media (min-width: 768px) and (max-width: 1023.98px) {
+}
+
+@media (min-width: 1024px) and (max-width: 1279.98px) {
+  #auth-section {
+    background: url('/auth-bg.svg');
+  }
+}
+
+@media (min-width: 1280px) and (max-width: 1535.98px) {
+  #auth-section {
+    background: url('/auth-bg.svg');
+  }
+}
+
+@media (min-width: 1536px) {
+  #auth-section {
+    background: url('/auth-bg.svg');
+  }
 }

@@ -10,7 +10,7 @@ import * as Yup from 'yup';
 
 export default function Page() {
   return (
-    <div className="max-w-[500px] w-full flex flex-col justify-start text-left gap-6">
+    <div className="max-w-[500px] w-full mx-auto lg:mx-[unset] flex flex-col justify-start text-left gap-6">
       <div>
         <SemiboldHeader3 className="text-light-900">Login</SemiboldHeader3>
       </div>
@@ -27,7 +27,16 @@ export default function Page() {
         onSubmit={async (values, { setSubmitting }) => {
           setSubmitting(true);
         }}>
-        {({ errors, handleChange, handleSubmit, isSubmitting, touched, values }) => (
+        {({
+          errors,
+          handleChange,
+          handleSubmit,
+          isSubmitting,
+          touched,
+          values,
+          isValid,
+          dirty
+        }) => (
           <Form noValidate onSubmit={handleSubmit}>
             <div className="mb-2 pb-2">
               <Input
@@ -64,17 +73,23 @@ export default function Page() {
               </Link>
             </div>
 
-            <div className="mt-4 pt-4">
-              <PrimaryButton className="w-full h-12" loading={isSubmitting} type="submit">
-                Login
-              </PrimaryButton>
-            </div>
+            <div className="flex flex-col gap-2 absolute lg:relative bottom-4 lg:bottom-[unset] max-w-[500px] mx-auto lg:mx-[unset] w-full lg:w-[unset] left-0 lg:left-[unset] right-0 lg:right-[unset] mt-6">
+              <div className="mt-4 pt-4 w-full">
+                <PrimaryButton
+                  className="w-full h-12"
+                  loading={isSubmitting}
+                  type="submit"
+                  disabled={!isValid || !dirty}>
+                  Login
+                </PrimaryButton>
+              </div>
 
-            <div className="flex gap-2 mt-3 pt-2 items-center text-center justify-center">
-              <MediumBody className="text-light-700">Don&apos;t have an account?</MediumBody>
-              <Link href={app_routes.signup}>
-                <MediumBody className="text-white hover:text-light-700">Sign up</MediumBody>
-              </Link>
+              <div className="flex gap-2 mt-3 pt-2 items-center text-center justify-center w-full">
+                <MediumBody className="text-light-700">Don&apos;t have an account?</MediumBody>
+                <Link href={app_routes.signup}>
+                  <MediumBody className="text-white hover:text-light-700">Sign up</MediumBody>
+                </Link>
+              </div>
             </div>
           </Form>
         )}

@@ -67,10 +67,13 @@ export const Input = ({
           {type === 'password' ? (
             <button
               onClick={togglePasswordVisibility}
-              className="text-inputBorder"
+              className="text-light-400 focus:text-primary-500 hover:text-primary-500"
               type="button"
               aria-label={inputType === 'password' ? 'Show password' : 'Hide password'}>
-              <FontAwesomeIcon icon={inputType === 'password' ? faEye : faEyeSlash} />
+              <FontAwesomeIcon
+                icon={inputType === 'password' ? faEye : faEyeSlash}
+                className="text-current"
+              />
             </button>
           ) : (
             endIcon

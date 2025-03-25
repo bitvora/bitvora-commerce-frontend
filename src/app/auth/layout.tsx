@@ -8,15 +8,15 @@ import { Suspense } from 'react';
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
     <Suspense>
-      <div className="w-screen h-screen px-3 py-3 overflow-hidden grid grid-cols-3 gap-4">
+      <div className="w-screen h-screen px-3 py-3 overflow-hidden flex flex-col lg:grid lg:grid-cols-3 gap-4">
         <div
-          className="col-span-1 h-full bg-primary-300 rounded-xl flex flex-col px-8 py-8 relative justify-center"
+          className="lg:col-span-1 h-[200px] lg:h-full rounded-xl flex flex-col px-8 py-8 relative justify-center"
           id="auth-section">
-          <header className="absolute top-10 left-7">
+          <header className="absolute top-10 left-4 lg:left-7">
             <Logo />
           </header>
 
-          <div className="my-12 flex flex-col gap-4 max-w-[350px]">
+          <div className="my-12 hidden lg:flex flex-col gap-4 max-w-[350px]">
             <h1 className="text-4xl/[115%] font-normal">
               Open Source <br />
               <span className="text-secondary-700">Bitcoin Payments</span> <br />
@@ -29,7 +29,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
             </p>
           </div>
 
-          <div className="absolute bottom-10 left-7">
+          <div className="absolute bottom-10 left-7 hidden lg:flex">
             <Link href={app_routes.home}>
               <div className="flex items-center gap-2 text-light-900 hover:text-light-800">
                 <FontAwesomeIcon icon={faArrowLeft} className="h-4 w-4" />
@@ -39,7 +39,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           </div>
         </div>
 
-        <div className="col-span-2 w-full h-full py-10 px-10 flex justify-center items-center">
+        <div className="w-full h-full lg:col-span-2 lg:py-10 px-4 lg:px-10 flex lg:justify-center lg:items-center relative">
           {children}
         </div>
       </div>
