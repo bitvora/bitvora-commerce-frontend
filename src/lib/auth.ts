@@ -5,7 +5,7 @@ import crypto from 'crypto';
 const SECRET_KEY = process.env.SESSION_SECRET;
 const IV_LENGTH = 16;
 
-function encrypt(text: string): string {
+export function encrypt(text: string): string {
   const iv = crypto.randomBytes(IV_LENGTH);
   const cipher = crypto.createCipheriv('aes-256-cbc', Buffer.from(SECRET_KEY), iv);
   let encrypted = cipher.update(text, 'utf8', 'base64');
@@ -13,7 +13,7 @@ function encrypt(text: string): string {
   return iv.toString('base64') + ':' + encrypted;
 }
 
-function decrypt(encryptedText: string): string {
+export function decrypt(encryptedText: string): string {
   const [ivBase64, encrypted] = encryptedText.split(':');
   const iv = Buffer.from(ivBase64, 'base64');
   const decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(SECRET_KEY), iv);
