@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 :root {
   --background: #ffffff;
@@ -10,11 +10,59 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  /* Neutral Colors */
+  --color-light-50: #0d0c0e;
+  --color-light-100: #141316;
+  --color-light-200: #201d24;
+  --color-light-300: #312e36;
+  --color-light-400: #4b4653;
+  --color-light-500: #645c70;
+  --color-light-600: #7d738c;
+  --color-light-700: #9791a1;
+  --color-light-800: #b6b0bf;
+  --color-light-900: #efedf1;
+
+  /* Primary Colors */
+  --color-primary-50: #100c17;
+  --color-primary-100: #15101e;
+  --color-primary-200: #1e162c;
+  --color-primary-300: #2f2244;
+  --color-primary-400: #443361;
+  --color-primary-500: #5c487f;
+  --color-primary-600: #78619e;
+  --color-primary-700: #9381b1;
+  --color-primary-800: #b4a9c6;
+  --color-primary-900: #e1dcea;
+
+  /* Secondary Colors */
+  --color-secondary-50: #120f0c;
+  --color-secondary-100: #1c1712;
+  --color-secondary-200: #292119;
+  --color-secondary-300: #423324;
+  --color-secondary-400: #634a31;
+  --color-secondary-500: #89633e;
+  --color-secondary-600: #b4804b;
+  --color-secondary-700: #c69a71;
+  --color-secondary-800: #d2b9a2;
+  --color-secondary-900: #ebe0d6;
+
+  /* Red */
+  --color-red-50: #2f1d1d;
+  --color-red-100: #492a2a;
+  --color-red-200: #6c3333;
+  --color-red-300: #933939;
+  --color-red-400: #b33737;
+  --color-red-500: #d54d4d;
+  --color-red-600: #e46767;
+  --color-red-700: #f98080;
+  --color-red-800: #f8b4b4;
+  --color-red-900: #fde8e8;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
+    --background: #0a0910;
     --foreground: #ededed;
   }
 }
@@ -23,4 +71,28 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+@media (min-width: 640px) and (max-width: 767.98px) {
+}
+
+@media (min-width: 768px) and (max-width: 1023.98px) {
+}
+
+@media (min-width: 1024px) and (max-width: 1279.98px) {
+  #auth-section {
+    background: url('/auth-bg.svg');
+  }
+}
+
+@media (min-width: 1280px) and (max-width: 1535.98px) {
+  #auth-section {
+    background: url('/auth-bg.svg');
+  }
+}
+
+@media (min-width: 1536px) {
+  #auth-section {
+    background: url('/auth-bg.svg');
+  }
 }
