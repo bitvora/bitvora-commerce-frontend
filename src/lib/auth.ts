@@ -1,44 +1,55 @@
-import { cookies } from 'next/headers';
-import { SessionPayload, User } from '@/lib/types';
-import crypto from 'crypto';
+'use server';
 
-const SECRET_KEY = process.env.SESSION_SECRET;
+import { cookies } from 'next/headers';
+import { SessionPayload } from '@/lib/types';
+
+const SECRET_KEY = process.env.SESSION_SECRET!;
 const IV_LENGTH = 16;
 
-export function encrypt(text: string): string {
-  const iv = crypto.randomBytes(IV_LENGTH);
-  const cipher = crypto.createCipheriv('aes-256-cbc', Buffer.from(SECRET_KEY), iv);
-  let encrypted = cipher.update(text, 'utf8', 'base64');
-  encrypted += cipher.final('base64');
-  return iv.toString('base64') + ':' + encrypted;
+async function getKey() {
+  const keyData = new TextEncoder().encode(SECRET_KEY);
+  return await crypto.subtle.importKey('raw', keyData, { name: 'AES-CBC' }, false, [
+    'encrypt',
+    'decrypt'
+  ]);
 }
 
-export function decrypt(encryptedText: string): string {
-  const [ivBase64, encrypted] = encryptedText.split(':');
+export async function encrypt(payload: SessionPayload): Promise<string> {
+  const text = JSON.stringify(payload);
+
+  const iv = crypto.getRandomValues(new Uint8Array(IV_LENGTH));
+  const key = await getKey();
+
+  const encrypted = await crypto.subtle.encrypt(
+    { name: 'AES-CBC', iv },
+    key,
+    new TextEncoder().encode(text)
+  );
+
+  return `${Buffer.from(iv).toString('base64')}:${Buffer.from(encrypted).toString('base64')}`;
+}
+
+export async function decrypt(encryptedText: string): Promise<SessionPayload> {
+  const [ivBase64, encryptedBase64] = encryptedText.split(':');
   const iv = Buffer.from(ivBase64, 'base64');
-  const decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(SECRET_KEY), iv);
-  let decrypted = decipher.update(encrypted, 'base64', 'utf8');
-  decrypted += decipher.final('utf8');
-  return decrypted;
+  const encrypted = Buffer.from(encryptedBase64, 'base64');
+
+  const key = await getKey();
+
+  const decrypted = await crypto.subtle.decrypt({ name: 'AES-CBC', iv }, key, encrypted);
+  const decryptedPayload = new TextDecoder().decode(decrypted);
+
+  return decryptedPayload ? JSON.parse(decryptedPayload) : ({} as SessionPayload);
 }
 
-export async function login({
-  user,
-  accessToken,
-  expires
-}: {
-  user: User;
-  accessToken: string;
-  expires: Date;
-}) {
-  const session = JSON.stringify({ user, expires, accessToken });
-  const encryptedSession = encrypt(session);
+export async function login(payload: SessionPayload) {
+  const encryptedSession = await encrypt(payload);
 
-  (await cookies()).set('session', encryptedSession, { expires, httpOnly: true });
+  (await cookies()).set('session', encryptedSession, { httpOnly: true });
 }
 
 export async function logout() {
-  (await cookies()).set('session', '', { expires: new Date(0) });
+  (await cookies()).delete('session');
 }
 
 export async function getSession(): Promise<SessionPayload | null> {
@@ -46,9 +57,21 @@ export async function getSession(): Promise<SessionPayload | null> {
   if (!session) return null;
 
   try {
-    return JSON.parse(decrypt(session));
+    return await decrypt(session);
   } catch (error) {
     console.error('Failed to decrypt session:', error);
     return null;
   }
+}
+
+export async function setActiveAccount(accountId: string) {
+  const session = await getSession();
+  if (!session) return;
+
+  session.activeAccount = accountId;
+  const updatedSession = await encrypt(session);
+
+  (await cookies()).set('session', updatedSession, {
+    httpOnly: true
+  });
 }

@@ -4,11 +4,15 @@ import { PrimaryButton } from '@/components/Buttons';
 import { Input } from '@/components/Inputs';
 import { Link } from '@/components/Links';
 import { MediumBody, SemiboldHeader3 } from '@/components/Text';
-import { app_routes } from '@/lib/constants';
+import { api_url, app_routes } from '@/lib/constants';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
+import toast from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
 
 export default function Page() {
+  const router = useRouter();
+
   return (
     <div className="max-w-[500px] w-full mx-auto lg:mx-[unset] flex flex-col justify-start text-left gap-6">
       <div>
@@ -26,6 +30,68 @@ export default function Page() {
         })}
         onSubmit={async (values, { setSubmitting }) => {
           setSubmitting(true);
+
+          try {
+            const response = await fetch(`${api_url}/login`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(values)
+            });
+
+            const data = await response.json();
+
+            if (response.status === 201) {
+              toast.success(data?.message);
+
+              try {
+                const accountsResponse = await fetch(`${api_url}/account`, {
+                  headers: {
+                    'Session-ID': data.data.id
+                  }
+                });
+
+                if (accountsResponse.ok) {
+                  const accountsData = await accountsResponse.json();
+                  if (accountsData.data && accountsData.data.length > 0) {
+                    const accounts = accountsData.data;
+                    const activeAccount =
+                      accountsData.data && accountsData.data?.length > 0
+                        ? accountsData.data[0]?.id
+                        : '';
+
+                    await fetch('/api/auth/login', {
+                      method: 'POST',
+                      body: JSON.stringify({
+                        id: data?.data?.id,
+                        user_id: data?.data?.user_id,
+                        session_token: data?.data?.session_token,
+                        logged_in_at: data?.data?.logged_in_at,
+                        status: data?.data?.status,
+                        accounts,
+                        activeAccount
+                      })
+                    });
+                  }
+                }
+              } catch (accountErr) {
+                console.error('Error fetching accounts:', accountErr);
+              }
+
+              toast.success('User logged in successfully');
+              router.push(app_routes.dashboard);
+            } else if (response.status === 401) {
+              toast.error('Invalid credentials. Please try again.');
+            } else {
+              toast.error(data.message || 'An error occurred during login');
+            }
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          } catch (err) {
+            toast.error('Invalid credentials.');
+          } finally {
+            setSubmitting(false);
+          }
         }}>
         {({
           errors,

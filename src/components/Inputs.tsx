@@ -4,6 +4,7 @@ import { useState, type ChangeEvent, type HTMLAttributes } from 'react';
 import { type FormikErrors, type FormikTouched } from 'formik';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import clsx from 'clsx';
 import { MediumBody, RegularSmallerText } from './Text';
 
 interface InputProps extends HTMLAttributes<HTMLInputElement> {
@@ -60,9 +61,14 @@ export const Input = ({
           placeholder={placeholder}
           type={inputType}
           disabled={disabled}
-          className="border-light-400 focus:border-primary-500 hover:border-primary-500
-            placeholder:text-light-500 text-light-900 disabled:text-light-500 focus:outline-none 
-            bg-transparent border-[1px] rounded-md py-3.5 px-4 font-bold text-sm xl:text-base w-full"
+          className={clsx(
+            'border-[1px] rounded-md py-3.5 px-4 font-bold text-sm xl:text-base w-full',
+            'placeholder:text-light-500 text-light-900 disabled:text-light-500 focus:outline-none bg-transparent',
+            {
+              'border-red-700 focus:border-red-700 hover:border-red-700': showError,
+              'border-light-400 focus:border-primary-500 hover:border-primary-500': !showError
+            }
+          )}
         />
 
         <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
@@ -84,7 +90,7 @@ export const Input = ({
       </div>
 
       {showError && (
-        <RegularSmallerText className="pt-2 text-red-700">
+        <RegularSmallerText className="pt-1 text-red-700">
           {errors[name as keyof typeof errors]}
         </RegularSmallerText>
       )}

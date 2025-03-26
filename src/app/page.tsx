@@ -1,3 +1,4 @@
+import { app_routes } from "@/lib/constants";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -26,8 +27,8 @@ export default function Home() {
             
             {/* Auth Buttons */}
             <div className="flex items-center space-x-4">
-              <a href="/login" className="text-gray-300 hover:text-white px-3 py-2">Login</a>
-              <a href="/signup" className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg">Sign Up</a>
+              <a href={app_routes.login} className="text-gray-300 hover:text-white px-3 py-2">Login</a>
+              <a href={app_routes.signup} className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg">Sign Up</a>
             </div>
           </div>
         </div>
