@@ -43,8 +43,6 @@ export default function Page() {
             const data = await response.json();
 
             if (response.status === 201) {
-              toast.success(data?.message);
-
               try {
                 const accountsResponse = await fetch(`${api_url}/account`, {
                   headers: {
@@ -79,7 +77,7 @@ export default function Page() {
                 console.error('Error fetching accounts:', accountErr);
               }
 
-              toast.success('User logged in successfully');
+              toast.success(data?.message ?? 'User logged in successfully');
               router.push(app_routes.dashboard);
             } else if (response.status === 401) {
               toast.error('Invalid credentials. Please try again.');

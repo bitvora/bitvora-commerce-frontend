@@ -25,12 +25,12 @@ export async function middleware(request: Request) {
 
   if (!isAuthenticated && !isPublicRoute) {
     // Redirect unauthenticated users to login
-    return NextResponse.redirect(new URL('/auth/login', request.url));
+    return NextResponse.redirect(new URL('/', request.url));
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: '/((?!api|_next/static|_next/image|favicon.ico).*)'
+  matcher: '/((?!api|_next/static|_next/image|favicon.ico|img/).*)'
 };

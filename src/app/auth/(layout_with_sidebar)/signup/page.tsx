@@ -22,8 +22,8 @@ export default function Page() {
       <div className="flex flex-col">
         <div className="sm:mx-auto sm:text-center sm:justify-center sm:mb-4 flex lg:mx-[unset] lg:text-left lg:justify-start">
           <Image
-            // src={tab === 1 ? '/finger.png' : '/email-notification.png'}
-            src="/finger.png"
+            // src={tab === 1 ? '/img/finger.png' : '/img/email-notification.png'}
+            src="/img/finger.png"
             alt=""
             width={50}
             height={50}
