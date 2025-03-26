@@ -79,9 +79,9 @@ export default function CustomersPage() {
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
 
   // Fetch customers on component mount
-  useEffect(() => {
-    fetchCustomers();
-  }, []);
+  // useEffect(() => {
+  //   fetchCustomers();
+  // }, []);
 
   const fetchCustomers = async () => {
     setLoading(true);

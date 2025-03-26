@@ -88,12 +88,12 @@ export default function SubscriptionsPage() {
   }, []);
 
   // Fetch customers and products when modal opens
-  useEffect(() => {
-    if (isModalOpen) {
-      fetchCustomers();
-      fetchProducts();
-    }
-  }, [isModalOpen]);
+  // useEffect(() => {
+  //   if (isModalOpen) {
+  //     fetchCustomers();
+  //     fetchProducts();
+  //   }
+  // }, [isModalOpen]);
 
   const fetchSubscriptions = async () => {
     setLoading(true);

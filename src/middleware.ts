@@ -20,7 +20,7 @@ export async function middleware(request: Request) {
 
   if (isAuthenticated && pathname.startsWith('/auth')) {
     // Redirect authenticated users away from auth pages
-    return NextResponse.redirect(new URL(app_routes.home, request.url));
+    return NextResponse.redirect(new URL(app_routes.dashboard, request.url));
   }
 
   if (!isAuthenticated && !isPublicRoute) {

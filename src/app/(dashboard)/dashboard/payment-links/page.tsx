@@ -41,9 +41,9 @@ export default function PaymentLinksPage() {
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
 
   // Fetch payment links on component mount
-  useEffect(() => {
-    fetchPaymentLinks();
-  }, []);
+  // useEffect(() => {
+  //   fetchPaymentLinks();
+  // }, []);
 
   const fetchPaymentLinks = async () => {
     setLoading(true);

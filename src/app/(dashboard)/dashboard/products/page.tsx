@@ -55,11 +55,11 @@ export default function ProductsPage() {
   const currencies = ["USD", "EUR", "GBP", "JPY", "CAD", "AUD", "CNY", "BTC", "ETH"];
 
   // Fetch products on component mount
-  useEffect(() => {
-    fetchProducts();
-  }, []);
+  // useEffect(() => {
+  //   fetchProducts();
+  // }, []);
 
-  constfetchProducts = async () => {
+  const fetchProducts = async () => {
     setLoading(true);
     setError(null);
     

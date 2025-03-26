@@ -26,9 +26,9 @@ export default function WalletPage() {
   const [connectSuccess, setConnectSuccess] = useState(false);
   const [connectError, setConnectError] = useState<string | null>(null);
 
-  useEffect(() => {
-    fetchWalletConnections();
-  }, []);
+  // useEffect(() => {
+  //   fetchWalletConnections();
+  // }, []);
 
   const fetchWalletConnections = async () => {
     try {

@@ -69,9 +69,9 @@ export default function WebhooksPage() {
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
 
   // Fetch webhooks on component mount
-  useEffect(() => {
-    fetchWebhooks();
-  }, []);
+  // useEffect(() => {
+  //   fetchWebhooks();
+  // }, []);
 
   const fetchWebhooks = async () => {
     setLoading(true);

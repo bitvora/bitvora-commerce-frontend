@@ -53,10 +53,10 @@ export default function CheckoutsPage() {
   const [customers, setCustomers] = useState<Array<{ id: string; name: string }>>([]);
 
   // Fetch checkouts on component mount
-  useEffect(() => {
-    fetchCheckouts();
-    fetchCustomers();
-  }, []);
+  // useEffect(() => {
+  //   fetchCheckouts();
+  //   fetchCustomers();
+  // }, []);
 
   const fetchCheckouts = async () => {
     setLoading(true);

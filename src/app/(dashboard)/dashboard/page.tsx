@@ -13,42 +13,42 @@ export default function Dashboard() {
     monthlyRecurringRevenue: 0
   });
 
-  useEffect(() => {
-    const fetchDashboardData = async () => {
-      try {
-        const sessionId = localStorage.getItem("session_id");
-        if (!sessionId) {
-          router.push("/login");
-          return;
-        }
+  // useEffect(() => {
+  //   const fetchDashboardData = async () => {
+  //     try {
+  //       const sessionId = localStorage.getItem("session_id");
+  //       if (!sessionId) {
+  //         router.push("/login");
+  //         return;
+  //       }
 
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://api.commerce.bitvora.com";
-        const response = await fetch(`${apiUrl}/dashboard/stats`, {
-          headers: {
-            "Session-ID": sessionId
-          }
-        });
+  //       const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://api.commerce.bitvora.com";
+  //       const response = await fetch(`${apiUrl}/dashboard/stats`, {
+  //         headers: {
+  //           "Session-ID": sessionId
+  //         }
+  //       });
 
-        if (response.status === 401) {
-          localStorage.removeItem("session_id");
-          router.push("/login");
-          return;
-        }
+  //       if (response.status === 401) {
+  //         localStorage.removeItem("session_id");
+  //         router.push("/login");
+  //         return;
+  //       }
 
-        if (response.ok) {
-          const data = await response.json();
-          setStats(data || stats);
-        }
-      } catch (error) {
-        console.error("Error fetching dashboard data:", error);
-        // Use placeholder data when API is not available
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  //       if (response.ok) {
+  //         const data = await response.json();
+  //         setStats(data || stats);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching dashboard data:", error);
+  //       // Use placeholder data when API is not available
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
 
-    fetchDashboardData();
-  }, [router]);
+  //   fetchDashboardData();
+  // }, [router]);
 
   if (isLoading) {
     return (

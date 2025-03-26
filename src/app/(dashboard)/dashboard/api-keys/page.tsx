@@ -67,9 +67,9 @@ export default function ApiKeysPage() {
   });
 
   // Fetch API keys on component mount
-  useEffect(() => {
-    fetchApiKeys();
-  }, []);
+  // useEffect(() => {
+  //   fetchApiKeys();
+  // }, []);
 
   const fetchApiKeys = async () => {
     setLoading(true);
