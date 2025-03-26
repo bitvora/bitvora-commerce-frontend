@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
+import 'react-modern-drawer/dist/index.css';
 import './globals.css';
 import { Toaster } from 'react-hot-toast';
 import Providers from './providers';

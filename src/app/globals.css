@@ -73,6 +73,15 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+.mobile-drawer {
+  width: 100vw !important;
+  height: calc(100vh - 70px) !important;
+  background: var(--color-primary-50) !important;
+  overflow: hidden !important;
+  margin-top: 70px !important;
+  padding: 20px 30px !important;
+}
+
 @media (min-width: 640px) and (max-width: 767.98px) {
 }
 

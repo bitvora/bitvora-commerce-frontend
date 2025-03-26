@@ -1,24 +1,21 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
 
+import { MenuIcon, CloseIcon } from '@/components/Icons';
+import { Logo } from '@/components/Logo';
+import { SemiboldSmallText } from '@/components/Text';
+import { app_routes } from '@/lib/constants';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import Drawer from 'react-modern-drawer';
+import Image from 'next/image';
 import { getAccounts } from '@/app/(dashboard)/actions';
 import { useAppContext } from '@/app/providers';
-import { Link } from '@/components/Links';
-import { Logo } from '@/components/Logo';
-import {
-  MediumSmallerText,
-  MediumSmallText,
-  SemiboldSmallerText,
-  SemiboldSmallText
-} from '@/components/Text';
-import { app_routes } from '@/lib/constants';
+import { useQuery } from '@tanstack/react-query';
 import { Account } from '@/lib/types';
+import { useEffect, useState } from 'react';
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useQuery } from '@tanstack/react-query';
-import Image from 'next/image';
-import { usePathname } from 'next/navigation';
-import { useEffect, useState } from 'react';
 
 const main_routes = [
   {
@@ -99,21 +96,25 @@ function NavItem({
   return (
     <Link href={route}>
       <div
-        className={`w-full h-[45px] rounded-md flex gap-3 justify-start items-center px-3 py-2 ${
-          isActive
-            ? 'border-[1px] border-light-400 text-secondary-700'
-            : 'text-light-900 hover:text-secondary-700'
+        className={`w-full h-[45px] rounded-md flex gap-4 justify-start items-center px-1 py-2 ${
+          isActive ? 'text-secondary-700' : 'text-light-900 hover:text-secondary-700'
         }`}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}>
         <Image width={16} height={16} src={isActive || isHovered ? active_icon : icon} alt={text} />
-        <MediumSmallText className="text-inherit mt-[0.5px]">{text}</MediumSmallText>
+        <SemiboldSmallText className="text-inherit mt-[0.5px]">{text}</SemiboldSmallText>
       </div>
     </Link>
   );
 }
 
-export default function Sidebar() {
+export default function Navbar() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleDrawer = () => {
+    setIsOpen((prevState) => !prevState);
+  };
+
   const { data, isLoading } = useQuery({
     queryKey: ['accounts'],
     queryFn: () => getAccounts()
@@ -137,71 +138,75 @@ export default function Sidebar() {
   }, [data, isLoading, session?.activeAccount]);
 
   return (
-    <div className="w-[320px] max-w-[320px] max-h-screen h-screen overflow-y-auto overflow-x-hidden hidden lg:flex flex-col relative pr-[30px]">
-      <header className="sticky top-0 left-0 bg-primary-100">
-        <Link href={app_routes.dashboard}>
-          <div className="flex items-center gap-2 text-light-700 hover:text-light-800">
-            <Logo url={app_routes.dashboard} />
-            <MediumSmallerText className="text-inherit mt-2">Commerce</MediumSmallerText>
-          </div>
-        </Link>
+    <>
+      <header className="flex lg:hidden w-full sticky top-0 left-0 bg-primary-50 justify-between mb-4 pb-4 items-center">
+        <div className="flex items-center gap-2 text-light-700 hover:text-light-800">
+          <Logo url={app_routes.dashboard} />
+        </div>
+
+        <button
+          className="cursor-pointer bg-transparent border-none outline-none"
+          onClick={toggleDrawer}>
+          {isOpen ? <CloseIcon /> : <MenuIcon />}
+        </button>
       </header>
 
-      <div className="flex flex-col gap-4 w-full mt-4 pt-4 mb-[50px]">
-        <div className="flex flex-col gap-2 w-full">
-          <SemiboldSmallerText className="text-light-500 uppercase mx-2 pb-2">
-            main
-          </SemiboldSmallerText>
-
+      <Drawer open={isOpen} onClose={toggleDrawer} direction="left" className="mobile-drawer">
+        <div className="w-full h-full overflow-x-hidden overflow-y-auto flex flex-col gap-2">
           <div className="flex flex-col gap-1">
             {main_routes.map(({ active_icon, icon, route, text }) => (
               <NavItem key={text} active_icon={active_icon} icon={icon} route={route} text={text} />
             ))}
           </div>
-        </div>
 
-        <hr className="bg-light-400 w-full h-[1px] border-0" />
-
-        <div className="flex flex-col gap-2 w-full">
-          <SemiboldSmallerText className="text-light-500 uppercase mx-2 pb-2">
-            developer
-          </SemiboldSmallerText>
+          <hr className="bg-light-400 w-full h-[1px] border-[0.5px] border-light-400 my-2" />
 
           <div className="flex flex-col gap-1">
             {developer_routes.map(({ active_icon, icon, route, text }) => (
               <NavItem key={text} active_icon={active_icon} icon={icon} route={route} text={text} />
             ))}
           </div>
-        </div>
-      </div>
 
-      {!isLoading && (
-        <div className="flex flex-col gap-4 sticky bottom-[40px] left-0 right-[30px] bg-primary-100">
-          <hr className="bg-light-400 w-full h-[1px] border-0" />
+          <hr className="bg-light-400 w-full h-[1px] border-[0.5px] border-light-400 my-2" />
 
-          <div className="flex gap-2 items-center w-full justify-between">
-            <div className="flex gap-4 items-center flex-1 min-w-0">
-              {currentAccount?.logo ? (
-                <img
-                  src={currentAccount?.logo}
-                  className="w-8 h-8 rounded-md"
-                  alt={currentAccount?.name}
-                />
-              ) : (
-                <Image src="/img/user.svg" alt={currentAccount?.name} height={36} width={36} />
-              )}
+          <div className="flex flex-col gap-1">
+            <div className="flex gap-2 items-center w-full justify-between mb-1 pb-1">
+              <div className="flex gap-4 items-center flex-1 min-w-0">
+                {currentAccount?.logo ? (
+                  <img
+                    src={currentAccount?.logo}
+                    className="w-8 h-8 rounded-md"
+                    alt={currentAccount?.name}
+                  />
+                ) : (
+                  <Image src="/img/user.svg" alt={currentAccount?.name} height={36} width={36} />
+                )}
 
-              <SemiboldSmallText className="text-light-900 truncate overflow-hidden text-ellipsis whitespace-nowrap flex-1">
-                {currentAccount?.name}
-              </SemiboldSmallText>
+                <SemiboldSmallText className="text-light-900 truncate overflow-hidden text-ellipsis whitespace-nowrap flex-1">
+                  {currentAccount?.name}
+                </SemiboldSmallText>
+              </div>
+
+              <button className="text-light-700 hover:text-light-500 cursor-pointer">
+                <FontAwesomeIcon icon={faAngleDown} />
+              </button>
             </div>
 
-            <button className="text-light-700 hover:text-light-500 cursor-pointer">
-              <FontAwesomeIcon icon={faAngleDown} />
-            </button>
+            <NavItem
+              active_icon="/icons/profile.svg"
+              icon="/icons/profile.svg"
+              route={app_routes.profile}
+              text="Manage Profile"
+            />
+
+            <div
+              className={`w-full h-[45px] rounded-md flex gap-4 justify-start items-center px-1 py-2`}>
+              <Image width={16} height={16} src="/icons/logout.svg" alt="Logout" />
+              <SemiboldSmallText className="mt-[0.5px] text-red-700">Logout</SemiboldSmallText>
+            </div>
           </div>
         </div>
-      )}
-    </div>
+      </Drawer>
+    </>
   );
 }

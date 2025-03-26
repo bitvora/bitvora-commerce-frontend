@@ -11,7 +11,8 @@ export const app_routes = {
   payment_links: '/payment-links',
   wallet: '/wallet',
   api_keys: '/api-keys',
-  webhooks: '/webhooks'
+  webhooks: '/webhooks',
+  profile: '/profile'
 };
 
 export const api_url = process.env.NEXT_PUBLIC_API_URL || 'https://api.commerce.bitvora.com';

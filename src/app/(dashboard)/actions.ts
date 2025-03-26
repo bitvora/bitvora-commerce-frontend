@@ -17,3 +17,10 @@ export async function getAccounts() {
     return [];
   }
 }
+
+export async function fetchSession() {
+  const response = await fetch('/api/session', { credentials: 'include' });
+  const data = await response.json();
+
+  return data.session;
+}
