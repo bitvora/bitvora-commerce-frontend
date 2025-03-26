@@ -12,7 +12,7 @@ export default async function Layout({ children }: { children: React.ReactNode }
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <div className="w-screen h-screen overflow-hidden bg-primary-100 px-6 pt-8 flex gap-4">
+      <div className="w-screen h-screen overflow-hidden bg-primary-100 px-6 pt-8 flex gap-6">
         <Sidebar />
 
         <div className="flex-1 h-full overflow-auto bg-primary-50">{children}</div>
