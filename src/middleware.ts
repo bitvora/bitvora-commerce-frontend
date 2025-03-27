@@ -10,7 +10,6 @@ export async function middleware(request: Request) {
 
   const session = sessionCookie ? await decrypt(sessionCookie) : null;
 
-  console.log(session);
   const isAuthenticated = !!session?.id;
 
   // Define public routes

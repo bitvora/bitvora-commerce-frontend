@@ -62,6 +62,18 @@
   --color-red-800: #f8b4b4;
   --color-red-900: #fde8e8;
 
+  /* Green */
+  --color-green-50: #2b3631;
+  --color-green-100: #30433b;
+  --color-green-200: #36594b;
+  --color-green-300: #396a57;
+  --color-green-400: #3b8168;
+  --color-green-500: #3c9676;
+  --color-green-600: #3bb18c;
+  --color-green-700: #5ec9a8;
+  --color-green-800: #9dddc8;
+  --color-green-900: #d9f2e9;
+
   --color-dark: #090b0a;
 }
 

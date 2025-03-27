@@ -159,10 +159,7 @@ export default function Sidebar() {
       </div>
 
       {!isAccountLoading && (
-        <div
-          className="flex flex-col gap-2 sticky bottom-[40px] left-0 right-[30px] bg-primary-100 cursor-pointer px-2"
-          onMouseEnter={() => setMenuOpen(true)}
-          onMouseLeave={() => setMenuOpen(false)}>
+        <div className="flex flex-col gap-2 sticky bottom-[40px] left-0 right-[30px] bg-primary-100 cursor-pointer px-2">
           <hr className="bg-light-400 w-full h-[1px] border-0" />
 
           <div className="flex gap-2 items-center w-full justify-between mt-2">

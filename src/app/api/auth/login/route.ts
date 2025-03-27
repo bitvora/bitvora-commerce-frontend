@@ -7,7 +7,7 @@ export async function POST(req: Request) {
     await login(payload);
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return NextResponse.json({ success: false, error: 'Failed to set session' }, { status: 500 });
   }
 }
