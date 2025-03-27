@@ -1,11 +1,11 @@
 'use client';
 
-import { useState, type ChangeEvent, type HTMLAttributes } from 'react';
+import { ReactNode, useState, type ChangeEvent, type HTMLAttributes } from 'react';
 import { type FormikErrors, type FormikTouched } from 'formik';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
-import { MediumBody, RegularSmallerText } from './Text';
+import { MediumBody, RegularSmallerText, SemiboldSmallText } from './Text';
 
 interface InputProps extends HTMLAttributes<HTMLInputElement> {
   label: string;
@@ -94,6 +94,56 @@ export const Input = ({
           {errors[name as keyof typeof errors]}
         </RegularSmallerText>
       )}
+    </div>
+  );
+};
+
+interface RadioOption<T> {
+  label: string | ReactNode;
+  value: T;
+}
+
+interface RadioGroupProps<T> {
+  options: RadioOption<T>[];
+  name: string;
+  defaultValue?: T;
+  onChange?: (value: T) => void;
+}
+
+export const RadioGroup = <T,>({ options, name, defaultValue, onChange }: RadioGroupProps<T>) => {
+  const [selected, setSelected] = useState<T>(defaultValue ?? options[0]?.value);
+
+  const handleSelect = (value: T) => {
+    setSelected(value);
+    if (onChange) onChange(value);
+  };
+
+  return (
+    <div className="w-full max-w-sm p-2 rounded-lg">
+      <div className="flex flex-col gap-2">
+        {options.map((option) => (
+          <label
+            key={JSON.stringify(option.value)}
+            className={`flex items-center gap-3 p-2 rounded-md cursor-pointer transition ${
+              selected === option.value ? 'text-secondary-700' : 'text-light-700'
+            }`}>
+            <input
+              type="radio"
+              name={name}
+              checked={selected === option.value}
+              onChange={() => handleSelect(option.value)}
+              className="hidden"
+            />
+            <div
+              className={`w-4 h-4 flex items-center justify-center border-2 rounded-full ${
+                selected === option.value ? 'border-2 border-primary-700' : 'border-gray-400'
+              }`}>
+              {selected === option.value && <div className="w-2 h-2 bg-primary-700 rounded-full" />}
+            </div>
+            <SemiboldSmallText>{option.label}</SemiboldSmallText>
+          </label>
+        ))}
+      </div>
     </div>
   );
 };

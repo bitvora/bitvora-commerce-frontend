@@ -11,14 +11,16 @@ import {
   SemiboldSmallerText,
   SemiboldSmallText
 } from '@/components/Text';
+import { logout } from '@/lib/auth';
 import { app_routes } from '@/lib/constants';
 import { Account } from '@/lib/types';
-import { faAngleDown } from '@fortawesome/free-solid-svg-icons';
+import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const main_routes = [
   {
@@ -84,12 +86,14 @@ function NavItem({
   text,
   icon,
   route,
-  active_icon
+  active_icon,
+  padding = true
 }: {
   text: string;
   route: string;
   icon: string;
   active_icon: string;
+  padding?: boolean;
 }) {
   const path = usePathname();
 
@@ -99,11 +103,11 @@ function NavItem({
   return (
     <Link href={route}>
       <div
-        className={`w-full h-[45px] rounded-md flex gap-3 justify-start items-center px-3 py-2 ${
+        className={`w-full h-[45px] rounded-md flex gap-3 justify-start items-center py-2 ${
           isActive
             ? 'border-[1px] border-light-400 text-secondary-700'
             : 'text-light-900 hover:text-secondary-700'
-        }`}
+        } ${padding ? 'px-3' : ''}`}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}>
         <Image width={16} height={16} src={isActive || isHovered ? active_icon : icon} alt={text} />
@@ -121,8 +125,11 @@ export default function Sidebar() {
 
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [currentAccount, setCurrentAccount] = useState<Account>({} as Account);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const { session } = useAppContext();
+
+  console.error(accounts);
 
   useEffect(() => {
     if (data?.data) {
@@ -132,6 +139,8 @@ export default function Sidebar() {
       if (session?.activeAccount && session?.activeAccount !== '') {
         const account = accounts.find((acc) => acc.id === session?.activeAccount);
         setCurrentAccount(account);
+      } else {
+        setCurrentAccount(accounts[0]);
       }
     }
   }, [data, isLoading, session?.activeAccount]);
@@ -176,10 +185,13 @@ export default function Sidebar() {
       </div>
 
       {!isLoading && (
-        <div className="flex flex-col gap-4 sticky bottom-[40px] left-0 right-[30px] bg-primary-100">
+        <div
+          className="flex flex-col gap-2 sticky bottom-[40px] left-0 right-[30px] bg-primary-100 cursor-pointer px-2"
+          onMouseEnter={() => setMenuOpen(true)}
+          onMouseLeave={() => setMenuOpen(false)}>
           <hr className="bg-light-400 w-full h-[1px] border-0" />
 
-          <div className="flex gap-2 items-center w-full justify-between">
+          <div className="flex gap-2 items-center w-full justify-between mt-2">
             <div className="flex gap-4 items-center flex-1 min-w-0">
               {currentAccount?.logo ? (
                 <img
@@ -196,10 +208,45 @@ export default function Sidebar() {
               </SemiboldSmallText>
             </div>
 
-            <button className="text-light-700 hover:text-light-500 cursor-pointer">
-              <FontAwesomeIcon icon={faAngleDown} />
+            <button
+              className="text-light-700 hover:text-light-500 cursor-pointer"
+              onClick={() => setMenuOpen(!menuOpen)}>
+              <FontAwesomeIcon icon={menuOpen ? faAngleUp : faAngleDown} />
             </button>
           </div>
+
+          <AnimatePresence>
+            {menuOpen && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 20 }}
+                transition={{ duration: 0.3, ease: 'easeInOut' }}
+                className="flex flex-col px-2">
+                <NavItem
+                  active_icon="/icons/profile.svg"
+                  icon="/icons/profile.svg"
+                  route={app_routes.profile}
+                  text="Manage Profile"
+                  padding={false}
+                />
+
+                <form
+                  onSubmit={async (e) => {
+                    e.preventDefault();
+                    await logout();
+                  }}
+                  className="-mt-2">
+                  <button
+                    className={`w-full h-[45px] rounded-md flex gap-3 justify-start items-center py-2 cursor-pointer`}
+                    type="submit">
+                    <Image width={16} height={16} src="/icons/logout.svg" alt="Logout" />
+                    <MediumSmallText className="mt-[0.5px] text-red-700">Logout</MediumSmallText>
+                  </button>
+                </form>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       )}
     </div>

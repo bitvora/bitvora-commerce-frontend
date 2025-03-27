@@ -2,6 +2,8 @@
 
 import { cookies } from 'next/headers';
 import { SessionPayload } from '@/lib/types';
+import { redirect } from 'next/navigation';
+import { app_routes } from '@/lib/constants';
 
 const SECRET_KEY = process.env.SESSION_SECRET!;
 const IV_LENGTH = 16;
@@ -50,6 +52,7 @@ export async function login(payload: SessionPayload) {
 
 export async function logout() {
   (await cookies()).delete('session');
+  redirect(app_routes.home);
 }
 
 export async function getSession(): Promise<SessionPayload | null> {

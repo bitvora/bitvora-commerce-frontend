@@ -29,7 +29,7 @@ export const PrimaryButton = ({
       className={clsx(
         'font-semibold bg-primary-500 border-primary-500 text-light-900',
         'hover:bg-primary-300 hover:border-primary-300 hover:text-light-800',
-        'text-sm lg:text-[16px] tracking-[4%] leading-4 rounded-md px-4 py-2 h-12',
+        'text-sm lg:text-[16px] tracking-[4%] leading-4 rounded-md px-4 py-2',
         'disabled:bg-primary-200 disabled:border-primary-200 disabled:text-light-700',
         loading || disabled ? 'cursor-not-allowed' : 'cursor-pointer',
         className

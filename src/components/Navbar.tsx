@@ -16,6 +16,8 @@ import { Account } from '@/lib/types';
 import { useEffect, useState } from 'react';
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { logout } from '@/lib/auth';
+import Currency from '@/components/Currency';
 
 const main_routes = [
   {
@@ -125,6 +127,8 @@ export default function Navbar() {
 
   const { session } = useAppContext();
 
+  console.error(accounts);
+
   useEffect(() => {
     if (data?.data) {
       const accounts: Account[] = data?.data;
@@ -140,8 +144,9 @@ export default function Navbar() {
   return (
     <>
       <header className="flex lg:hidden w-full sticky top-0 left-0 bg-primary-50 justify-between mb-4 pb-4 items-center">
-        <div className="flex items-center gap-2 text-light-700 hover:text-light-800">
+        <div className="flex items-center gap-4 text-light-700 hover:text-light-800">
           <Logo url={app_routes.dashboard} />
+          <Currency />
         </div>
 
         <button
@@ -199,11 +204,19 @@ export default function Navbar() {
               text="Manage Profile"
             />
 
-            <div
-              className={`w-full h-[45px] rounded-md flex gap-4 justify-start items-center px-1 py-2`}>
-              <Image width={16} height={16} src="/icons/logout.svg" alt="Logout" />
-              <SemiboldSmallText className="mt-[0.5px] text-red-700">Logout</SemiboldSmallText>
-            </div>
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                await logout();
+              }}
+              className="-mt-2">
+              <button
+                className={`w-full h-[45px] rounded-md flex gap-4 justify-start items-center px-1 py-2`}
+                type="submit">
+                <Image width={16} height={16} src="/icons/logout.svg" alt="Logout" />
+                <SemiboldSmallText className="mt-[0.5px] text-red-700">Logout</SemiboldSmallText>
+              </button>
+            </form>
           </div>
         </div>
       </Drawer>

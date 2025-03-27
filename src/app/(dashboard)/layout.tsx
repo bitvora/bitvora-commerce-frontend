@@ -17,7 +17,7 @@ export default async function Layout({ children }: { children: React.ReactNode }
         <Sidebar />
         <Navbar />
 
-        <div className="flex-1 h-full overflow-auto bg-primary-50 w-full">{children}</div>
+        <div className="flex-1 h-full overflow-auto w-full">{children}</div>
       </div>
     </HydrationBoundary>
   );

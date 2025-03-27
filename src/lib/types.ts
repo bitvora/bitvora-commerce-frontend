@@ -1,3 +1,5 @@
+import { IconDefinition } from '@fortawesome/free-solid-svg-icons';
+
 export interface Account {
   id: string;
   user_id: string;
@@ -21,4 +23,9 @@ export interface SessionPayload {
   status: string;
   accounts: Account[];
   activeAccount: string;
+}
+
+export interface CurrencyType {
+  label: string;
+  image: string;
 }
