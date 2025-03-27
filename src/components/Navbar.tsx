@@ -9,15 +9,13 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import Drawer from 'react-modern-drawer';
 import Image from 'next/image';
-import { getAccounts } from '@/app/(dashboard)/actions';
-import { useAppContext } from '@/app/providers';
-import { useQuery } from '@tanstack/react-query';
-import { Account } from '@/lib/types';
-import { useEffect, useState } from 'react';
+import { useAppContext } from '@/app/contexts';
+import { useState } from 'react';
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { logout } from '@/lib/auth';
 import Currency from '@/components/Currency';
+import secureLocalStorage from 'react-secure-storage';
 
 const main_routes = [
   {
@@ -112,34 +110,11 @@ function NavItem({
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const { currentAccount } = useAppContext();
 
   const toggleDrawer = () => {
     setIsOpen((prevState) => !prevState);
   };
-
-  const { data, isLoading } = useQuery({
-    queryKey: ['accounts'],
-    queryFn: () => getAccounts()
-  });
-
-  const [accounts, setAccounts] = useState<Account[]>([]);
-  const [currentAccount, setCurrentAccount] = useState<Account>({} as Account);
-
-  const { session } = useAppContext();
-
-  console.error(accounts);
-
-  useEffect(() => {
-    if (data?.data) {
-      const accounts: Account[] = data?.data;
-      setAccounts(accounts);
-
-      if (session?.activeAccount && session?.activeAccount !== '') {
-        const account = accounts.find((acc) => acc.id === session?.activeAccount);
-        setCurrentAccount(account);
-      }
-    }
-  }, [data, isLoading, session?.activeAccount]);
 
   return (
     <>
@@ -207,6 +182,7 @@ export default function Navbar() {
             <form
               onSubmit={async (e) => {
                 e.preventDefault();
+                secureLocalStorage.clear();
                 await logout();
               }}
               className="-mt-2">

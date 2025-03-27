@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import 'react-modern-drawer/dist/index.css';
+import 'react-calendar/dist/Calendar.css';
+import 'react-phone-number-input/style.css'
 import './globals.css';
 import { Toaster } from 'react-hot-toast';
 import Providers from './providers';

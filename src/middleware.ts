@@ -9,6 +9,8 @@ export async function middleware(request: Request) {
   const pathname = new URL(request.url).pathname;
 
   const session = sessionCookie ? await decrypt(sessionCookie) : null;
+
+  console.log(session);
   const isAuthenticated = !!session?.id;
 
   // Define public routes

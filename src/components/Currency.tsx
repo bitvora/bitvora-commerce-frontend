@@ -5,7 +5,7 @@ import { SemiboldSmallerText, SemiboldSmallText } from '@/components/Text';
 import { faCaretDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { RadioGroup } from '@/components/Inputs';
-import { useAppContext } from '@/app/providers';
+import { useAppContext } from '@/app/contexts';
 import { CurrencyType } from '@/lib/types';
 import { currencies } from '@/lib/constants';
 import Dropdown from '@/components/Dropdown';
@@ -62,7 +62,7 @@ export default function Currency() {
           </div>
         </div>
       }
-      className="w-full max-w-[70px] md:max-w-[200px]"
+      className="w-full max-w-[70px] md:max-w-[150px] lg:max-w-[200px]"
       contentClass="w-[240px]"
       buttonClass="w-full flex justify-between gap-4 items-center bg-[#2b2731] h-8 rounded-3xl px-4 border-none outline-none text-light-900 cursor-pointer hover:text-light-800"
     />

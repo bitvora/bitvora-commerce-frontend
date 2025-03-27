@@ -11,7 +11,9 @@ export default function Page() {
         <div className="flex gap-6 items-center">
           <MediumHeader5>Dashboard</MediumHeader5>
 
-          <Currency />
+          <div className="hidden lg:flex">
+            <Currency />
+          </div>
         </div>
 
         <div className="flex gap-4 items-center">

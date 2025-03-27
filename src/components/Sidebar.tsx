@@ -1,8 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
 
-import { getAccounts } from '@/app/(dashboard)/actions';
-import { useAppContext } from '@/app/providers';
+import { useAppContext } from '@/app/contexts';
 import { Link } from '@/components/Links';
 import { Logo } from '@/components/Logo';
 import {
@@ -13,14 +12,13 @@ import {
 } from '@/components/Text';
 import { logout } from '@/lib/auth';
 import { app_routes } from '@/lib/constants';
-import { Account } from '@/lib/types';
 import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import secureLocalStorage from 'react-secure-storage';
 
 const main_routes = [
   {
@@ -118,32 +116,8 @@ function NavItem({
 }
 
 export default function Sidebar() {
-  const { data, isLoading } = useQuery({
-    queryKey: ['accounts'],
-    queryFn: () => getAccounts()
-  });
-
-  const [accounts, setAccounts] = useState<Account[]>([]);
-  const [currentAccount, setCurrentAccount] = useState<Account>({} as Account);
+  const { currentAccount, isAccountLoading } = useAppContext();
   const [menuOpen, setMenuOpen] = useState(false);
-
-  const { session } = useAppContext();
-
-  console.error(accounts);
-
-  useEffect(() => {
-    if (data?.data) {
-      const accounts: Account[] = data?.data;
-      setAccounts(accounts);
-
-      if (session?.activeAccount && session?.activeAccount !== '') {
-        const account = accounts.find((acc) => acc.id === session?.activeAccount);
-        setCurrentAccount(account);
-      } else {
-        setCurrentAccount(accounts[0]);
-      }
-    }
-  }, [data, isLoading, session?.activeAccount]);
 
   return (
     <div className="w-[320px] max-w-[320px] max-h-screen h-screen overflow-y-auto overflow-x-hidden hidden lg:flex flex-col relative pr-[30px]">
@@ -184,7 +158,7 @@ export default function Sidebar() {
         </div>
       </div>
 
-      {!isLoading && (
+      {!isAccountLoading && (
         <div
           className="flex flex-col gap-2 sticky bottom-[40px] left-0 right-[30px] bg-primary-100 cursor-pointer px-2"
           onMouseEnter={() => setMenuOpen(true)}
@@ -234,6 +208,7 @@ export default function Sidebar() {
                 <form
                   onSubmit={async (e) => {
                     e.preventDefault();
+                    secureLocalStorage.clear();
                     await logout();
                   }}
                   className="-mt-2">
