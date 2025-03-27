@@ -1,7 +1,7 @@
 'use client';
 
 import { fetchSession, getAccounts } from '@/lib/actions';
-import { currencies } from '@/lib/constants';
+import { currencies, graph_periods } from '@/lib/constants';
 import { Account, CurrencyType, SessionPayload } from '@/lib/types';
 import { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
 import secureLocalStorage from 'react-secure-storage';
@@ -16,6 +16,8 @@ interface AppContextType {
   isAccountLoading?: boolean;
   updateCurrentAccount: (account: Account) => void;
   refetchAccount: () => void;
+  currentTab: string;
+  updateCurrentTab: (payload: string) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -25,6 +27,7 @@ export default function ContextProvider({ children }: { children: React.ReactNod
   const [currency, setCurrency] = useState<CurrencyType | null>(null);
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [currentAccount, setCurrentAccount] = useState<Account>({} as Account);
+  const [currentTab, setCurrentTab] = useState(graph_periods[0].value);
 
   const updateCurrency = (currency: CurrencyType) => {
     setCurrency(currency);
@@ -34,6 +37,10 @@ export default function ContextProvider({ children }: { children: React.ReactNod
   const updateCurrentAccount = (account: Account) => {
     setCurrentAccount(account);
     secureLocalStorage.setItem('currentAccount', JSON.stringify(account));
+  };
+
+  const updateCurrentTab = (payload: string) => {
+    setCurrentTab(payload);
   };
 
   const {
@@ -131,9 +138,11 @@ export default function ContextProvider({ children }: { children: React.ReactNod
       currentAccount,
       isAccountLoading,
       updateCurrentAccount,
-      refetchAccount
+      refetchAccount,
+      currentTab,
+      updateCurrentTab
     };
-  }, [currency, session, accounts, currentAccount, isAccountLoading, refetchAccount]);
+  }, [currency, session, accounts, currentAccount, isAccountLoading, refetchAccount, currentTab]);
 
   return <AppContext.Provider value={values}>{children}</AppContext.Provider>;
 }

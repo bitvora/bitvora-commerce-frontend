@@ -31,6 +31,7 @@ ChartJS.register(
 interface AreaChartProps {
   data: number[];
   showPrimary?: boolean;
+  showYAxisLabel?: boolean;
   labels: string[];
   label: string;
   labelFormatter?: (value: string) => string;
@@ -50,6 +51,7 @@ function getGradient(ctx: any, chartArea: any): any {
 export const AreaChart = ({
   data,
   showPrimary = false,
+  showYAxisLabel = true,
   labels,
   label,
   labelFormatter
@@ -84,7 +86,7 @@ export const AreaChart = ({
           y: {
             min: 0,
             ticks: {
-              color: '#9791a1',
+              color: showYAxisLabel ? '#9791a1' : 'transparent',
               autoSkip: false,
               count: 5,
               maxTicksLimit: 7,

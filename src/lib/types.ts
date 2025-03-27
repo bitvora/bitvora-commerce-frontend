@@ -38,3 +38,23 @@ export interface CurrencyType {
   label: string;
   image: string;
 }
+
+export type SalesData = {
+  data: {
+    total_amount: number;
+    total_count: number;
+    start_time: string;
+    end_time: string;
+    data_points: { amount: number; date?: string; month?: string; timestamp?: string }[];
+  };
+};
+
+export type NewCustomerData = {
+  data: {
+    total_amount: number;
+    total_count: number;
+    start_time: string;
+    end_time: string;
+    data_points: { amount: number; date?: string; month?: string; timestamp?: string }[];
+  };
+};

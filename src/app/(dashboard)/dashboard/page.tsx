@@ -1,5 +1,6 @@
 'use client';
 
+import NewCustomers from '@/app/(dashboard)/dashboard/components/NewCustomers';
 import SalesGraph from './components/SalesGraph';
 import { PrimaryButton } from '@/components/Buttons';
 import Currency from '@/components/Currency';
@@ -29,6 +30,10 @@ export default function Page() {
       </div>
 
       <SalesGraph />
+
+      <div className="flex gap-3 items-stretch">
+        <NewCustomers />
+      </div>
     </div>
   );
 }

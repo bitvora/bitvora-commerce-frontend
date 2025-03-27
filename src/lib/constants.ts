@@ -31,3 +31,14 @@ export const currencies: CurrencyType[] = [
   { label: 'CNY', image: 'http://purecatamphetamine.github.io/country-flag-icons/3x2/CN.svg' },
   { label: 'ETH', image: '/currencies/eth.jpg' }
 ];
+
+export const graph_periods = [
+  { label: '1D', value: '1D' },
+  { label: '1W', value: '1W' },
+  { label: '1M', value: '1M' },
+  {
+    label: '6M',
+    value: '6M'
+  },
+  { label: '1Y', value: '1Y' }
+];
