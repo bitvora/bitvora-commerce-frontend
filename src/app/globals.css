@@ -24,9 +24,12 @@
   --color-light-900: #efedf1;
 
   /* Primary Colors */
+  --color-primary-40: #100c16;
   --color-primary-50: #100c17;
   --color-primary-100: #15101e;
+  --color-primary-150: #15101f;
   --color-primary-200: #1e162c;
+  --color-primary-250: #1e152b;
   --color-primary-300: #2f2244;
   --color-primary-400: #443361;
   --color-primary-500: #5c487f;
@@ -58,6 +61,20 @@
   --color-red-700: #f98080;
   --color-red-800: #f8b4b4;
   --color-red-900: #fde8e8;
+
+  /* Green */
+  --color-green-50: #2b3631;
+  --color-green-100: #30433b;
+  --color-green-200: #36594b;
+  --color-green-300: #396a57;
+  --color-green-400: #3b8168;
+  --color-green-500: #3c9676;
+  --color-green-600: #3bb18c;
+  --color-green-700: #5ec9a8;
+  --color-green-800: #9dddc8;
+  --color-green-900: #d9f2e9;
+
+  --color-dark: #090b0a;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -73,26 +90,59 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+.mobile-drawer {
+  width: 100vw !important;
+  height: calc(100vh - 70px) !important;
+  background: var(--color-primary-50) !important;
+  overflow: hidden !important;
+  margin-top: 70px !important;
+  padding: 20px 30px !important;
+}
+
+.drawer {
+  width: 100vw !important;
+  background: transparent !important;
+}
+
 @media (min-width: 640px) and (max-width: 767.98px) {
 }
 
 @media (min-width: 768px) and (max-width: 1023.98px) {
+  .drawer {
+    width: 70vw !important;
+    padding: 20px !important;
+  }
 }
 
 @media (min-width: 1024px) and (max-width: 1279.98px) {
   #auth-section {
-    background: url('/auth-bg.svg');
+    background: url('/img/auth-bg.svg');
+  }
+
+  .drawer {
+    width: 600px !important;
+    padding: 20px !important;
   }
 }
 
 @media (min-width: 1280px) and (max-width: 1535.98px) {
   #auth-section {
-    background: url('/auth-bg.svg');
+    background: url('/img/auth-bg.svg');
+  }
+
+  .drawer {
+    width: 600px !important;
+    padding: 20px !important;
   }
 }
 
 @media (min-width: 1536px) {
   #auth-section {
-    background: url('/auth-bg.svg');
+    background: url('/img/auth-bg.svg');
+  }
+
+  .drawer {
+    width: 600px !important;
+    padding: 20px !important;
   }
 }

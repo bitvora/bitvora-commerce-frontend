@@ -11,7 +11,7 @@ export default function Page() {
   return (
     <div className="flex flex-col gap-2 w-full text-center md:justify-center h-full md:w-[600px] min-h-[450px] md:h-auto md:border-[0.5px] md:border-light-400 md:rounded-lg lg:py-10 px-4 lg:px-10">
       <div className="mx-auto hidden md:flex">
-        <Image src="/finger.png" alt="login" width={50} height={50} />
+        <Image src="/img/finger.png" alt="login" width={50} height={50} />
       </div>
 
       <SemiboldHeader4 className="text-light-900">Forgot Password?</SemiboldHeader4>

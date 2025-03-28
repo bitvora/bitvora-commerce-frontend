@@ -9,6 +9,7 @@ import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
+import secureLocalStorage from 'react-secure-storage';
 
 export default function Page() {
   const router = useRouter();
@@ -32,62 +33,73 @@ export default function Page() {
           setSubmitting(true);
 
           try {
+            // Step 1: Send login request
             const response = await fetch(`${api_url}/login`, {
               method: 'POST',
-              headers: {
-                'Content-Type': 'application/json'
-              },
+              headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify(values)
             });
 
             const data = await response.json();
 
             if (response.status === 201) {
-              toast.success(data?.message);
+              const sessionId = data?.data?.id;
+              if (!sessionId) {
+                toast.error('Failed to retrieve session ID.');
+                return;
+              }
+
+              let accounts = [];
+              let activeAccount = '';
 
               try {
+                // Step 2: Try fetching user accounts
                 const accountsResponse = await fetch(`${api_url}/account`, {
-                  headers: {
-                    'Session-ID': data.data.id
-                  }
+                  headers: { 'Session-ID': sessionId }
                 });
 
                 if (accountsResponse.ok) {
                   const accountsData = await accountsResponse.json();
-                  if (accountsData.data && accountsData.data.length > 0) {
-                    const accounts = accountsData.data;
-                    const activeAccount =
-                      accountsData.data && accountsData.data?.length > 0
-                        ? accountsData.data[0]?.id
-                        : '';
-
-                    await fetch('/api/auth/login', {
-                      method: 'POST',
-                      body: JSON.stringify({
-                        id: data?.data?.id,
-                        user_id: data?.data?.user_id,
-                        session_token: data?.data?.session_token,
-                        logged_in_at: data?.data?.logged_in_at,
-                        status: data?.data?.status,
-                        accounts,
-                        activeAccount
-                      })
-                    });
-                  }
+                  accounts = accountsData.data ?? [];
+                  activeAccount = accounts.length > 0 ? accounts[0]?.id : '';
+                } else {
+                  console.error('Failed to fetch accounts:', accountsResponse.statusText);
                 }
               } catch (accountErr) {
                 console.error('Error fetching accounts:', accountErr);
               }
 
-              toast.success('User logged in successfully');
+              // Step 3: Always make this request, even if accounts fetching fails
+              await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  id: sessionId,
+                  user_id: data?.data?.user_id,
+                  session_token: data?.data?.session_token,
+                  logged_in_at: data?.data?.logged_in_at,
+                  status: data?.data?.status,
+                  accounts,
+                  activeAccount
+                })
+              });
+
+              // Step 4: Store accounts locally
+              secureLocalStorage.setItem('accounts', JSON.stringify(accounts));
+              const currentAccount = accounts.find((acc) => acc.id === activeAccount);
+              if (currentAccount) {
+                secureLocalStorage.setItem('currentAccount', JSON.stringify(currentAccount));
+              }
+
+              toast.success(data?.message ?? 'User logged in successfully');
               router.push(app_routes.dashboard);
             } else if (response.status === 401) {
               toast.error('Invalid credentials. Please try again.');
             } else {
               toast.error(data.message || 'An error occurred during login');
             }
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
           } catch (err) {
+            console.error(err)
             toast.error('Invalid credentials.');
           } finally {
             setSubmitting(false);
