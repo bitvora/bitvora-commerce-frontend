@@ -118,7 +118,7 @@ export default function Navbar() {
 
   return (
     <>
-      <header className="flex lg:hidden w-full sticky top-0 left-0 bg-primary-50 justify-between mb-4 pb-4 items-center">
+      <header className="flex lg:hidden w-full sticky top-0 left-0 bg-primary-50 justify-between mb-4 pb-4 items-center px-4">
         <div className="flex items-center gap-4 text-light-700 hover:text-light-800">
           <Logo url={app_routes.dashboard} />
           <Currency />

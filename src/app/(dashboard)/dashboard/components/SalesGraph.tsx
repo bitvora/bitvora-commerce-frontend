@@ -1,6 +1,14 @@
 'use client';
 
-import { MediumBody, SemiboldBody, SemiboldHeader3, SemiboldSmallText } from '@/components/Text';
+import {
+  MediumBody,
+  MediumHeader5,
+  MediumSmallerText,
+  SemiboldBody,
+  SemiboldCaption,
+  SemiboldHeader3,
+  SemiboldSmallText
+} from '@/components/Text';
 import { faArrowDown, faArrowUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect, useMemo, useState } from 'react';
@@ -110,48 +118,81 @@ export default function SalesGraph() {
   }, [currentTab]);
 
   return (
-    <div className="bg-primary-50 rounded-lg px-8 py-8 w-full flex items-start justify-between">
-      <div className="flex flex-col gap-3 w-[300px] h-full">
-        <SemiboldBody className="text-light-900">Total Sales</SemiboldBody>
-        <SemiboldHeader3 className="text-light-900">
-          {numeral(total).format('0,0')} SATS
-        </SemiboldHeader3>
+    <div className="bg-primary-50 rounded-lg px-6 xl:px-8 py-8 w-full flex flex-col xl:flex-row items-start justify-between">
+      <div className="flex flex-row gap-3 w-full xl:w-[unset] h-full justify-between">
+        <div className="flex flex-col gap-1 xl:gap-3 w-[300px] h-full">
+          <SemiboldBody className="text-light-900 hidden xl:flex">Total Sales</SemiboldBody>
+          <MediumSmallerText className="text-light-700 xl:hidden">Total Sales</MediumSmallerText>
 
-        <div className="flex items-center gap-1">
-          <div
-            className={clsx('flex items-center gap-1', {
-              'text-green-700': difference > 0,
-              'text-error-700': difference < 0,
-              'text-light-700': difference === 0
-            })}>
-            {difference !== 0 && (
-              <FontAwesomeIcon icon={difference > 0 ? faArrowUp : faArrowDown} />
-            )}
-            <SemiboldSmallText className="text-inherit">
-              {previousTotal > 0 ? (difference * 100).toFixed(2) : '0.00'}%
-            </SemiboldSmallText>
+          <SemiboldHeader3 className="text-light-900 hidden xl:flex">
+            {numeral(total).format('0,0')} SATS
+          </SemiboldHeader3>
+
+          <MediumHeader5 className="text-light-900 xl:hidden">
+            {numeral(total).format('0,0')} SATS
+          </MediumHeader5>
+
+          <div className="flex items-center gap-1">
+            <div
+              className={clsx('flex items-center gap-1', {
+                'text-green-700': difference > 0,
+                'text-error-700': difference < 0,
+                'text-light-700': difference === 0
+              })}>
+              {difference !== 0 && (
+                <FontAwesomeIcon icon={difference > 0 ? faArrowUp : faArrowDown} />
+              )}
+              <SemiboldSmallText className="text-inherit">
+                {previousTotal > 0 ? (difference * 100).toFixed(2) : '0.00'}%
+              </SemiboldSmallText>
+            </div>
+
+            <SemiboldSmallText className="text-light-700 hidden xl:flex">{text}</SemiboldSmallText>
           </div>
-          <SemiboldSmallText className="text-light-700">{text}</SemiboldSmallText>
+        </div>
+
+        <div className="xl:hidden">
+          <div className="flex items-center float-right justify-end ml-auto gap-1">
+            {timeTabs.map((tab) => (
+              <button
+                key={tab.value}
+                onClick={() => updateCurrentTab?.(tab.value)}
+                className={clsx(
+                  'border-[0.5px] rounded-md cursor-pointer outline-none focus:outline-none text-light-500 h-8 w-8 px-1',
+                  {
+                    'border-secondary-700 bg-[#221e2b] text-secondary-500':
+                      currentTab === tab.value,
+                    'border-transparent bg-transparent hover:border-secondary-700':
+                      currentTab !== tab.value
+                  }
+                )}>
+                <SemiboldCaption className="text-inherit">{tab.label}</SemiboldCaption>
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
       <div className="flex flex-col gap-2 w-full">
-        <div className="flex items-center float-right justify-end ml-auto gap-1">
-          {timeTabs.map((tab) => (
-            <button
-              key={tab.value}
-              onClick={() => updateCurrentTab?.(tab.value)}
-              className={clsx(
-                'border-[0.5px] rounded-md cursor-pointer outline-none focus:outline-none text-light-500 h-10 w-10 px-1',
-                {
-                  'border-secondary-700 bg-[#221e2b] text-secondary-500': currentTab === tab.value,
-                  'border-transparent bg-transparent hover:border-secondary-700':
-                    currentTab !== tab.value
-                }
-              )}>
-              <MediumBody className="text-inherit">{tab.label}</MediumBody>
-            </button>
-          ))}
+        <div className="hidden xl:flex">
+          <div className="flex items-center float-right justify-end ml-auto gap-1">
+            {timeTabs.map((tab) => (
+              <button
+                key={tab.value}
+                onClick={() => updateCurrentTab?.(tab.value)}
+                className={clsx(
+                  'border-[0.5px] rounded-md cursor-pointer outline-none focus:outline-none text-light-500 h-10 w-10 px-1',
+                  {
+                    'border-secondary-700 bg-[#221e2b] text-secondary-500':
+                      currentTab === tab.value,
+                    'border-transparent bg-transparent hover:border-secondary-700':
+                      currentTab !== tab.value
+                  }
+                )}>
+                <MediumBody className="text-inherit">{tab.label}</MediumBody>
+              </button>
+            ))}
+          </div>
         </div>
 
         <div className="w-full h-60 lg:h-72">
