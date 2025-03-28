@@ -14,7 +14,7 @@ export default async function Layout({ children }: { children: React.ReactNode }
 
           <CreateAccount />
 
-          <div className="flex-1 h-full overflow-auto w-full">{children}</div>
+          <div className="flex-1 h-full overflow-auto w-full pb-8 mb-8">{children}</div>
         </div>
       </ServerLayout>
     </ContextProvider>

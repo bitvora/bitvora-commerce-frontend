@@ -7,35 +7,44 @@ import { useEffect, useMemo, useState } from 'react';
 import clsx from 'clsx';
 import { useQuery } from '@tanstack/react-query';
 import {
-  getDailyNewCustomers,
-  getLastSevenDaysNewCustomers,
-  getLastSixMonthsNewCustomers,
-  getLastThirtyDaysNewCustomers,
-  getLastTwelveMonthsNewCustomers,
-  getPreviousWeekNewCustomers,
-  getPreviousMonthNewCustomers,
-  getPreviousSixMonthsNewCustomers,
-  getPreviousYearNewCustomers,
-  getYesterdayNewCustomers
+  getDailyMRR,
+  getLastSevenDaysMRR,
+  getLastSixMonthsMRR,
+  getLastThirtyDaysMRR,
+  getLastTwelveMonthsMRR,
+  getPreviousWeekMRR,
+  getPreviousMonthMRR,
+  getPreviousSixMonthsMRR,
+  getPreviousYearMRR,
+  getYesterdayMRR
 } from '@/app/(dashboard)/dashboard/actions';
 import { LoadingIcon } from '@/components/Icons';
 import { AreaChart } from '@/components/Graphs';
 import { formatDate } from '@/lib/helpers';
 import { useAppContext } from '@/app/contexts';
 import { graph_periods } from '@/lib/constants';
-import { Breakpoint, NewCustomerData } from '@/lib/types';
+import { MRRData, Breakpoint } from '@/lib/types';
 import numeral from 'numeral';
 import { useBreakpoint } from '@/hooks/useBreakpoint';
 
 const fetchers = {
-  '1D': { fetcher: getDailyNewCustomers, previousFetcher: getYesterdayNewCustomers },
-  '1W': { fetcher: getLastSevenDaysNewCustomers, previousFetcher: getPreviousWeekNewCustomers },
-  '1M': { fetcher: getLastThirtyDaysNewCustomers, previousFetcher: getPreviousMonthNewCustomers },
-  '6M': {
-    fetcher: getLastSixMonthsNewCustomers,
-    previousFetcher: getPreviousSixMonthsNewCustomers
+  '1D': { fetcher: getDailyMRR, previousFetcher: getYesterdayMRR },
+  '1W': {
+    fetcher: getLastSevenDaysMRR,
+    previousFetcher: getPreviousWeekMRR
   },
-  '1Y': { fetcher: getLastTwelveMonthsNewCustomers, previousFetcher: getPreviousYearNewCustomers }
+  '1M': {
+    fetcher: getLastThirtyDaysMRR,
+    previousFetcher: getPreviousMonthMRR
+  },
+  '6M': {
+    fetcher: getLastSixMonthsMRR,
+    previousFetcher: getPreviousSixMonthsMRR
+  },
+  '1Y': {
+    fetcher: getLastTwelveMonthsMRR,
+    previousFetcher: getPreviousYearMRR
+  }
 };
 
 const timeTabs = graph_periods.map((period) => ({
@@ -43,7 +52,7 @@ const timeTabs = graph_periods.map((period) => ({
   ...fetchers[period.value]
 }));
 
-export default function NewCustomers() {
+export default function MRR() {
   const [graphValues, setGraphValues] = useState([]);
   const [graphLabels, setGraphLabels] = useState([]);
   const [total, setTotal] = useState(0);
@@ -53,28 +62,32 @@ export default function NewCustomers() {
 
   const selectedTab = timeTabs.find((tab) => tab.value === currentTab) || {};
 
-  const { data, isLoading } = useQuery<NewCustomerData>({
-    queryKey: [`new-customers-${currentTab}`],
+  const { data, isLoading } = useQuery<MRRData>({
+    queryKey: [`mrr-${currentTab}`],
     queryFn: selectedTab?.fetcher
   });
 
-  const { data: previousData, isLoading: isPreviousLoading } = useQuery<NewCustomerData>({
-    queryKey: [`previous-new-customers-${currentTab}`],
+  const { data: previousData, isLoading: isPreviousLoading } = useQuery<MRRData>({
+    queryKey: [`previous-mrr-${currentTab}`],
     queryFn: selectedTab?.previousFetcher,
     enabled: !!selectedTab?.previousFetcher
   });
 
+  console.log({ data });
+
   useEffect(() => {
     if (!isLoading && data?.data) {
-      setTotal(data.data.total_count || 0);
-      setGraphValues(data.data.data_points.map((point) => point.count));
-      setGraphLabels(data.data.data_points.map((point) => point.date));
+      setTotal(data.data.total_amount || 0);
+      setGraphValues(data.data.data_points.map((point) => point.amount));
+      setGraphLabels(
+        data.data.data_points.map((point) => point.timestamp || point.date || point.month)
+      );
     }
   }, [data, isLoading, currentTab]);
 
   useEffect(() => {
     if (!isPreviousLoading && previousData?.data) {
-      setPreviousTotal(previousData.data.total_count || 0);
+      setPreviousTotal(previousData.data.total_amount || 0);
     }
   }, [previousData, isPreviousLoading]);
 
@@ -101,10 +114,10 @@ export default function NewCustomers() {
     const ticksMap: Record<Breakpoint, number | undefined> = {
       base: undefined,
       sm: undefined,
-      md: 3,
-      lg: 3,
+      md: 4,
+      lg: 4,
       xl: 3,
-      '2xl': 3
+      '2xl': 5
     };
 
     return ticksMap[breakpoint];
@@ -113,11 +126,13 @@ export default function NewCustomers() {
   return (
     <div className="bg-primary-50 rounded-lg px-8 py-8 w-full flex flex-col gap-4 items-start justify-between h-full flex-1">
       <div className="w-full">
-        <SemiboldBody className="text-light-700">New Customers</SemiboldBody>
+        <SemiboldBody className="text-light-700">Monthly Recurring Revenue (MRR)</SemiboldBody>
       </div>
 
       <div className="w-full flex gap-6 items-center">
-        <MediumHeader5 className="text-light-900">{numeral(total).format('0,0')}</MediumHeader5>
+        <MediumHeader5 className="text-light-900">
+          {numeral(total).format('0,0')} SATS
+        </MediumHeader5>
 
         {difference !== 0 && (
           <div
@@ -145,7 +160,7 @@ export default function NewCustomers() {
           <AreaChart
             data={graphValues}
             labels={graphLabels}
-            label="New Customers"
+            label="MRR"
             labelFormatter={labelFormatter}
             showYAxisLabel={false}
             maxXTicks={maxTicks}

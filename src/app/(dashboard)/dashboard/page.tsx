@@ -1,10 +1,12 @@
 'use client';
 
-import NewCustomers from '@/app/(dashboard)/dashboard/components/NewCustomers';
+import NewCustomers from './components/NewCustomers';
 import SalesGraph from './components/SalesGraph';
+import ActiveSubscribers from './components/ActiveSubscribers';
 import { PrimaryButton } from '@/components/Buttons';
 import Currency from '@/components/Currency';
 import { MediumHeader5, SemiboldSmallText } from '@/components/Text';
+import MRR from './components/MRR';
 
 export default function Page() {
   return (
@@ -31,8 +33,10 @@ export default function Page() {
 
       <SalesGraph />
 
-      <div className="flex gap-3 items-stretch">
+      <div className="flex gap-3 items-stretch overflow-hidden">
         <NewCustomers />
+        <ActiveSubscribers />
+        <MRR />
       </div>
     </div>
   );

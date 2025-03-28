@@ -35,6 +35,9 @@ interface AreaChartProps {
   labels: string[];
   label: string;
   labelFormatter?: (value: string) => string;
+  maxXTicks?: number;
+  height?: number;
+  width?: number;
 }
 
 function getGradient(ctx: any, chartArea: any): any {
@@ -54,95 +57,106 @@ export const AreaChart = ({
   showYAxisLabel = true,
   labels,
   label,
-  labelFormatter
+  labelFormatter,
+  maxXTicks,
+  height = 500,
+  width
 }: AreaChartProps) => {
   return (
-    <Line
-      height={500}
-      data={{
-        labels,
-        datasets: [
-          {
-            label,
-            data,
-            borderColor: '#78619E',
-            borderWidth: 3,
-            fill: 'start',
-            tension: 0.4,
-            backgroundColor: function (context) {
-              const chart = context.chart;
-              const { ctx, chartArea } = chart;
-
-              if (!chartArea) return;
-              return getGradient(ctx, chartArea);
+    <div className="relative w-full h-full">
+      <Line
+        height={height}
+        width={width}
+        data={{
+          labels,
+          datasets: [
+            {
+              label,
+              data,
+              borderColor: '#78619E',
+              borderWidth: 3,
+              fill: 'start',
+              tension: 0.4,
+              backgroundColor: function (context) {
+                const chart = context.chart;
+                const { ctx, chartArea } = chart;
+                if (!chartArea) return;
+                return getGradient(ctx, chartArea);
+              }
+            }
+          ]
+        }}
+        options={{
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              min: 0,
+              ticks: {
+                color: showYAxisLabel ? '#9791a1' : 'transparent',
+                autoSkip: false,
+                count: 5,
+                maxTicksLimit: 7,
+                padding: 20
+              },
+              grid: {
+                color: '#9791a1',
+                drawOnChartArea: true,
+                drawTicks: false,
+                lineWidth: 0.1
+              },
+              beginAtZero: true
+            },
+            x: {
+              display: showPrimary,
+              ticks: {
+                autoSkip: true,
+                ...(maxXTicks ? { maxTicksLimit: maxXTicks } : {}) // Apply only if defined
+              }
+            }
+          },
+          plugins: {
+            title: {
+              display: false
+            },
+            legend: {
+              display: false
+            },
+            tooltip: {
+              callbacks: {
+                title: function (tooltipItem) {
+                  return labelFormatter
+                    ? labelFormatter(tooltipItem[0].label)
+                    : tooltipItem[0].label;
+                },
+                label: function () {
+                  return label;
+                },
+                afterLabel: function () {
+                  return '________________';
+                },
+                footer: function (tooltipItem) {
+                  return tooltipItem[0].formattedValue.toString() + ' SATS';
+                }
+              },
+              enabled: true,
+              intersect: true,
+              mode: 'point',
+              titleColor: '#C69A71',
+              titleSpacing: 2,
+              titleMarginBottom: 5,
+              titleFont: {
+                size: 12,
+                weight: 'bolder'
+              },
+              bodyColor: '#EFEDF1',
+              displayColors: false,
+              borderWidth: 1
             }
           }
-        ]
-      }}
-      options={{
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-          y: {
-            min: 0,
-            ticks: {
-              color: showYAxisLabel ? '#9791a1' : 'transparent',
-              autoSkip: false,
-              count: 5,
-              maxTicksLimit: 7,
-              padding: 20
-            },
-            grid: {
-              color: '#9791a1',
-              drawOnChartArea: true,
-              drawTicks: false,
-              lineWidth: 0.1
-            },
-            beginAtZero: true
-          },
-          x: {
-            display: showPrimary
-          }
-        },
-        plugins: {
-          title: {
-            display: false
-          },
-          legend: {
-            display: false
-          },
-          tooltip: {
-            callbacks: {
-              title: function (tooltipItem) {
-                return labelFormatter ? labelFormatter(tooltipItem[0].label) : tooltipItem[0].label;
-              },
-              label: function () {
-                return label;
-              },
-              afterLabel: function () {
-                return '________________';
-              },
-              footer: function (tooltipItem) {
-                return tooltipItem[0].formattedValue.toString() + ' SATS';
-              }
-            },
-            enabled: true,
-            intersect: true,
-            mode: 'point',
-            titleColor: '#C69A71',
-            titleSpacing: 2,
-            titleMarginBottom: 5,
-            titleFont: {
-              size: 12,
-              weight: 'bolder'
-            },
-            bodyColor: '#EFEDF1',
-            displayColors: false,
-            borderWidth: 1
-          }
-        }
-      }}
-    />
+        }}
+      />
+    </div>
   );
 };
 

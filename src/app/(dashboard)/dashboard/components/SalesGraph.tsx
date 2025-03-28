@@ -50,12 +50,12 @@ export default function SalesGraph() {
   const selectedTab = timeTabs.find((tab) => tab.value === currentTab) || {};
 
   const { data, isLoading } = useQuery<SalesData>({
-    queryKey: [currentTab],
+    queryKey: [`sales-${currentTab}`],
     queryFn: selectedTab?.fetcher
   });
 
   const { data: previousData, isLoading: isPreviousLoading } = useQuery<SalesData>({
-    queryKey: [`previous-${currentTab}`],
+    queryKey: [`previous-sales-graph-${currentTab}`],
     queryFn: selectedTab?.previousFetcher,
     enabled: !!selectedTab?.previousFetcher
   });
@@ -124,7 +124,9 @@ export default function SalesGraph() {
               'text-error-700': difference < 0,
               'text-light-700': difference === 0
             })}>
-            {difference !== 0 && <FontAwesomeIcon icon={ difference > 0 ? faArrowUp : faArrowDown} />}
+            {difference !== 0 && (
+              <FontAwesomeIcon icon={difference > 0 ? faArrowUp : faArrowDown} />
+            )}
             <SemiboldSmallText className="text-inherit">
               {previousTotal > 0 ? (difference * 100).toFixed(2) : '0.00'}%
             </SemiboldSmallText>
@@ -151,7 +153,7 @@ export default function SalesGraph() {
             </button>
           ))}
         </div>
-        
+
         <div className="w-full h-60 lg:h-72">
           {isLoading ? (
             <div className="w-full flex items-center justify-center h-[200px]">
