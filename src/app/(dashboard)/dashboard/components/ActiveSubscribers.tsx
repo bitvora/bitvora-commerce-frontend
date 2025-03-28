@@ -1,6 +1,6 @@
 'use client';
 
-import { MediumHeader5, SemiboldBody, SemiboldSmallText } from '@/components/Text';
+import { MediumHeader4, SemiboldBody, SemiboldSmallText } from '@/components/Text';
 import { faCaretDown, faCaretUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect, useMemo, useState } from 'react';
@@ -72,8 +72,6 @@ export default function ActiveSubscribers() {
     enabled: !!selectedTab?.previousFetcher
   });
 
-  console.log({ graphValues, graphLabels });
-
   useEffect(() => {
     if (!isLoading && data?.data) {
       setTotal(data.data.total_count || 0);
@@ -107,13 +105,13 @@ export default function ActiveSubscribers() {
   };
 
   return (
-    <div className="bg-primary-50 rounded-lg px-8 py-8 w-full flex flex-col gap-4 items-start justify-between flex-1 h-full">
+    <div className="bg-primary-50 rounded-lg px-8 py-8 w-full hidden xl:flex flex-col gap-4 items-start justify-between flex-1 h-full">
       <div className="w-full">
         <SemiboldBody className="text-light-700">Active Subscribers</SemiboldBody>
       </div>
 
       <div className="w-full flex gap-6 items-center">
-        <MediumHeader5 className="text-light-900">{numeral(total).format('0,0')}</MediumHeader5>
+        <MediumHeader4 className="text-light-900">{numeral(total).format('0,0')}</MediumHeader4>
 
         {difference !== 0 && (
           <div
