@@ -44,6 +44,7 @@ export default function Select({
   listClassName = 'text-light-900'
 }: SelectProps) {
   const selectedOption = options.find((option) => option.value === value);
+
   const showError =
     touched?.[name as unknown as keyof typeof touched] &&
     (errors?.[name as unknown as keyof typeof errors] as unknown as string);

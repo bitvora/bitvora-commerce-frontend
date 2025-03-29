@@ -44,9 +44,7 @@ export const CreateAccount = () => {
             validationSchema={Yup.object({
               name: Yup.string().required('Name is required')
             })}
-            onSubmit={async (values, { setSubmitting, resetForm }) => {
-              setSubmitting(true);
-
+            onSubmit={async (values, { resetForm }) => {
               try {
                 const result = await createAccount(values);
 
@@ -61,8 +59,6 @@ export const CreateAccount = () => {
               } catch (err) {
                 console.error(err);
                 toast.error('Error creating account');
-              } finally {
-                setSubmitting(false);
               }
             }}>
             {({

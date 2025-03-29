@@ -3,17 +3,18 @@
 
 import Currency from '@/components/Currency';
 import { MediumHeader5, SemiboldBody, SemiboldSmallText } from '@/components/Text';
-import { AddProduct } from './components';
+import { AddProduct, EditProduct } from './components';
 import { useProductContext } from './context';
 import Table from '@/components/Table';
 import numeral from 'numeral';
 import { DeleteIcon, EditIcon } from '@/components/Icons';
-import { ChangeEvent, useEffect, useMemo, useState } from 'react';
+import { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import { DarkInput } from '@/components/Inputs';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { app_routes } from '@/lib/constants';
+import { Product } from '@/lib/types';
 
 const renderPrice = ({ amount, currency }: { amount: number; currency: string }) => {
   let price;
@@ -96,6 +97,7 @@ export default function Page() {
 
   const router = useRouter();
   const searchParams = useSearchParams();
+  
 
   const initialQuery = searchParams.get('q') || '';
   const initialPage = Number(searchParams.get('page')) || 1;
@@ -103,6 +105,9 @@ export default function Page() {
   const [query, setQuery] = useState(initialQuery);
   const [debouncedQuery, setDebouncedQuery] = useState(initialQuery);
   const [currentPage, setCurrentPage] = useState(initialPage);
+
+  const [currentProduct, setCurrentProduct] = useState<Product>({} as Product);
+  const [isEditOpen, setIsEditOpen] = useState(false);
 
   useEffect(() => {
     const params = new URLSearchParams();
@@ -138,17 +143,28 @@ export default function Page() {
   };
 
   const clearQuery = () => {
-    console.log('clicked');
     setQuery('');
     setCurrentPage(1);
   };
 
+  const toggleEditModal = useCallback(
+    (value: boolean) => {
+      setIsEditOpen(value);
+
+      if (!value) {
+        setCurrentProduct({} as Product);
+      }
+    },
+    [setIsEditOpen, setCurrentProduct]
+  );
+
   const handleEdit = (product) => {
-    console.log('Edit', product);
+    setCurrentProduct(product);
+    toggleEditModal(true);
   };
 
   const handleDelete = (product) => {
-    console.log('Delete', product);
+    setCurrentProduct(product);
   };
 
   return (
@@ -178,13 +194,13 @@ export default function Page() {
             <div className="flex gap-2 items-center">
               <button
                 onClick={() => handleEdit(row)}
-                className="h-8 w-8 cursor-pointer rounded-md bg-light-overlay-50 flex items-center text-center justify-center">
+                className="h-8 w-8 cursor-pointer rounded-md hover:bg-light-overlay-50 flex items-center text-center justify-center">
                 <EditIcon />
               </button>
 
               <button
                 onClick={() => handleDelete(row)}
-                className="h-8 w-8 cursor-pointer rounded-md bg-light-overlay-50 flex items-center text-center justify-center">
+                className="h-8 w-8 cursor-pointer rounded-md hover:bg-light-overlay-50 flex items-center text-center justify-center">
                 <DeleteIcon />
               </button>
             </div>
@@ -222,6 +238,12 @@ export default function Page() {
           emptyMessage={query ? 'No Products found' : 'No Products'}
         />
       </div>
+
+      <EditProduct
+        isEditOpen={isEditOpen}
+        product={currentProduct}
+        toggleEditModal={toggleEditModal}
+      />
     </div>
   );
 }

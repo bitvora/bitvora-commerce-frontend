@@ -145,10 +145,7 @@ export default function Table<T extends Record<string, unknown>>({
             ))
           ) : paginatedData.length > 0 ? (
             paginatedData.map((row, rowIndex) => (
-              <tr
-                key={rowIndex}
-                className="hover:bg-light-overlay-50 cursor-pointer"
-                onClick={() => handleRowClick(row)}>
+              <tr key={rowIndex} onClick={() => handleRowClick(row)}>
                 {columns.map((col, colIndex) => (
                   <td key={colIndex} className={clsx('px-6 py-4 text-sm', col.className)}>
                     {renderCell(col, row)}
