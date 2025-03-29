@@ -7,6 +7,8 @@ import { PrimaryButton } from '@/components/Buttons';
 import Currency from '@/components/Currency';
 import { MediumHeader5, SemiboldSmallText } from '@/components/Text';
 import MRR from './components/MRR';
+import { Link } from '@/components/Links';
+import { app_routes } from '@/lib/constants';
 
 export default function Page() {
   return (
@@ -25,9 +27,11 @@ export default function Page() {
             <SemiboldSmallText>Payment Link</SemiboldSmallText>
           </PrimaryButton>
 
-          <PrimaryButton className="h-10 sm:h-12 md:h-12 w-full xl:w-[auto]">
-            <SemiboldSmallText>Add Product</SemiboldSmallText>
-          </PrimaryButton>
+          <Link href={`${app_routes.products}?action=new-product`}>
+            <PrimaryButton className="h-10 sm:h-12 md:h-12 w-full xl:w-[auto]">
+              <SemiboldSmallText>Add Product</SemiboldSmallText>
+            </PrimaryButton>
+          </Link>
         </div>
       </div>
 

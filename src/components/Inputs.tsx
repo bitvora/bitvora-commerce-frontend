@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode, useState, type ChangeEvent, type HTMLAttributes } from 'react';
+import { ReactNode, useRef, useState, type ChangeEvent, type HTMLAttributes } from 'react';
 import { type FormikErrors, type FormikTouched } from 'formik';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
@@ -107,7 +107,7 @@ interface DarkInputProps extends HTMLAttributes<HTMLInputElement> {
   errors?: FormikErrors<Record<string, string>>;
   handleChange: (event: ChangeEvent<HTMLInputElement>) => void;
   endIcon?: React.ReactNode;
-  value: string;
+  value: string | number;
   showLabel?: boolean;
   disabled?: boolean;
   required?: boolean;
@@ -127,13 +127,66 @@ export const DarkInput = ({
   disabled,
   required
 }: DarkInputProps) => {
-  const [inputType, setInputType] = useState(type);
-  const showError =
-    touched?.[name as keyof typeof touched] && errors?.[name as keyof typeof errors];
+  const inputRef = useRef<HTMLInputElement>(null);
+  const isNumberType = type === 'number';
+  const [inputType, setInputType] = useState(isNumberType ? 'text' : type);
 
   const togglePasswordVisibility = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     setInputType((prevType) => (prevType === 'password' ? 'text' : 'password'));
+  };
+
+  const showError =
+    touched?.[name as keyof typeof touched] && errors?.[name as keyof typeof errors];
+
+  const formatWithCommas = (num: string) => {
+    // Split integer and decimal parts
+    const [integerPart, decimalPart] = num.split('.');
+
+    // Format integer part with commas
+    const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+    // Return combined formatted number
+    return decimalPart !== undefined ? `${formattedInteger}.${decimalPart}` : formattedInteger;
+  };
+
+  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+    if (!isNumberType) {
+      return handleChange(event); // ✅ Use default onChange for non-number types
+    }
+
+    const input = event.target;
+    let rawValue = input.value.replace(/,/g, ''); // Remove existing commas
+
+    // ✅ Allow numbers & decimals but prevent multiple dots
+    if (!/^\d*\.?\d*$/.test(rawValue)) return;
+
+    // ✅ Prevent multiple leading zeros unless it's "0." (e.g., "0012" → "12", but "0.1" is valid)
+    if (rawValue.startsWith('0') && rawValue.length > 1 && !rawValue.startsWith('0.')) {
+      rawValue = rawValue.replace(/^0+/, '');
+    }
+
+    const formattedValue = formatWithCommas(rawValue);
+
+    // Preserve cursor position
+    const cursorPosition = input.selectionStart!;
+    const commaCountBefore = (input.value.slice(0, cursorPosition).match(/,/g) || []).length;
+    input.value = formattedValue;
+    const commaCountAfter = (formattedValue.slice(0, cursorPosition).match(/,/g) || []).length;
+    const newCursorPosition = cursorPosition + (commaCountAfter - commaCountBefore);
+
+    setTimeout(() => {
+      if (inputRef.current) {
+        inputRef.current.setSelectionRange(newCursorPosition, newCursorPosition);
+      }
+    }, 0);
+
+    // Create event with raw value (without commas) for form state
+    const eventWithRawValue = {
+      ...event,
+      target: { ...event.target, name, value: rawValue }
+    };
+    handleChange(eventWithRawValue);
   };
 
   return (
@@ -153,10 +206,11 @@ export const DarkInput = ({
 
       <div className="relative mt-1 mb-1">
         <input
-          value={value}
+          ref={inputRef}
+          value={isNumberType ? formatWithCommas(value.toString()) : value}
           name={name}
           required={required}
-          onChange={handleChange}
+          onChange={handleInputChange}
           placeholder={placeholder}
           type={inputType}
           disabled={disabled}
@@ -165,7 +219,8 @@ export const DarkInput = ({
             'placeholder:text-light-500 text-light-900 disabled:text-light-500 focus:outline-none',
             {
               'border-red-700 focus:border-red-700 hover:border-red-700': showError,
-              'border-light-400 focus:border-light-400 hover:border-light-400': !showError
+              'border-light-400 focus:hover:border-primary-500 hover:hover:border-primary-500':
+                !showError
             }
           )}
         />
@@ -243,6 +298,81 @@ export const RadioGroup = <T,>({ options, name, defaultValue, onChange }: RadioG
           </label>
         ))}
       </div>
+    </div>
+  );
+};
+
+interface DarkTextareaProps extends HTMLAttributes<HTMLTextAreaElement> {
+  label: string;
+  name: string;
+  placeholder?: string;
+  touched?: FormikTouched<Record<string, unknown>>;
+  errors?: FormikErrors<Record<string, string>>;
+  handleChange: (event: ChangeEvent<HTMLTextAreaElement>) => void;
+  value: string;
+  showLabel?: boolean;
+  disabled?: boolean;
+  required?: boolean;
+  rows?: number;
+}
+
+export const DarkTextarea = ({
+  label,
+  name,
+  placeholder,
+  touched,
+  errors,
+  handleChange,
+  value,
+  showLabel = false,
+  disabled,
+  required,
+  rows = 4
+}: DarkTextareaProps) => {
+  const showError =
+    touched?.[name as keyof typeof touched] && errors?.[name as keyof typeof errors];
+
+  return (
+    <div className="text-left">
+      {(showLabel || value) && (
+        <div className="mb-1 pb-1 flex items-start gap-1">
+          <SemiboldBody className="text-light-700 transition-opacity duration-300">
+            {label}
+          </SemiboldBody>
+          {required && (
+            <SemiboldBody className="text-light-700 transition-opacity duration-300">
+              *
+            </SemiboldBody>
+          )}
+        </div>
+      )}
+
+      <div className="relative mt-1 mb-1">
+        <textarea
+          value={value}
+          name={name}
+          required={required}
+          onChange={handleChange}
+          placeholder={placeholder}
+          disabled={disabled}
+          className={clsx(
+            'border-[1px] rounded-md py-3.5 px-4 font-bold text-sm xl:text-base w-full bg-dark',
+            'placeholder:text-light-500 text-light-900 disabled:text-light-500 focus:outline-none resize-none',
+            {
+              'border-red-700 focus:border-red-700 hover:border-red-700': showError,
+              'border-light-400 focus:hover:border-primary-500 hover:hover:border-primary-500':
+                !showError
+            }
+          )}
+          rows={rows}
+        />
+      </div>
+
+      {showError && (
+        <RegularSmallerText className="pt-1 text-red-700">
+          {errors[name as keyof typeof errors]}
+        </RegularSmallerText>
+      )}
     </div>
   );
 };

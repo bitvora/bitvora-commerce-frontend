@@ -17,18 +17,19 @@ import { faCaretDown } from '@fortawesome/free-solid-svg-icons';
 
 interface Option {
   label: string;
-  value: string;
+  value: string | number;
 }
 
 interface SelectProps {
   options: Option[];
-  value: string;
-  onChange: (value: string) => void;
+  value: string | number;
+  onChange: (value: string | number) => void;
   placeholder?: string;
   className?: string;
   dropdownClass?: string;
   touched?: FormikTouched<Record<string, unknown>>;
   errors?: FormikErrors<Record<string, string>>;
+  listClassName?: string;
 }
 
 export default function Select({
@@ -39,7 +40,8 @@ export default function Select({
   className,
   dropdownClass,
   errors,
-  touched
+  touched,
+  listClassName = 'text-light-900'
 }: SelectProps) {
   const selectedOption = options.find((option) => option.value === value);
   const showError =
@@ -67,14 +69,18 @@ export default function Select({
         </>
       }
       content={
-        <div className="rounded-md shadow-md h-[300px] max-h-[300px] overflow-auto">
+        <div className="rounded-md shadow-md h-full max-h-[300px] overflow-auto">
           <motion.ul>
             {options.map((option) => (
               <li
                 key={option.value}
-                className="px-4 py-2 cursor-pointer"
+                className={clsx(
+                  'px-4 py-2 cursor-pointer border-b-[0.5px] border-light-400',
+                  { 'text-light-900 border-primary-500': option.value === value },
+                  listClassName
+                )}
                 onClick={() => onChange(option.value)}>
-                <SemiboldSmallerText className="text-light-900">{option.label}</SemiboldSmallerText>
+                <SemiboldSmallerText className="text-[inherit]">{option.label}</SemiboldSmallerText>
               </li>
             ))}
           </motion.ul>

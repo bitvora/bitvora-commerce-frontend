@@ -105,3 +105,29 @@ export type MRRData = {
 };
 
 export type Breakpoint = 'base' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+
+export interface Product {
+  id: string;
+  user_id: string;
+  account_id: string;
+  name: string;
+  description: string;
+  image: string;
+  is_recurring: boolean;
+  amount: number;
+  currency: string;
+  billing_period_hours: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CreateProductType {
+  account_id: string;
+  name: string;
+  description: string;
+  image: string;
+  is_recurring: boolean;
+  amount: number;
+  currency: string;
+  billing_period_hours?: number;
+}

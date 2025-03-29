@@ -19,3 +19,7 @@ export const getPastMonth = (months: number) => {
   date.setMonth(date.getMonth() - months);
   return formatDate(date.toISOString(), 'YYYY-MM-DD');
 };
+
+export const formatWithCommas = (num: string) => {
+  return num.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+};

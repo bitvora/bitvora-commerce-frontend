@@ -42,3 +42,18 @@ export const graph_periods = [
   },
   { label: '1Y', value: '1Y' }
 ];
+
+export const billing_period_hours = [
+  {
+    label: 'Weekly',
+    value: 168
+  },
+  {
+    label: 'Monthly',
+    value: 720
+  },
+  {
+    label: 'Yearly',
+    value: 8760
+  }
+];
