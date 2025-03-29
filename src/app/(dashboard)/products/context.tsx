@@ -25,12 +25,9 @@ const ProductContext = createContext<ProductContextType | undefined>(undefined);
 export default function ProductContextProvider({ children }: { children: ReactNode }) {
   const [products, setProducts] = useState<Product[]>([]);
   const { currentAccount } = useAppContext();
+  const [isProductsLoading, setIsProductsLoading] = useState(true);
 
-  const {
-    data: productsData,
-    isLoading: isProductsLoading,
-    refetch
-  } = useQuery({
+  const { data: productsData, refetch } = useQuery({
     queryKey: ['products', currentAccount?.id],
     queryFn: () => getProducts(),
     enabled: !!currentAccount?.id
@@ -43,6 +40,7 @@ export default function ProductContextProvider({ children }: { children: ReactNo
   useEffect(() => {
     if (productsData?.data) {
       setProducts(productsData?.data);
+      setIsProductsLoading(false);
     }
   }, [productsData]);
 

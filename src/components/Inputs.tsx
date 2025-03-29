@@ -99,7 +99,7 @@ export const Input = ({
 };
 
 interface DarkInputProps extends HTMLAttributes<HTMLInputElement> {
-  label: string;
+  label?: string;
   name: string;
   placeholder?: string;
   type?: 'text' | 'password' | 'email' | 'number' | 'url';
@@ -107,10 +107,12 @@ interface DarkInputProps extends HTMLAttributes<HTMLInputElement> {
   errors?: FormikErrors<Record<string, string>>;
   handleChange: (event: ChangeEvent<HTMLInputElement>) => void;
   endIcon?: React.ReactNode;
+  startIcon?: React.ReactNode;
   value: string | number;
   showLabel?: boolean;
   disabled?: boolean;
   required?: boolean;
+  className?: string;
 }
 
 export const DarkInput = ({
@@ -122,10 +124,12 @@ export const DarkInput = ({
   errors,
   handleChange,
   endIcon,
+  startIcon,
   value,
   showLabel = false,
   disabled,
-  required
+  required,
+  className
 }: DarkInputProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const isNumberType = type === 'number';
@@ -191,7 +195,7 @@ export const DarkInput = ({
 
   return (
     <div className="text-left">
-      {(showLabel || value) && (
+      {(showLabel || value) && label && (
         <div className="mb-1 pb-1 flex items-start gap-1">
           <SemiboldBody className="text-light-700 transition-opacity duration-300">
             {label}
@@ -221,12 +225,14 @@ export const DarkInput = ({
               'border-red-700 focus:border-red-700 hover:border-red-700': showError,
               'border-light-400 focus:hover:border-primary-500 hover:hover:border-primary-500':
                 !showError
-            }
+            },
+            { 'pl-10': startIcon },
+            className
           )}
         />
 
-        <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
-          {type === 'password' ? (
+        {type === 'password' ? (
+          <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
             <button
               onClick={togglePasswordVisibility}
               className="text-light-400 focus:text-primary-500 hover:text-primary-500 cursor-pointer"
@@ -237,10 +243,18 @@ export const DarkInput = ({
                 className="text-current"
               />
             </button>
-          ) : (
-            endIcon
-          )}
-        </div>
+          </div>
+        ) : (
+          <>
+            {endIcon && (
+              <div className="absolute right-4 top-1/2 transform -translate-y-1/2">{endIcon}</div>
+            )}
+          </>
+        )}
+
+        {startIcon && (
+          <div className="absolute left-4 top-1/2 transform -translate-y-1/2">{startIcon}</div>
+        )}
       </div>
 
       {showError && (

@@ -9,7 +9,7 @@ import { PrimaryButton } from '@/components/Buttons';
 import { DarkInput, DarkTextarea } from '@/components/Inputs';
 import { createProduct } from './actions';
 import { useProductContext } from './context';
-import { useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { usePathname, useSearchParams, useRouter } from 'next/navigation';
 import { app_routes, billing_period_hours, currencies } from '@/lib/constants';
 import { CloseIcon } from '@/components/Icons';
@@ -17,6 +17,8 @@ import { Checkbox } from '@/components/Checkbox';
 import Select from '@/components/Selects';
 import { useAppContext } from '@/app/contexts';
 import { CreateProductType } from '@/lib/types';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 
 export const AddProduct = () => {
   const { currentAccount } = useAppContext();
@@ -287,3 +289,33 @@ export const AddProduct = () => {
     </>
   );
 };
+
+export function ProductsTableHeader() {
+  const [query, setQuery] = useState('');
+  const { products } = useProductContext();
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setQuery(event.target.value);
+  };
+
+  return (
+    <div className="w-full flex items-center justify-between">
+      <SemiboldBody className="text-light-900">
+        Products <span className="text-light-700">({products.length})</span>
+      </SemiboldBody>
+
+      <DarkInput
+        value={query}
+        handleChange={handleChange}
+        name="query"
+        placeholder="Search Products"
+        startIcon={
+          <div className="text-light-500">
+            <FontAwesomeIcon icon={faMagnifyingGlass} />
+          </div>
+        }
+        className="h-10"
+      />
+    </div>
+  );
+}
