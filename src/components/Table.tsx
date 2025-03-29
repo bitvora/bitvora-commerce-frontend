@@ -1,4 +1,4 @@
-import { useMemo, useState, ReactNode } from 'react';
+import { useMemo, useState, ReactNode, useCallback } from 'react';
 import clsx from 'clsx';
 import {
   MediumSmallerText,
@@ -27,6 +27,8 @@ interface Props<T extends Record<string, unknown>> {
   actionColumn?: (row: T) => ReactNode;
   tableContainerClassName?: string;
   tableHeader: ReactNode;
+  currentPage?: number;
+  onPageChange?: (page: number) => void;
 }
 
 export default function Table<T extends Record<string, unknown>>({
@@ -38,66 +40,67 @@ export default function Table<T extends Record<string, unknown>>({
   rowOnClick,
   actionColumn,
   tableContainerClassName,
-  tableHeader
+  tableHeader,
+  currentPage: externalCurrentPage,
+  onPageChange
 }: Props<T>) {
-  const headers = useMemo(
-    () => [...columns.map((col) => col.header), actionColumn ? 'Actions' : ''].filter(Boolean),
-    [columns, actionColumn]
-  );
-
-  const [currentPage, setCurrentPage] = useState(1);
+  const [internalPage, setInternalPage] = useState(1);
+  const currentPage = externalCurrentPage ?? internalPage;
   const totalPages = Math.ceil(data.length / rowsPerPage);
+
+  const setCurrentPage = (page: number) => {
+    if (onPageChange) {
+      onPageChange(page);
+    } else {
+      setInternalPage(page);
+    }
+  };
 
   const paginatedData = useMemo(() => {
     const start = (currentPage - 1) * rowsPerPage;
     return data.slice(start, start + rowsPerPage);
   }, [currentPage, data, rowsPerPage]);
 
-  const startItem = (currentPage - 1) * rowsPerPage + 1;
-  const endItem = Math.min(currentPage * rowsPerPage, data.length);
+  const headers = useMemo(
+    () => [...columns.map((col) => col.header), actionColumn ? 'Actions' : ''].filter(Boolean),
+    [columns, actionColumn]
+  );
 
-  const getPageNumbers = () => {
+  const getPageNumbers = useMemo(() => {
+    if (totalPages <= 3) return Array.from({ length: totalPages }, (_, i) => i + 1);
     const pages: number[] = [];
-    for (let i = Math.max(1, currentPage - 1); i <= Math.min(totalPages, currentPage + 1); i++) {
-      pages.push(i);
-    }
+    if (currentPage > 1) pages.push(currentPage - 1);
+    pages.push(currentPage);
+    if (currentPage < totalPages) pages.push(currentPage + 1);
     return pages;
-  };
+  }, [currentPage, totalPages]);
 
-  const renderCell = (col: Column<T>, row: T) => {
+  const handleRowClick = useCallback(
+    (row: T) => {
+      if (rowOnClick) rowOnClick(row);
+    },
+    [rowOnClick]
+  );
+
+  const renderCell = useCallback((col: Column<T>, row: T) => {
     if (col.accessor === 'id') {
       return (
         <SemiboldSmallerText className="text-light-700">
-          {formatUUID(String(row[col.accessor]))}
+          {formatUUID(String(row.id))}
         </SemiboldSmallerText>
       );
     }
-    if (col.render) {
-      return <SemiboldSmallText>{col.render(row)}</SemiboldSmallText>;
-    }
-    return <SemiboldSmallText>{row[col.accessor]?.toString() || ''}</SemiboldSmallText>;
-  };
-
-  const TableSkeleton = () => {
-    return (
-      <>
-        {Array.from({ length: rowsPerPage }).map((_, rowIndex) => (
-          <tr key={rowIndex} className="animate-pulse">
-            {columns.map((col, colIndex) => (
-              <td key={colIndex} className={clsx('px-6 py-4 text-sm', col.className)}>
-                <div className="h-4 bg-light-300 rounded w-full"></div>
-              </td>
-            ))}
-            {actionColumn && (
-              <td className="px-6 py-4 text-sm">
-                <div className="h-4 bg-light-300 rounded w-full"></div>
-              </td>
-            )}
-          </tr>
-        ))}
-      </>
+    return col.render ? (
+      col.render(row)
+    ) : (
+      <SemiboldSmallText className="text-light-700">
+        {row[col.accessor]?.toString() || ''}
+      </SemiboldSmallText>
     );
-  };
+  }, []);
+
+  const buttonClass =
+    'h-8 w-8 rounded-md flex justify-center items-center cursor-pointer border-[0.5px] border-light-200';
 
   return (
     <div
@@ -126,13 +129,26 @@ export default function Table<T extends Record<string, unknown>>({
 
         <tbody className="bg-transparent divide-y divide-light-200 mt-4">
           {isLoading ? (
-            <TableSkeleton />
+            Array.from({ length: rowsPerPage }).map((_, rowIndex) => (
+              <tr key={rowIndex} className="animate-pulse">
+                {columns.map((col, colIndex) => (
+                  <td key={colIndex} className={clsx('px-6 py-4 text-sm', col.className)}>
+                    <div className="h-4 bg-light-300 rounded w-full"></div>
+                  </td>
+                ))}
+                {actionColumn && (
+                  <td className="px-6 py-4 text-sm">
+                    <div className="h-4 bg-light-300 rounded w-full"></div>
+                  </td>
+                )}
+              </tr>
+            ))
           ) : paginatedData.length > 0 ? (
             paginatedData.map((row, rowIndex) => (
               <tr
                 key={rowIndex}
                 className="hover:bg-light-overlay-50 cursor-pointer"
-                onClick={() => rowOnClick?.(row)}>
+                onClick={() => handleRowClick(row)}>
                 {columns.map((col, colIndex) => (
                   <td key={colIndex} className={clsx('px-6 py-4 text-sm', col.className)}>
                     {renderCell(col, row)}
@@ -143,8 +159,8 @@ export default function Table<T extends Record<string, unknown>>({
             ))
           ) : (
             <tr>
-              <td colSpan={headers.length} className="text-center py-4 text-gray-500">
-                {emptyMessage}
+              <td colSpan={headers.length} className="text-center py-4 text-light-900">
+                <SemiboldSmallText className="text-inherit">{emptyMessage}</SemiboldSmallText>
               </td>
             </tr>
           )}
@@ -155,46 +171,44 @@ export default function Table<T extends Record<string, unknown>>({
         <div className="flex justify-end items-center p-4 gap-8">
           <div className="flex items-center gap-2">
             <MediumSmallText className="text-light-700">
-              {startItem}-{endItem}
+              {(currentPage - 1) * rowsPerPage + 1} -
+              {Math.min(currentPage * rowsPerPage, data.length)}
             </MediumSmallText>
-
             <MediumSmallerText className="text-light-500">of</MediumSmallerText>
-
             <MediumSmallText className="text-light-700">{data.length}</MediumSmallText>
           </div>
 
           <div className="flex gap-2">
-            {currentPage !== 1 && (
+            {currentPage > 1 && (
               <button
                 className={clsx(
-                  'h-8 w-8 rounded-md bg-transparent border-[0.5px] border-light-200 flex justify-center text-center items-center cursor-pointer text-light-500 hover:text-light-700 hover:bg-light-overlay-100'
+                  buttonClass,
+                  'text-light-500 hover:text-light-700 hover:bg-light-overlay-100'
                 )}
-                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}>
+                onClick={() => setCurrentPage(currentPage - 1)}>
                 <FontAwesomeIcon icon={faAngleLeft} />
               </button>
             )}
 
-            {getPageNumbers().map((page) => (
+            {getPageNumbers.map((page) => (
               <button
                 key={page}
-                className={clsx(
-                  'px-4 py-2 rounded-md h-8 w-8 flex justify-center text-center items-center cursor-pointer',
-                  {
-                    'bg-light-overlay-50 text-light-700': page === currentPage,
-                    'bg-transparent text-light-700 hover:bg-light-overlay-50': page !== currentPage
-                  }
-                )}
+                className={clsx(buttonClass, {
+                  'bg-light-overlay-50 text-light-700': page === currentPage,
+                  'text-light-700 hover:bg-light-overlay-50': page !== currentPage
+                })}
                 onClick={() => setCurrentPage(page)}>
                 <MediumSmallText>{page}</MediumSmallText>
               </button>
             ))}
 
-            {currentPage !== totalPages && (
+            {currentPage < totalPages && (
               <button
                 className={clsx(
-                  'h-8 w-8 rounded-md bg-transparent border-[0.5px] border-light-200 flex justify-center text-center items-center cursor-pointer text-light-500 hover:text-light-700 hover:bg-light-overlay-100'
+                  buttonClass,
+                  'text-light-500 hover:text-light-700 hover:bg-light-overlay-100'
                 )}
-                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}>
+                onClick={() => setCurrentPage(currentPage + 1)}>
                 <FontAwesomeIcon icon={faAngleRight} />
               </button>
             )}

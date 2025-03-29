@@ -1,19 +1,155 @@
+/* eslint-disable @next/next/no-img-element */
 'use client';
 
 import Currency from '@/components/Currency';
-import { MediumHeader5 } from '@/components/Text';
-import { AddProduct, ProductsTableHeader } from './components';
+import { MediumHeader5, SemiboldBody, SemiboldSmallText } from '@/components/Text';
+import { AddProduct } from './components';
 import { useProductContext } from './context';
 import Table from '@/components/Table';
+import numeral from 'numeral';
+import { DeleteIcon, EditIcon } from '@/components/Icons';
+import { ChangeEvent, useEffect, useMemo, useState } from 'react';
+import { DarkInput } from '@/components/Inputs';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMagnifyingGlass, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { app_routes } from '@/lib/constants';
+
+const renderPrice = ({ amount, currency }: { amount: number; currency: string }) => {
+  let price;
+
+  switch (currency) {
+    case 'sats':
+      price = `${numeral(amount).format('0,0')} sats`;
+      break;
+
+    case 'btc':
+      price = `${numeral(amount).format('0,0.0000000')} btc`;
+      break;
+
+    case 'eur':
+      price = `€ ${numeral(amount).format('0,0.00')}`;
+      break;
+
+    case 'gbp':
+      price = `£ ${numeral(amount).format('0,0.00')}`;
+      break;
+
+    case 'jpy':
+      price = `¥ ${numeral(amount).format('0,0.00')}`;
+      break;
+
+    case 'cad':
+      price = `CA$ ${numeral(amount).format('0,0.00')}`;
+      break;
+
+    case 'aud':
+      price = `AU$ ${numeral(amount).format('0,0.00')}`;
+      break;
+
+    case 'cny':
+      price = `CN¥ ${numeral(amount).format('0,0.00')}`;
+      break;
+
+    case 'eth':
+      price = `${numeral(amount).format('0,0.0000000')} eth`;
+      break;
+
+    case 'usd':
+    default:
+      price = `$ ${numeral(amount).format('0,0.00')}`;
+  }
+  return <SemiboldSmallText className="text-light-700">{price}</SemiboldSmallText>;
+};
 
 const columns = [
   { header: 'ID', accessor: 'id' },
-  { header: 'Name', accessor: 'name' },
-  { header: 'Amount', accessor: 'amount' }
+  {
+    header: 'Name',
+    accessor: 'name',
+    render: (row) => (
+      <div className="flex items-center gap-3">
+        <img src={row.image} alt={row.name} className="w-10 h-10 rounded-md object-cover" />
+        <SemiboldSmallText className="text-light-700 truncate">{row.name}</SemiboldSmallText>
+      </div>
+    )
+  },
+  {
+    header: 'Price',
+    accessor: 'amount',
+    render: (row) => renderPrice({ amount: row.amount, currency: row.currency })
+  },
+  {
+    header: 'Total Sales',
+    accessor: 'total_sales',
+    render: () => <SemiboldSmallText className="text-light-700">N/A</SemiboldSmallText>
+  },
+  {
+    header: 'Subscriptions',
+    accessor: 'subscriptions',
+    render: () => <SemiboldSmallText className="text-light-700">N/A</SemiboldSmallText>
+  }
 ];
 
 export default function Page() {
   const { products, isProductsLoading } = useProductContext();
+
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const initialQuery = searchParams.get('q') || '';
+  const initialPage = Number(searchParams.get('page')) || 1;
+
+  const [query, setQuery] = useState(initialQuery);
+  const [debouncedQuery, setDebouncedQuery] = useState(initialQuery);
+  const [currentPage, setCurrentPage] = useState(initialPage);
+
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (debouncedQuery) params.set('q', debouncedQuery);
+    if (currentPage > 1) params.set('page', String(currentPage));
+
+    router.push(`${app_routes.products}?${params.toString()}`, { scroll: false });
+  }, [debouncedQuery, currentPage, router]);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedQuery(query);
+    }, 500);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [query]);
+
+  const filteredProducts = useMemo(() => {
+    if (!debouncedQuery) return products;
+
+    return products.filter((product) =>
+      Object.values(product).some((value) =>
+        String(value).toLowerCase().includes(debouncedQuery.toLowerCase())
+      )
+    );
+  }, [products, debouncedQuery]);
+
+  const handleQueryChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setQuery(event.target.value);
+    setCurrentPage(1);
+  };
+
+  const clearQuery = () => {
+    console.log('clicked');
+    setQuery('');
+    setCurrentPage(1);
+  };
+
+  const handleEdit = (product) => {
+    console.log('Edit', product);
+  };
+
+  const handleDelete = (product) => {
+    console.log('Delete', product);
+  };
 
   return (
     <div className="flex flex-col gap-8 bg-primary-150 px-3 pt-6 lg:pt-0 pb-8 w-full">
@@ -34,15 +170,56 @@ export default function Page() {
       <div className="w-full">
         <Table
           columns={columns}
-          data={products as unknown as Record<string, unknown>[]}
+          data={filteredProducts as unknown as Record<string, unknown>[]}
           rowsPerPage={10}
-          rowOnClick={(row) => alert(`Clicked on ${row.name}`)}
+          currentPage={currentPage}
+          onPageChange={setCurrentPage}
           actionColumn={(row) => (
-            <button onClick={() => alert(`Action for ${row.name}`)}>Action</button>
+            <div className="flex gap-2 items-center">
+              <button
+                onClick={() => handleEdit(row)}
+                className="h-8 w-8 cursor-pointer rounded-md bg-light-overlay-50 flex items-center text-center justify-center">
+                <EditIcon />
+              </button>
+
+              <button
+                onClick={() => handleDelete(row)}
+                className="h-8 w-8 cursor-pointer rounded-md bg-light-overlay-50 flex items-center text-center justify-center">
+                <DeleteIcon />
+              </button>
+            </div>
           )}
-          tableHeader={<ProductsTableHeader />}
+          tableHeader={
+            <div className="w-full flex items-center justify-between">
+              <SemiboldBody className="text-light-900">
+                Products <span className="text-light-700">({filteredProducts.length})</span>
+              </SemiboldBody>
+
+              <DarkInput
+                value={query}
+                handleChange={handleQueryChange}
+                name="query"
+                placeholder="Search Products"
+                startIcon={
+                  <div className="text-light-500">
+                    <FontAwesomeIcon icon={faMagnifyingGlass} />
+                  </div>
+                }
+                endIcon={
+                  query && (
+                    <button
+                      className="cursor-pointer z-10 text-light-700 hover:text-light-900 outline-none border-none"
+                      onClick={clearQuery}>
+                      <FontAwesomeIcon icon={faXmark} className="h-3 w-3" />
+                    </button>
+                  )
+                }
+                className="h-10"
+              />
+            </div>
+          }
           isLoading={isProductsLoading}
-          emptyMessage="No Products"
+          emptyMessage={query ? 'No Products found' : 'No Products'}
         />
       </div>
     </div>
