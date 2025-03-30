@@ -2,7 +2,7 @@
 'use client';
 
 import Currency from '@/components/Currency';
-import { MediumHeader5, SemiboldBody, SemiboldSmallText } from '@/components/Text';
+import { MediumHeader5, MediumTitle, SemiboldBody, SemiboldSmallText } from '@/components/Text';
 import { AddProduct, EditProduct } from './components';
 import { useProductContext } from './context';
 import Table from '@/components/Table';
@@ -15,6 +15,10 @@ import { faMagnifyingGlass, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { app_routes } from '@/lib/constants';
 import { Product } from '@/lib/types';
+import Modal from '@/components/Modal';
+import { RedButton, SecondaryButton } from '@/components/Buttons';
+import toast from 'react-hot-toast';
+import { deleteProduct } from './actions';
 
 const renderPrice = ({ amount, currency }: { amount: number; currency: string }) => {
   let price;
@@ -93,11 +97,10 @@ const columns = [
 ];
 
 export default function Page() {
-  const { products, isProductsLoading } = useProductContext();
+  const { products, isProductsLoading, refetchProducts } = useProductContext();
 
   const router = useRouter();
   const searchParams = useSearchParams();
-  
 
   const initialQuery = searchParams.get('q') || '';
   const initialPage = Number(searchParams.get('page')) || 1;
@@ -108,6 +111,16 @@ export default function Page() {
 
   const [currentProduct, setCurrentProduct] = useState<Product>({} as Product);
   const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+
+  const openDeleteModal = () => {
+    setIsDeleteOpen(true);
+  };
+
+  const closeDeleteModal = () => {
+    setCurrentProduct({} as Product);
+    setIsDeleteOpen(false);
+  };
 
   useEffect(() => {
     const params = new URLSearchParams();
@@ -165,6 +178,33 @@ export default function Page() {
 
   const handleDelete = (product) => {
     setCurrentProduct(product);
+    openDeleteModal();
+  };
+
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleDeleteProduct = async (event) => {
+    event.preventDefault();
+    setIsDeleting(true);
+
+    try {
+      const result = await deleteProduct(currentProduct.id);
+
+      if (!result.success) {
+        toast.error(result.error || 'Error deleting product');
+        return;
+      }
+
+      closeDeleteModal();
+      setCurrentPage(1);
+      refetchProducts();
+      toast.success('Product deleted successfully');
+    } catch (err) {
+      console.error(err);
+      toast.error('Error deleting product');
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   return (
@@ -191,16 +231,16 @@ export default function Page() {
           currentPage={currentPage}
           onPageChange={setCurrentPage}
           actionColumn={(row) => (
-            <div className="flex gap-2 items-center">
+            <div className="flex gap-1 items-center">
               <button
                 onClick={() => handleEdit(row)}
-                className="h-8 w-8 cursor-pointer rounded-md hover:bg-light-overlay-50 flex items-center text-center justify-center">
+                className="h-8 w-8 cursor-pointer rounded-md hover:bg-light-overlay-50 flex items-center text-center justify-center border-none outline-none">
                 <EditIcon />
               </button>
 
               <button
                 onClick={() => handleDelete(row)}
-                className="h-8 w-8 cursor-pointer rounded-md hover:bg-light-overlay-50 flex items-center text-center justify-center">
+                className="h-8 w-8 cursor-pointer rounded-md hover:bg-light-overlay-50 flex items-center text-center justify-center border-none outline-none">
                 <DeleteIcon />
               </button>
             </div>
@@ -244,6 +284,34 @@ export default function Page() {
         product={currentProduct}
         toggleEditModal={toggleEditModal}
       />
+
+      <Modal
+        className="w-full max-w-[600px] p-8 flex flex-col gap-6"
+        open={isDeleteOpen}
+        onClose={closeDeleteModal}>
+        <div className="bg-red-50 w-11 h-11 flex items-center text-center justify-center rounded-md">
+          <DeleteIcon height={20} width={20} />
+        </div>
+
+        <div className="flex flex-col gap-1">
+          <MediumTitle className="text-light-900">
+            Are you sure you want to delete this product?
+          </MediumTitle>
+          <SemiboldSmallText className="text-light-700">
+            This action cannot be undone.
+          </SemiboldSmallText>
+        </div>
+
+        <div className="w-full flex items-center ml-auto justify-end gap-4 mt-4">
+          <SecondaryButton className="h-11 w-28" onClick={closeDeleteModal}>
+            Cancel
+          </SecondaryButton>
+
+          <RedButton className="h-11 w-27" loading={isDeleting} onClick={handleDeleteProduct}>
+            Delete
+          </RedButton>
+        </div>
+      </Modal>
     </div>
   );
 }
