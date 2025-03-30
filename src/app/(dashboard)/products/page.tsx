@@ -2,12 +2,7 @@
 'use client';
 
 import Currency from '@/components/Currency';
-import {
-  MediumHeader5,
-  SemiboldBody,
-  SemiboldSmallerText,
-  SemiboldSmallText
-} from '@/components/Text';
+import { MediumHeader5, SemiboldBody, SemiboldSmallText } from '@/components/Text';
 import { AddProduct, DeleteProductModal, EditProduct, ProductImageModal } from './components';
 import { useProductContext } from './context';
 import Table from '@/components/Table';
@@ -19,7 +14,7 @@ import { faMagnifyingGlass, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { app_routes } from '@/lib/constants';
 import { Product } from '@/lib/types';
-import { formatUUID, renderPrice } from '@/lib/helpers';
+import { renderPrice } from '@/lib/helpers';
 import { Link } from '@/components/Links';
 
 export default function Page() {
@@ -112,15 +107,6 @@ export default function Page() {
 
   const columns = [
     {
-      header: 'ID',
-      accessor: 'id',
-      render: (row) => (
-        <Link href={`${app_routes.products}/${row.id}`}>
-          <SemiboldSmallerText className="text-inherit">{formatUUID(row.id)}</SemiboldSmallerText>
-        </Link>
-      )
-    },
-    {
       header: 'Name',
       accessor: 'name',
       render: (row) => (
@@ -173,16 +159,42 @@ export default function Page() {
   return (
     <div className="flex flex-col gap-8 bg-primary-150 px-3 pt-6 lg:pt-0 pb-8 w-full">
       <div className="bg-transparent xl:bg-primary-50 rounded-lg px-2 lg:px-8 py-2 lg:h-[80px] w-full flex items-center justify-between">
-        <div className="gap-10 items-center hidden xl:flex">
+        <div className="sm:gap-4 md:gap-10 items-center hidden sm:flex">
           <MediumHeader5>Products</MediumHeader5>
 
-          <div className="hidden lg:flex">
+          <div className="hidden sm:flex">
             <Currency />
           </div>
         </div>
 
-        <div className="flex gap-4 items-center w-full xl:w-[auto]">
-          <AddProduct />
+        <div className="flex gap-2 sm:gap-4 items-center w-full sm:w-[auto] justify-between">
+          <div className="sm:hidden">
+            <DarkInput
+              value={query}
+              handleChange={handleQueryChange}
+              name="query"
+              placeholder="Search Products"
+              startIcon={
+                <div className="text-light-500">
+                  <FontAwesomeIcon icon={faMagnifyingGlass} />
+                </div>
+              }
+              endIcon={
+                query && (
+                  <button
+                    className="cursor-pointer z-10 text-light-700 hover:text-light-900 outline-none border-none"
+                    onClick={clearQuery}>
+                    <FontAwesomeIcon icon={faXmark} className="h-3 w-3" />
+                  </button>
+                )
+              }
+              className="h-10"
+            />
+          </div>
+
+          <div>
+            <AddProduct />
+          </div>
         </div>
       </div>
 

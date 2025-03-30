@@ -48,8 +48,10 @@ export const AddProduct = () => {
 
   return (
     <>
-      <PrimaryButton className="h-10 sm:h-12 md:h-12 w-full xl:w-[auto]" onClick={handleOpen}>
-        <SemiboldSmallText>Add New Product</SemiboldSmallText>
+      <PrimaryButton
+        className="h-10 md:h-12 w-[140px] min-w-[140px] lg:w-[auto]"
+        onClick={handleOpen}>
+        <SemiboldSmallText>New Product</SemiboldSmallText>
       </PrimaryButton>
 
       <Drawer
@@ -58,7 +60,7 @@ export const AddProduct = () => {
         direction="right"
         className="drawer"
         overlayOpacity={0.9}>
-        <div className="h-full w-full relative px-6 py-6 rounded-lg flex flex-col bg-primary-40 gap-10">
+        <div className="h-full w-full relative px-4 lg:px-6 py-4 lg:py-6 rounded-lg flex flex-col bg-primary-40 gap-6 lg:gap-10">
           <div className="flex w-full justify-between items-center">
             <SemiboldTitle className="text-light-900">New Product</SemiboldTitle>
 
@@ -133,7 +135,7 @@ export const AddProduct = () => {
                 setFieldValue
               }) => (
                 <Form noValidate onSubmit={handleSubmit}>
-                  <div className="rounded-lg px-6 py-6 bg-primary-150 w-full h-full">
+                  <div className="rounded-lg px-5 lg:px-6 py-5 lg:py-6 bg-primary-150 w-full h-full">
                     <div className="mb-2 pb-2">
                       <DarkInput
                         label="Product Name"
@@ -586,12 +588,15 @@ export const DeleteProductModal = ({
         </SemiboldSmallText>
       </div>
 
-      <div className="w-full flex items-center ml-auto justify-end gap-4 mt-4">
-        <SecondaryButton className="h-11 w-28" onClick={closeDeleteModal}>
+      <div className="w-full flex items-center md:ml-auto justify-between md:justify-end gap-4 mt-4">
+        <SecondaryButton className="h-11 w-full md:w-28" onClick={closeDeleteModal}>
           Cancel
         </SecondaryButton>
 
-        <RedButton className="h-11 w-27" loading={isDeleting} onClick={handleDeleteProduct}>
+        <RedButton
+          className="h-11 w-full md:w-27"
+          loading={isDeleting}
+          onClick={handleDeleteProduct}>
           Delete
         </RedButton>
       </div>
@@ -610,7 +615,7 @@ export const ProductImageModal = ({
 }) => {
   return (
     <Modal
-      className="max-w-[500px] max-h-[500px] w-full h-full px-0 py-0 flex flex-col gap-6"
+      className="max-w-[300px] max-h-[300px] sm:max-w-[450px] sm:max-h-[450px] md:max-w-[500px] md:max-h-[500px] w-full h-full px-0 py-0 flex flex-col gap-6"
       open={isImageOpen}
       onClose={closeImageModal}>
       <img

@@ -8,7 +8,12 @@ import { Product } from '@/lib/types';
 import { useCallback, useEffect, useState } from 'react';
 import Drawer from 'react-modern-drawer';
 import { app_routes, billing_period_hours } from '@/lib/constants';
-import { SemiboldBody, SemiboldSmallText, SemiboldTitle } from '@/components/Text';
+import {
+  SemiboldBody,
+  SemiboldSmallerText,
+  SemiboldSmallText,
+  SemiboldTitle
+} from '@/components/Text';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { formatDate, renderPrice } from '@/lib/helpers';
@@ -72,7 +77,7 @@ export default function Page() {
       {loading ? (
         <Skeleton />
       ) : (
-        <div className="h-full w-full relative px-6 py-6 rounded-lg flex flex-col bg-primary-40 gap-10">
+        <div className="h-full w-full relative px-4 md:px-6 py-4 md:py-6 rounded-lg flex flex-col bg-primary-40 gap-8 md:gap-10">
           <div className="flex w-full justify-between items-center">
             <SemiboldTitle className="text-light-900">Product Details</SemiboldTitle>
 
@@ -83,9 +88,9 @@ export default function Page() {
             </Link>
           </div>
 
-          <div className="w-full flex gap-6 items-start">
+          <div className="w-full flex gap-3 md:gap-6 items-start">
             <div
-              className="w-[180px] h-[180px] max-w-[180px] max-h-[180px] cursor-pointer"
+              className="w-[120px] h-[120px] max-w-[120px] max-h-[120px] md:w-[180px]  md:h-[180px] md:max-w-[180px] md:max-h-[180px] cursor-pointer"
               onClick={() => setIsImageOpen(true)}>
               <img
                 src={product?.image}
@@ -94,7 +99,7 @@ export default function Page() {
               />
             </div>
 
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-2 md:gap-3">
               <div className="flex flex-col gap-1">
                 <div>
                   <SemiboldBody className="text-light-900">{product?.name}</SemiboldBody>
@@ -115,31 +120,33 @@ export default function Page() {
                 </SemiboldSmallText>
               </div>
 
-              <div>
-                <SemiboldSmallText className="text-light-500">
-                  Subscription:
-                  <span className="text-light-700 ml-1">
-                    {
-                      billing_period_hours.find(
-                        (period) => period.value === product?.billing_period_hours
-                      )?.label
-                    }
-                  </span>
-                </SemiboldSmallText>
-              </div>
+              {product?.is_recurring && (
+                <div>
+                  <SemiboldSmallText className="text-light-500">
+                    Subscription:
+                    <span className="text-light-700 ml-1">
+                      {
+                        billing_period_hours.find(
+                          (period) => period.value === product?.billing_period_hours
+                        )?.label
+                      }
+                    </span>
+                  </SemiboldSmallText>
+                </div>
+              )}
 
               <div>
-                <SemiboldSmallText className="text-light-500">
+                <SemiboldSmallerText className="text-light-500">
                   Created:
                   <span className="text-light-700 ml-1">
                     {formatDate(product?.created_at, 'MMM D, YYYY hh:mm a')}
                   </span>
-                </SemiboldSmallText>
+                </SemiboldSmallerText>
               </div>
             </div>
           </div>
 
-          <div className="w-full mt-10 bg-primary-150 rounded-lg px-4 py-4">
+          <div className="w-full mt-5 md:mt-10 bg-primary-150 rounded-lg px-3 md:px-4 py-3 md:py-4">
             <Tabs tabs={tabs} />
           </div>
 
