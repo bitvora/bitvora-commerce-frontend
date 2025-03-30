@@ -2,11 +2,15 @@
 'use client';
 
 import Currency from '@/components/Currency';
-import { MediumHeader5, MediumTitle, SemiboldBody, SemiboldSmallText } from '@/components/Text';
-import { AddProduct, EditProduct } from './components';
+import {
+  MediumHeader5,
+  SemiboldBody,
+  SemiboldSmallerText,
+  SemiboldSmallText
+} from '@/components/Text';
+import { AddProduct, DeleteProductModal, EditProduct, ProductImageModal } from './components';
 import { useProductContext } from './context';
 import Table from '@/components/Table';
-import numeral from 'numeral';
 import { DeleteIcon, EditIcon } from '@/components/Icons';
 import { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import { DarkInput } from '@/components/Inputs';
@@ -15,89 +19,11 @@ import { faMagnifyingGlass, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { app_routes } from '@/lib/constants';
 import { Product } from '@/lib/types';
-import Modal from '@/components/Modal';
-import { RedButton, SecondaryButton } from '@/components/Buttons';
-import toast from 'react-hot-toast';
-import { deleteProduct } from './actions';
-
-const renderPrice = ({ amount, currency }: { amount: number; currency: string }) => {
-  let price;
-
-  switch (currency) {
-    case 'sats':
-      price = `${numeral(amount).format('0,0')} sats`;
-      break;
-
-    case 'btc':
-      price = `${numeral(amount).format('0,0.0000000')} btc`;
-      break;
-
-    case 'eur':
-      price = `€ ${numeral(amount).format('0,0.00')}`;
-      break;
-
-    case 'gbp':
-      price = `£ ${numeral(amount).format('0,0.00')}`;
-      break;
-
-    case 'jpy':
-      price = `¥ ${numeral(amount).format('0,0.00')}`;
-      break;
-
-    case 'cad':
-      price = `CA$ ${numeral(amount).format('0,0.00')}`;
-      break;
-
-    case 'aud':
-      price = `AU$ ${numeral(amount).format('0,0.00')}`;
-      break;
-
-    case 'cny':
-      price = `CN¥ ${numeral(amount).format('0,0.00')}`;
-      break;
-
-    case 'eth':
-      price = `${numeral(amount).format('0,0.0000000')} eth`;
-      break;
-
-    case 'usd':
-    default:
-      price = `$ ${numeral(amount).format('0,0.00')}`;
-  }
-  return <SemiboldSmallText className="text-light-700">{price}</SemiboldSmallText>;
-};
-
-const columns = [
-  { header: 'ID', accessor: 'id' },
-  {
-    header: 'Name',
-    accessor: 'name',
-    render: (row) => (
-      <div className="flex items-center gap-3">
-        <img src={row.image} alt={row.name} className="w-10 h-10 rounded-md object-cover" />
-        <SemiboldSmallText className="text-light-700 truncate">{row.name}</SemiboldSmallText>
-      </div>
-    )
-  },
-  {
-    header: 'Price',
-    accessor: 'amount',
-    render: (row) => renderPrice({ amount: row.amount, currency: row.currency })
-  },
-  {
-    header: 'Total Sales',
-    accessor: 'total_sales',
-    render: () => <SemiboldSmallText className="text-light-700">N/A</SemiboldSmallText>
-  },
-  {
-    header: 'Subscriptions',
-    accessor: 'subscriptions',
-    render: () => <SemiboldSmallText className="text-light-700">N/A</SemiboldSmallText>
-  }
-];
+import { formatUUID, renderPrice } from '@/lib/helpers';
+import { Link } from '@/components/Links';
 
 export default function Page() {
-  const { products, isProductsLoading, refetchProducts } = useProductContext();
+  const { products, isProductsLoading } = useProductContext();
 
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -112,14 +38,16 @@ export default function Page() {
   const [currentProduct, setCurrentProduct] = useState<Product>({} as Product);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-
-  const openDeleteModal = () => {
-    setIsDeleteOpen(true);
-  };
+  const [isImageOpen, setIsImageOpen] = useState(false);
 
   const closeDeleteModal = () => {
     setCurrentProduct({} as Product);
     setIsDeleteOpen(false);
+  };
+
+  const closeImageModal = () => {
+    setCurrentProduct({} as Product);
+    setIsImageOpen(false);
   };
 
   useEffect(() => {
@@ -166,9 +94,10 @@ export default function Page() {
 
       if (!value) {
         setCurrentProduct({} as Product);
+        router.replace(app_routes.products);
       }
     },
-    [setIsEditOpen, setCurrentProduct]
+    [router]
   );
 
   const handleEdit = (product) => {
@@ -178,34 +107,68 @@ export default function Page() {
 
   const handleDelete = (product) => {
     setCurrentProduct(product);
-    openDeleteModal();
+    setIsDeleteOpen(true);
   };
 
-  const [isDeleting, setIsDeleting] = useState(false);
-
-  const handleDeleteProduct = async (event) => {
-    event.preventDefault();
-    setIsDeleting(true);
-
-    try {
-      const result = await deleteProduct(currentProduct.id);
-
-      if (!result.success) {
-        toast.error(result.error || 'Error deleting product');
-        return;
-      }
-
-      closeDeleteModal();
-      setCurrentPage(1);
-      refetchProducts();
-      toast.success('Product deleted successfully');
-    } catch (err) {
-      console.error(err);
-      toast.error('Error deleting product');
-    } finally {
-      setIsDeleting(false);
+  const columns = [
+    {
+      header: 'ID',
+      accessor: 'id',
+      render: (row) => (
+        <Link href={`${app_routes.products}/${row.id}`}>
+          <SemiboldSmallerText className="text-inherit">{formatUUID(row.id)}</SemiboldSmallerText>
+        </Link>
+      )
+    },
+    {
+      header: 'Name',
+      accessor: 'name',
+      render: (row) => (
+        <div className="flex items-center gap-3">
+          <button
+            className="cursor-pointer border-none outline-none"
+            onClick={() => {
+              setCurrentProduct(row);
+              setIsImageOpen(true);
+            }}>
+            <img src={row.image} alt={row.name} className="w-10 h-10 rounded-md object-cover" />
+          </button>
+          <Link href={`${app_routes.products}/${row.id}`}>
+            <SemiboldSmallText className="text-inherit truncate">{row.name}</SemiboldSmallText>{' '}
+          </Link>
+        </div>
+      )
+    },
+    {
+      header: 'Price',
+      accessor: 'amount',
+      render: (row) => (
+        <Link href={`${app_routes.products}/${row.id}`}>
+          <SemiboldSmallText className="text-inherit">
+            {renderPrice({ amount: row.amount, currency: row.currency })}
+          </SemiboldSmallText>
+        </Link>
+      )
+    },
+    {
+      header: 'Total Sales',
+      accessor: 'total_sales',
+      render: (row) => (
+        <Link href={`${app_routes.products}/${row.id}`}>
+          <SemiboldSmallText className="text-inherit">N/A</SemiboldSmallText>
+        </Link>
+      )
+    },
+    {
+      header: 'Subscriptions',
+      accessor: 'subscriptions',
+      render: (row) => (
+        <Link href={`${app_routes.products}/${row.id}`}>
+          <SemiboldSmallText className="text-inherit">N/A</SemiboldSmallText>
+        </Link>
+      )
     }
-  };
+  ];
 
   return (
     <div className="flex flex-col gap-8 bg-primary-150 px-3 pt-6 lg:pt-0 pb-8 w-full">
@@ -285,33 +248,17 @@ export default function Page() {
         toggleEditModal={toggleEditModal}
       />
 
-      <Modal
-        className="w-full max-w-[600px] p-8 flex flex-col gap-6"
-        open={isDeleteOpen}
-        onClose={closeDeleteModal}>
-        <div className="bg-red-50 w-11 h-11 flex items-center text-center justify-center rounded-md">
-          <DeleteIcon height={20} width={20} />
-        </div>
+      <DeleteProductModal
+        product={currentProduct}
+        isDeleteOpen={isDeleteOpen}
+        closeDeleteModal={closeDeleteModal}
+      />
 
-        <div className="flex flex-col gap-1">
-          <MediumTitle className="text-light-900">
-            Are you sure you want to delete this product?
-          </MediumTitle>
-          <SemiboldSmallText className="text-light-700">
-            This action cannot be undone.
-          </SemiboldSmallText>
-        </div>
-
-        <div className="w-full flex items-center ml-auto justify-end gap-4 mt-4">
-          <SecondaryButton className="h-11 w-28" onClick={closeDeleteModal}>
-            Cancel
-          </SecondaryButton>
-
-          <RedButton className="h-11 w-27" loading={isDeleting} onClick={handleDeleteProduct}>
-            Delete
-          </RedButton>
-        </div>
-      </Modal>
+      <ProductImageModal
+        product={currentProduct}
+        isImageOpen={isImageOpen}
+        closeImageModal={closeImageModal}
+      />
     </div>
   );
 }

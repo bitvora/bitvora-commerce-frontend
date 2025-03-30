@@ -1,12 +1,6 @@
 import { useMemo, useState, ReactNode, useCallback } from 'react';
 import clsx from 'clsx';
-import {
-  MediumSmallerText,
-  MediumSmallText,
-  SemiboldSmallerText,
-  SemiboldSmallText
-} from '@/components/Text';
-import { formatUUID } from '@/lib/helpers';
+import { MediumSmallerText, MediumSmallText, SemiboldSmallText } from '@/components/Text';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons';
 
@@ -83,17 +77,10 @@ export default function Table<T extends Record<string, unknown>>({
   );
 
   const renderCell = useCallback((col: Column<T>, row: T) => {
-    if (col.accessor === 'id') {
-      return (
-        <SemiboldSmallerText className="text-light-700">
-          {formatUUID(String(row.id))}
-        </SemiboldSmallerText>
-      );
-    }
     return col.render ? (
       col.render(row)
     ) : (
-      <SemiboldSmallText className="text-light-700">
+      <SemiboldSmallText className="text-inherit">
         {row[col.accessor]?.toString() || ''}
       </SemiboldSmallText>
     );
@@ -145,13 +132,22 @@ export default function Table<T extends Record<string, unknown>>({
             ))
           ) : paginatedData.length > 0 ? (
             paginatedData.map((row, rowIndex) => (
-              <tr key={rowIndex} onClick={() => handleRowClick(row)}>
+              <tr key={rowIndex} onClick={() => handleRowClick(row)} className="group">
                 {columns.map((col, colIndex) => (
-                  <td key={colIndex} className={clsx('px-6 py-4 text-sm', col.className)}>
+                  <td
+                    key={colIndex}
+                    className={clsx(
+                      'px-6 py-4 text-sm border-light-300 cursor-pointer border-b-[1px] group-hover:border-b-[1px] group-hover:border-primary-600 transition duration-200 text-light-700 group-hover:text-light-900',
+                      col.className
+                    )}>
                     {renderCell(col, row)}
                   </td>
                 ))}
-                {actionColumn && <td className="px-6 py-4 text-sm">{actionColumn(row)}</td>}
+                {actionColumn && (
+                  <td className="px-6 py-4 text-sm border-light-300 cursor-pointer border-b-[1px] group-hover:border-b-[1px] group-hover:border-primary-600 transition duration-200">
+                    {actionColumn(row)}
+                  </td>
+                )}
               </tr>
             ))
           ) : (
