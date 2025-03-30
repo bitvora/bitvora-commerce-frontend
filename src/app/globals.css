@@ -75,6 +75,8 @@
   --color-green-900: #d9f2e9;
 
   --color-dark: #090b0a;
+  --color-light-overlay-50: #ffffff0d;
+  --color-light-overlay-100: #ffffff1a;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -90,6 +92,18 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+/* Hide number input arrows for Webkit browsers (Chrome, Safari, Edge) */
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Hide number input arrows for Firefox */
+input[type='number'] {
+  -moz-appearance: textfield;
+}
+
 .mobile-drawer {
   width: 100vw !important;
   height: calc(100vh - 70px) !important;
@@ -102,6 +116,25 @@ body {
 .drawer {
   width: 100vw !important;
   background: transparent !important;
+}
+
+.product-currency {
+  background: var(--color-primary-40) !important;
+  border: 1px solid var(--color-primary-500) !important;
+}
+
+.product-currency ul {
+  padding: 1px 10px !important;
+}
+
+.product-currency-item {
+  padding: 14px 16px !important;
+}
+
+@media (max-width: 639.98px) {
+  .products-table {
+    padding: 0 !important;
+  }
 }
 
 @media (min-width: 640px) and (max-width: 767.98px) {

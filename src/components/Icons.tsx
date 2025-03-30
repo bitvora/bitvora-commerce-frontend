@@ -15,5 +15,13 @@ export const MenuIcon = () => {
 };
 
 export const CloseIcon = ({ height = 15, width = 15 }: { width?: number; height?: number }) => {
-  return <Image src="/img/close.svg" alt="menu" width={width} height={height} />;
+  return <Image src="/icons/close.svg" alt="close" width={width} height={height} />;
+};
+
+export const EditIcon = ({ height = 17, width = 17 }: { width?: number; height?: number }) => {
+  return <Image src="/icons/edit.svg" alt="edit" width={width} height={height} />;
+};
+
+export const DeleteIcon = ({ height = 17, width = 17 }: { width?: number; height?: number }) => {
+  return <Image src="/icons/delete.svg" alt="delete" width={width} height={height} />;
 };

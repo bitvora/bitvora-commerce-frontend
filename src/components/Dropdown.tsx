@@ -63,8 +63,8 @@ export default function Dropdown({
             exit={{ opacity: 0, y: 10 }}
             transition={{ duration: 0.3, ease: 'easeInOut' }}
             className={clsx(
-              'absolute left-0 top-full mt-2 bg-primary-250 shadow-lg rounded-md z-10',
-              contentClass
+              contentClass,
+              'absolute left-0 top-full mt-2 bg-primary-250 shadow-lg rounded-md z-10'
             )}
             onClick={onSelectClose ? closeDropdown : undefined}>
             {content}

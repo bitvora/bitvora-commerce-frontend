@@ -30,8 +30,6 @@ export default function Page() {
           password: Yup.string().max(255).required('Password is required')
         })}
         onSubmit={async (values, { setSubmitting }) => {
-          setSubmitting(true);
-
           try {
             // Step 1: Send login request
             const response = await fetch(`${api_url}/login`, {
@@ -99,7 +97,7 @@ export default function Page() {
               toast.error(data.message || 'An error occurred during login');
             }
           } catch (err) {
-            console.error(err)
+            console.error(err);
             toast.error('Invalid credentials.');
           } finally {
             setSubmitting(false);

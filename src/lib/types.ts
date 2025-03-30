@@ -37,6 +37,7 @@ export interface SessionPayload {
 export interface CurrencyType {
   label: string;
   image: string;
+  value: string;
 }
 
 export type SalesData = {
@@ -105,3 +106,40 @@ export type MRRData = {
 };
 
 export type Breakpoint = 'base' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+
+export interface Product {
+  id: string;
+  user_id: string;
+  account_id: string;
+  name: string;
+  description: string;
+  image: string;
+  is_recurring: boolean;
+  amount: number;
+  currency: string;
+  billing_period_hours: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CreateProductType {
+  account_id: string;
+  name: string;
+  description: string;
+  image: string;
+  is_recurring: boolean;
+  amount: number;
+  currency: string;
+  billing_period_hours?: number;
+}
+
+export interface UpdateProductType {
+  account_id: string;
+  name: string;
+  description: string;
+  image: string;
+  is_recurring: boolean;
+  amount: number;
+  currency: string;
+  billing_period_hours?: number;
+}

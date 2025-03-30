@@ -90,6 +90,14 @@ export const SemiboldTitle = ({ children, className, ...props }: HeaderProps) =>
   );
 };
 
+export const MediumTitle = ({ children, className, ...props }: HeaderProps) => {
+  return (
+    <h6 className={`${className ?? ''} font-medium text-[20px] tracking-[0%]`} {...props}>
+      {children}
+    </h6>
+  );
+};
+
 export const RegularTitle = ({ children, className, ...props }: HeaderProps) => {
   return (
     <h6 className={`${className ?? ''} font-normal text-[20px] tracking-[0%]`} {...props}>
@@ -97,6 +105,7 @@ export const RegularTitle = ({ children, className, ...props }: HeaderProps) => 
     </h6>
   );
 };
+
 
 export const SemiboldBody = ({ children, className, ...props }: TextProps) => {
   return (
