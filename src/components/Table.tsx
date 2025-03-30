@@ -1,6 +1,11 @@
 import { useMemo, useState, ReactNode, useCallback } from 'react';
 import clsx from 'clsx';
-import { MediumSmallerText, MediumSmallText, SemiboldSmallText } from '@/components/Text';
+import {
+  MediumSmallerText,
+  MediumSmallText,
+  SemiboldSmallerText,
+  SemiboldSmallText
+} from '@/components/Text';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons';
 
@@ -9,6 +14,7 @@ interface Column<T> {
   accessor?: keyof T;
   className?: string;
   render?: (row: T) => ReactNode;
+  hiddenOn?: ('sm' | 'md' | 'lg' | 'xl')[];
 }
 
 interface Props<T extends Record<string, unknown>> {
@@ -56,7 +62,11 @@ export default function Table<T extends Record<string, unknown>>({
   }, [currentPage, data, rowsPerPage]);
 
   const headers = useMemo(
-    () => [...columns.map((col) => col.header), actionColumn ? 'Actions' : ''].filter(Boolean),
+    () =>
+      [
+        ...columns.map((col) => ({ label: col.header, hiddenOn: col.hiddenOn })),
+        actionColumn ? { label: 'Actions', hiddenOn: ['sm'] } : null
+      ].filter(Boolean),
     [columns, actionColumn]
   );
 
@@ -106,9 +116,16 @@ export default function Table<T extends Record<string, unknown>>({
                 className={clsx(
                   'px-6 py-3 text-left text-xs font-medium text-secondary-700 uppercase tracking-wider',
                   index === 0 && 'rounded-l-md',
-                  index === headers.length - 1 && 'rounded-r-md'
+                  index === headers.length - 1 && 'rounded-r-md',
+                  header.hiddenOn?.includes('sm') && 'hidden sm:table-cell'
                 )}>
-                <SemiboldSmallText className="text-inherit capitalize">{header}</SemiboldSmallText>
+                <SemiboldSmallText className="text-inherit capitalize hidden md:flex">
+                  {header.label}
+                </SemiboldSmallText>
+
+                <SemiboldSmallerText className="truncate capitalize md:hidden text-inherit">
+                  {header.label}
+                </SemiboldSmallerText>
               </th>
             ))}
           </tr>
@@ -119,7 +136,13 @@ export default function Table<T extends Record<string, unknown>>({
             Array.from({ length: rowsPerPage }).map((_, rowIndex) => (
               <tr key={rowIndex} className="animate-pulse">
                 {columns.map((col, colIndex) => (
-                  <td key={colIndex} className={clsx('px-6 py-4 text-sm', col.className)}>
+                  <td
+                    key={colIndex}
+                    className={clsx(
+                      'px-6 py-4 text-sm',
+                      col.className,
+                      col.hiddenOn?.map((bp) => `hidden ${bp}:table-cell`).join(' ')
+                    )}>
                     <div className="h-4 bg-light-300 rounded w-full"></div>
                   </td>
                 ))}
@@ -133,18 +156,23 @@ export default function Table<T extends Record<string, unknown>>({
           ) : paginatedData.length > 0 ? (
             paginatedData.map((row, rowIndex) => (
               <tr key={rowIndex} onClick={() => handleRowClick(row)} className="group">
-                {columns.map((col, colIndex) => (
+                {columns.map((col, index) => (
                   <td
-                    key={colIndex}
+                    key={index}
                     className={clsx(
                       'px-6 py-4 text-sm border-light-300 cursor-pointer border-b-[1px] group-hover:border-b-[1px] group-hover:border-primary-600 transition duration-200 text-light-700 group-hover:text-light-900',
-                      col.className
+                      col.className,
+                      col.hiddenOn?.map((bp) => `hidden ${bp}:table-cell`).join(' ')
                     )}>
                     {renderCell(col, row)}
                   </td>
                 ))}
+
                 {actionColumn && (
-                  <td className="px-6 py-4 text-sm border-light-300 cursor-pointer border-b-[1px] group-hover:border-b-[1px] group-hover:border-primary-600 transition duration-200">
+                  <td
+                    className="px-6 py-4 text-sm border-light-300 cursor-pointer border-b-[1px] 
+               group-hover:border-b-[1px] group-hover:border-primary-600 
+               transition duration-200 hidden sm:table-cell">
                     {actionColumn(row)}
                   </td>
                 )}

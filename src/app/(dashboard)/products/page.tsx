@@ -2,7 +2,12 @@
 'use client';
 
 import Currency from '@/components/Currency';
-import { MediumHeader5, SemiboldBody, SemiboldSmallText } from '@/components/Text';
+import {
+  MediumHeader5,
+  SemiboldBody,
+  SemiboldSmallerText,
+  SemiboldSmallText
+} from '@/components/Text';
 import { AddProduct, DeleteProductModal, EditProduct, ProductImageModal } from './components';
 import { useProductContext } from './context';
 import Table from '@/components/Table';
@@ -107,20 +112,26 @@ export default function Page() {
 
   const columns = [
     {
-      header: 'Name',
+      header: 'Product',
       accessor: 'name',
       render: (row) => (
         <div className="flex items-center gap-3">
           <button
-            className="cursor-pointer border-none outline-none"
+            className="cursor-pointer border-none outline-none hidden md:flex"
             onClick={() => {
               setCurrentProduct(row);
               setIsImageOpen(true);
             }}>
             <img src={row.image} alt={row.name} className="w-10 h-10 rounded-md object-cover" />
           </button>
+
           <Link href={`${app_routes.products}/${row.id}`}>
-            <SemiboldSmallText className="text-inherit truncate">{row.name}</SemiboldSmallText>{' '}
+            <SemiboldSmallText className="text-inherit truncate hidden md:flex">
+              {row.name}
+            </SemiboldSmallText>
+            <SemiboldSmallerText className="truncate md:hidden text-light-700">
+              {row.name}
+            </SemiboldSmallerText>
           </Link>
         </div>
       )
@@ -130,18 +141,25 @@ export default function Page() {
       accessor: 'amount',
       render: (row) => (
         <Link href={`${app_routes.products}/${row.id}`}>
-          <SemiboldSmallText className="text-inherit">
+          <SemiboldSmallText className="text-inherit hidden md:flex">
             {renderPrice({ amount: row.amount, currency: row.currency })}
           </SemiboldSmallText>
+
+          <SemiboldSmallerText className="truncate md:hidden text-light-700">
+            {renderPrice({ amount: row.amount, currency: row.currency })}
+          </SemiboldSmallerText>
         </Link>
       )
     },
     {
-      header: 'Total Sales',
+      header: 'Sales',
       accessor: 'total_sales',
       render: (row) => (
         <Link href={`${app_routes.products}/${row.id}`}>
-          <SemiboldSmallText className="text-inherit">N/A</SemiboldSmallText>
+          <SemiboldSmallText className="text-inherit hidden md:flex">N/A</SemiboldSmallText>
+          <SemiboldSmallerText className="truncate md:hidden text-light-700">
+            N/A
+          </SemiboldSmallerText>
         </Link>
       )
     },
@@ -150,19 +168,22 @@ export default function Page() {
       accessor: 'subscriptions',
       render: (row) => (
         <Link href={`${app_routes.products}/${row.id}`}>
-          <SemiboldSmallText className="text-inherit">N/A</SemiboldSmallText>
+          <SemiboldSmallText className="text-inherit hidden md:flex">N/A</SemiboldSmallText>
+          <SemiboldSmallerText className="truncate md:hidden text-light-700">
+            N/A
+          </SemiboldSmallerText>
         </Link>
       )
     }
   ];
 
   return (
-    <div className="flex flex-col gap-8 bg-primary-150 px-3 pt-6 lg:pt-0 pb-8 w-full">
-      <div className="bg-transparent xl:bg-primary-50 rounded-lg px-2 lg:px-8 py-2 lg:h-[80px] w-full flex items-center justify-between">
+    <div className="flex flex-col gap-3 md:gap-8 bg-primary-50 md:bg-primary-150 px-0 sm:px-3 pt-6 lg:pt-0 pb-8 w-full">
+      <div className="bg-transparent xl:bg-primary-50 rounded-lg px-4 sm:px-8 py-2 lg:h-[80px] w-full flex items-center justify-between">
         <div className="sm:gap-4 md:gap-10 items-center hidden sm:flex">
           <MediumHeader5>Products</MediumHeader5>
 
-          <div className="hidden sm:flex">
+          <div className="hidden md:flex">
             <Currency />
           </div>
         </div>
@@ -200,6 +221,7 @@ export default function Page() {
 
       <div className="w-full">
         <Table
+          tableContainerClassName="products-table"
           columns={columns}
           data={filteredProducts as unknown as Record<string, unknown>[]}
           rowsPerPage={10}
@@ -221,7 +243,7 @@ export default function Page() {
             </div>
           )}
           tableHeader={
-            <div className="w-full flex items-center justify-between">
+            <div className="w-full hidden md:flex items-center justify-between">
               <SemiboldBody className="text-light-900">
                 Products <span className="text-light-700">({filteredProducts.length})</span>
               </SemiboldBody>
