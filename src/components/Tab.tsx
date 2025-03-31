@@ -33,7 +33,7 @@ export default function Tabs({ tabs, defaultActiveIndex = 0 }: TabsProps) {
       </div>
 
       {/* Tab Content */}
-      <div className="p-4">{tabs[activeIndex]?.content}</div>
+      <div>{tabs[activeIndex]?.content}</div>
     </div>
   );
 }

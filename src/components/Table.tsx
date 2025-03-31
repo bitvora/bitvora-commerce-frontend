@@ -26,7 +26,7 @@ interface Props<T extends Record<string, unknown>> {
   rowOnClick?: (row: T) => void;
   actionColumn?: (row: T) => ReactNode;
   tableContainerClassName?: string;
-  tableHeader: ReactNode;
+  tableHeader?: ReactNode;
   currentPage?: number;
   onPageChange?: (page: number) => void;
 }

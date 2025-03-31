@@ -27,11 +27,11 @@ export default function Page() {
             <SemiboldSmallText>Payment Link</SemiboldSmallText>
           </PrimaryButton>
 
-          <Link href={`${app_routes.products}?action=new-product`}>
-            <PrimaryButton className="h-10 sm:h-12 md:h-12 w-full xl:w-[auto]">
+          <PrimaryButton className="h-10 sm:h-12 md:h-12 w-full xl:w-[auto]">
+            <Link href={`${app_routes.products}?action=new-product`}>
               <SemiboldSmallText>Add Product</SemiboldSmallText>
-            </PrimaryButton>
-          </Link>
+            </Link>
+          </PrimaryButton>
         </div>
       </div>
 

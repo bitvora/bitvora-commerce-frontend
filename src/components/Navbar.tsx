@@ -133,7 +133,7 @@ export default function Navbar() {
 
       <Drawer open={isOpen} onClose={toggleDrawer} direction="left" className="mobile-drawer">
         <div className="w-full h-full overflow-x-hidden overflow-y-auto flex flex-col gap-2">
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col gap-1" onClick={toggleDrawer}>
             {main_routes.map(({ active_icon, icon, route, text }) => (
               <NavItem key={text} active_icon={active_icon} icon={icon} route={route} text={text} />
             ))}
@@ -141,7 +141,7 @@ export default function Navbar() {
 
           <hr className="bg-light-400 w-full h-[1px] border-[0.5px] border-light-400 my-2" />
 
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col gap-1" onClick={toggleDrawer}>
             {developer_routes.map(({ active_icon, icon, route, text }) => (
               <NavItem key={text} active_icon={active_icon} icon={icon} route={route} text={text} />
             ))}
@@ -185,7 +185,7 @@ export default function Navbar() {
                 secureLocalStorage.clear();
                 await logout();
               }}
-              className="-mt-2">
+              className="-mt-2 onClick={toggleDrawer}">
               <button
                 className={`w-full h-[45px] rounded-md flex gap-4 justify-start items-center px-1 py-2`}
                 type="submit">

@@ -38,8 +38,10 @@ export default function ProductContextProvider({ children }: { children: ReactNo
   }, [refetch]);
 
   useEffect(() => {
-    if (productsData?.data) {
-      setProducts(productsData?.data);
+    if (productsData) {
+      if (productsData?.data) {
+        setProducts(productsData?.data);
+      }
       setIsProductsLoading(false);
     }
   }, [productsData]);

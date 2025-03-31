@@ -2,9 +2,14 @@ import api from '@/lib/api';
 import { getPastDate, getPastMonth } from '@/lib/helpers';
 import { getSessionFromServer } from '@/lib/session';
 
-async function getSalesData(period, date) {
+async function getSalesData(period: string, date: string) {
   try {
     const session = await getSessionFromServer();
+
+    if (!session || session?.activeAccount === '') {
+      return null;
+    }
+
     const response = await api.fetch(
       `/dashboard/${session?.activeAccount}/sales/${period}/${date}`,
       {},
@@ -32,9 +37,14 @@ export const getPreviousMonthSales = () => getSalesData('30-days', getPastDate(3
 export const getPreviousSixMonthsSales = () => getSalesData('6-months', getPastMonth(6));
 export const getPreviousYearSales = () => getSalesData('12-months', getPastMonth(12));
 
-async function getNewCustomersData(period, date) {
+async function getNewCustomersData(period: string, date: string) {
   try {
     const session = await getSessionFromServer();
+
+    if (!session || session?.activeAccount === '') {
+      return null;
+    }
+
     const response = await api.fetch(
       `/dashboard/${session?.activeAccount}/customers/${period}/${date}`,
       {},
@@ -64,9 +74,14 @@ export const getPreviousSixMonthsNewCustomers = () =>
   getNewCustomersData('6-months', getPastMonth(6));
 export const getPreviousYearNewCustomers = () => getNewCustomersData('12-months', getPastMonth(12));
 
-async function getActiveSubscribersData(period, date) {
+async function getActiveSubscribersData(period: string, date: string) {
   try {
     const session = await getSessionFromServer();
+
+    if (!session || session?.activeAccount === '') {
+      return null;
+    }
+
     const response = await api.fetch(
       `/dashboard/${session?.activeAccount}/subscribers/${period}/${date}`,
       {},
@@ -78,7 +93,7 @@ async function getActiveSubscribersData(period, date) {
     return await response.json();
   } catch (error) {
     console.error(`Error fetching ${period} active subscribers:`, error);
-    return [];
+    return null;
   }
 }
 
@@ -103,9 +118,14 @@ export const getPreviousSixMonthsActiveSubscribers = () =>
 export const getPreviousYearActiveSubscribers = () =>
   getActiveSubscribersData('12-months', getPastMonth(12));
 
-async function getMRRData(period, date) {
+async function getMRRData(period: string, date: string) {
   try {
     const session = await getSessionFromServer();
+
+    if (!session || session?.activeAccount === '') {
+      return null;
+    }
+
     const response = await api.fetch(
       `/dashboard/${session?.activeAccount}/mrr/${period}/${date}`,
       {},

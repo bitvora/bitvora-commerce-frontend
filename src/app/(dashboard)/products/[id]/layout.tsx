@@ -4,7 +4,9 @@ import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query
 import ProductContextProvider from '@/app/(dashboard)/products/context';
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
-  const product = await getProduct(params.id);
+  const { id } = await params;
+
+  const product = await getProduct(id);
 
   return {
     title: `Product: ${product?.data?.name}`,
