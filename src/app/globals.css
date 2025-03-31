@@ -131,6 +131,11 @@ input[type='number'] {
   padding: 14px 16px !important;
 }
 
+.products-subscription-table {
+  padding: 0 !important;
+  background: transparent !important;
+}
+
 @media (max-width: 639.98px) {
   .products-table {
     padding: 0 !important;

@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
 
-import { useParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { getProduct } from './actions';
 import { useQuery } from '@tanstack/react-query';
 import { Product } from '@/lib/types';
@@ -18,7 +18,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { formatDate, renderPrice } from '@/lib/helpers';
 import { Link } from '@/components/Links';
-import { Skeleton } from './components';
+import { Skeleton, Subscribers } from './components';
 import Tabs from '@/components/Tab';
 import { RedButton, SecondaryButton } from '@/components/Buttons';
 import {
@@ -26,9 +26,11 @@ import {
   EditProduct,
   ProductImageModal
 } from '@/app/(dashboard)/products/components';
+import React from 'react';
 
-export default function Page() {
-  const { id } = useParams<{ id: string }>();
+export default function Page({ params }: { params: { id: string } }) {
+  const { id } = params;
+
   const router = useRouter();
 
   const [product, setProduct] = useState<Product>({} as Product);
@@ -51,11 +53,6 @@ export default function Page() {
     router.push(app_routes.products);
   };
 
-  const tabs = [
-    { label: 'Sales', content: <p>This is the overview tab.</p> },
-    { label: 'Subscribers', content: <p>Pricing details go here.</p> }
-  ];
-
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [isImageOpen, setIsImageOpen] = useState(false);
@@ -77,7 +74,7 @@ export default function Page() {
       {loading ? (
         <Skeleton />
       ) : (
-        <div className="h-full w-full relative px-4 md:px-6 py-4 md:py-6 rounded-lg flex flex-col bg-primary-40 gap-8 md:gap-10">
+        <div className="h-full w-full relative px-4 md:px-6 py-4 md:py-6 rounded-lg flex flex-col bg-primary-40 gap-8 md:gap-10 overflow-auto">
           <div className="flex w-full justify-between items-center">
             <SemiboldTitle className="text-light-900">Product Details</SemiboldTitle>
 
@@ -88,9 +85,9 @@ export default function Page() {
             </Link>
           </div>
 
-          <div className="w-full flex gap-3 md:gap-6 items-start">
+          <div className="w-full flex gap-3 sm:gap-6 items-start">
             <div
-              className="w-[120px] h-[120px] max-w-[120px] max-h-[120px] md:w-[180px]  md:h-[180px] md:max-w-[180px] md:max-h-[180px] cursor-pointer"
+              className="w-[120px] h-[120px] max-w-[120px] max-h-[120px] sm:w-[180px]  sm:h-[180px] sm:max-w-[180px] sm:max-h-[180px] cursor-pointer"
               onClick={() => setIsImageOpen(true)}>
               <img
                 src={product?.image}
@@ -99,7 +96,7 @@ export default function Page() {
               />
             </div>
 
-            <div className="flex flex-col gap-2 md:gap-3">
+            <div className="flex flex-col gap-2 sm:gap-3">
               <div className="flex flex-col gap-1">
                 <div>
                   <SemiboldBody className="text-light-900">{product?.name}</SemiboldBody>
@@ -147,7 +144,7 @@ export default function Page() {
           </div>
 
           <div className="w-full mt-5 md:mt-10 bg-primary-150 rounded-lg px-3 md:px-4 py-3 md:py-4">
-            <Tabs tabs={tabs} />
+            <Tabs tabs={[{ label: 'Subscriptions', content: <Subscribers /> }]} />
           </div>
 
           <div className="w-full flex gap-4 items-center border-none outline-none">

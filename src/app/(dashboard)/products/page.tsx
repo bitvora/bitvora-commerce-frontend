@@ -125,11 +125,11 @@ export default function Page() {
             <img src={row.image} alt={row.name} className="w-10 h-10 rounded-md object-cover" />
           </button>
 
-          <Link href={`${app_routes.products}/${row.id}`}>
-            <SemiboldSmallText className="text-inherit truncate hidden md:flex">
+          <Link href={`${app_routes.products}/${row.id}`} className="text-inherit">
+            <SemiboldSmallText className="text-light-700 hover:text-light-900 truncate hidden md:flex">
               {row.name}
             </SemiboldSmallText>
-            <SemiboldSmallerText className="truncate md:hidden text-light-700">
+            <SemiboldSmallerText className="truncate md:hidden text-light-700 hover:text-light-900">
               {row.name}
             </SemiboldSmallerText>
           </Link>
@@ -141,11 +141,11 @@ export default function Page() {
       accessor: 'amount',
       render: (row) => (
         <Link href={`${app_routes.products}/${row.id}`}>
-          <SemiboldSmallText className="text-inherit hidden md:flex">
+          <SemiboldSmallText className="text-light-700 hover:text-light-900 hidden md:flex">
             {renderPrice({ amount: row.amount, currency: row.currency })}
           </SemiboldSmallText>
 
-          <SemiboldSmallerText className="truncate md:hidden text-light-700">
+          <SemiboldSmallerText className="truncate md:hidden text-light-700 hover:text-light-900">
             {renderPrice({ amount: row.amount, currency: row.currency })}
           </SemiboldSmallerText>
         </Link>
@@ -156,8 +156,10 @@ export default function Page() {
       accessor: 'total_sales',
       render: (row) => (
         <Link href={`${app_routes.products}/${row.id}`}>
-          <SemiboldSmallText className="text-inherit hidden md:flex">N/A</SemiboldSmallText>
-          <SemiboldSmallerText className="truncate md:hidden text-light-700">
+          <SemiboldSmallText className="text-light-700 hover:text-light-900 hidden md:flex">
+            N/A
+          </SemiboldSmallText>
+          <SemiboldSmallerText className="truncate md:hidden text-light-700 hover:text-light-900">
             N/A
           </SemiboldSmallerText>
         </Link>
@@ -168,8 +170,10 @@ export default function Page() {
       accessor: 'subscriptions',
       render: (row) => (
         <Link href={`${app_routes.products}/${row.id}`}>
-          <SemiboldSmallText className="text-inherit hidden md:flex">N/A</SemiboldSmallText>
-          <SemiboldSmallerText className="truncate md:hidden text-light-700">
+          <SemiboldSmallText className="text-light-700 hover:text-light-900 hidden md:flex">
+            N/A
+          </SemiboldSmallText>
+          <SemiboldSmallerText className="truncate md:hidden text-light-700 hover:text-light-900">
             N/A
           </SemiboldSmallerText>
         </Link>

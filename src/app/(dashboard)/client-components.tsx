@@ -8,11 +8,26 @@ import { SemiboldSmallerText, SemiboldTitle } from '@/components/Text';
 import { PrimaryButton } from '@/components/Buttons';
 import { DarkInput } from '@/components/Inputs';
 import { CountrySelect } from '@/components/Selects';
-import { createAccount } from '@/lib/actions';
+import { createAccount, fetchSession } from '@/lib/actions';
 import { useAppContext } from '@/app/contexts';
+import { useEffect, useState } from 'react';
+import { Account, SessionPayload } from '@/lib/types';
 
 export const CreateAccount = () => {
-  const { refetchAccount, accounts, isAccountLoading } = useAppContext();
+  const { accounts, isAccountLoading } = useAppContext();
+  const [session, setSession] = useState<SessionPayload>({} as SessionPayload);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const session = await fetchSession();
+
+      if (session) {
+        setSession(session);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <Drawer
@@ -53,9 +68,21 @@ export const CreateAccount = () => {
                   return;
                 }
 
-                refetchAccount();
+                const account: Account = result.data?.data;
+
+                await fetch('/api/auth/login', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    ...session,
+                    accounts: [...accounts, account],
+                    activeAccount: account.id
+                  })
+                });
+
                 toast.success('Account created successfully');
                 resetForm();
+                window.location.reload();
               } catch (err) {
                 console.error(err);
                 toast.error('Error creating account');
