@@ -120,15 +120,15 @@ export default function Sidebar() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <div className="w-[300px] max-w-[300px] lg:w-[250px] lg:max-w-[250px] xl:w-[300px] xl:max-w-[300px] 2xl:w-[350px] 2xl:max-w-[350px] max-h-screen h-screen overflow-y-auto overflow-x-hidden hidden lg:flex flex-col relative pr-[30px] lg:pr-3 xl:pr-[30px]">
-      <header className="sticky top-0 left-0 bg-primary-100">
+    <aside className="w-[300px] max-w-[300px] lg:w-[250px] lg:max-w-[250px] xl:w-[300px] xl:max-w-[300px] 2xl:w-[350px] 2xl:max-w-[350px] max-h-screen h-screen overflow-y-auto overflow-x-hidden hidden lg:flex flex-col relative pr-[30px] lg:pr-3 xl:pr-[30px]">
+      <div className="sticky top-0 left-0 bg-primary-100">
         <Link href={app_routes.dashboard}>
           <div className="flex items-center gap-2 text-light-700 hover:text-light-800">
             <Logo url={app_routes.dashboard} />
             <MediumSmallerText className="text-inherit mt-2">Commerce</MediumSmallerText>
           </div>
         </Link>
-      </header>
+      </div>
 
       <div className="flex flex-col gap-4 w-full mt-4 pt-4 mb-[50px]">
         <div className="flex flex-col gap-2 w-full">
@@ -221,6 +221,6 @@ export default function Sidebar() {
           </AnimatePresence>
         </div>
       )}
-    </div>
+    </aside>
   );
 }

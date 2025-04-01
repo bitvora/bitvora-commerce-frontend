@@ -2,13 +2,14 @@
 
 import Currency from '@/components/Currency';
 import {
+  MediumBody,
   MediumHeader5,
   SemiboldBody,
   SemiboldSmallerText,
   SemiboldSmallText
 } from '@/components/Text';
-import { AddCustomer, DeleteCustomerModal, EditCustomer } from './components';
-import { useCustomerContext } from './context';
+import { DeleteSubscriptionModal } from './components';
+import { useSubscriptionContext } from './context';
 import Table from '@/components/Table';
 import { DeleteIcon, EditIcon } from '@/components/Icons';
 import { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
@@ -17,12 +18,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { app_routes } from '@/lib/constants';
-import { formatUUID } from '@/lib/helpers';
+import { formatDate, formatUUID } from '@/lib/helpers';
 import { Link } from '@/components/Links';
-import { Customer } from '@/types/customers';
+import { Subscription } from '@/types/subscriptions';
 
 export default function Page() {
-  const { isCustomersLoading, customers } = useCustomerContext();
+  const { subscriptions, isSubscriptionLoading } = useSubscriptionContext();
 
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -34,12 +35,12 @@ export default function Page() {
   const [debouncedQuery, setDebouncedQuery] = useState(initialQuery);
   const [currentPage, setCurrentPage] = useState(initialPage);
 
-  const [currentCustomer, setCurrentCustomer] = useState<Customer>({} as Customer);
+  const [currentSubscription, setCurrentSubscription] = useState<Subscription>({} as Subscription);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
   const closeDeleteModal = () => {
-    setCurrentCustomer({} as Customer);
+    setCurrentSubscription({} as Subscription);
     setIsDeleteOpen(false);
   };
 
@@ -48,7 +49,7 @@ export default function Page() {
     if (debouncedQuery) params.set('q', debouncedQuery);
     if (currentPage > 1) params.set('page', String(currentPage));
 
-    router.push(`${app_routes.customers}?${params.toString()}`, { scroll: false });
+    router.push(`${app_routes.subscriptions}?${params.toString()}`, { scroll: false });
   }, [debouncedQuery, currentPage, router]);
 
   useEffect(() => {
@@ -61,15 +62,15 @@ export default function Page() {
     };
   }, [query]);
 
-  const filteredCustomers = useMemo(() => {
-    if (!debouncedQuery) return customers;
+  const filteredSubscriptions = useMemo(() => {
+    if (!debouncedQuery) return subscriptions;
 
-    return customers.filter((customer) =>
-      Object.values(customer).some((value) =>
+    return subscriptions.filter((subscription) =>
+      Object.values(subscription).some((value) =>
         String(value).toLowerCase().includes(debouncedQuery.toLowerCase())
       )
     );
-  }, [customers, debouncedQuery]);
+  }, [subscriptions, debouncedQuery]);
 
   const handleQueryChange = (event: ChangeEvent<HTMLInputElement>) => {
     setQuery(event.target.value);
@@ -86,20 +87,20 @@ export default function Page() {
       setIsEditOpen(value);
 
       if (!value) {
-        setCurrentCustomer({} as Customer);
-        router.replace(app_routes.customers);
+        setCurrentSubscription({} as Subscription);
+        router.replace(app_routes.subscriptions);
       }
     },
     [router]
   );
 
-  const handleEdit = (customer) => {
-    setCurrentCustomer(customer);
+  const handleEdit = (subscription) => {
+    setCurrentSubscription(subscription);
     toggleEditModal(true);
   };
 
-  const handleDelete = (customer) => {
-    setCurrentCustomer(customer);
+  const handleDelete = (subscription) => {
+    setCurrentSubscription(subscription);
     setIsDeleteOpen(true);
   };
 
@@ -108,7 +109,7 @@ export default function Page() {
       header: 'ID',
       accessor: 'id',
       render: (row) => (
-        <Link href={`${app_routes.customers}/${row.id}`} className="text-inherit">
+        <Link href={`${app_routes.subscriptions}/${row.id}`} className="text-inherit">
           <SemiboldSmallText className="truncate text-light-700 hover:text-light-900">
             {formatUUID(row.id)}
           </SemiboldSmallText>
@@ -116,44 +117,41 @@ export default function Page() {
       )
     },
     {
-      header: 'Name',
-      accessor: 'name',
+      header: 'Product',
+      accessor: 'product_id',
       render: (row) => (
-        <Link href={`${app_routes.customers}/${row.id}`} className="text-inherit">
+        <Link href={`${app_routes.products}/${row.product_id}`} className="text-inherit">
           <SemiboldSmallText className="text-light-700 hover:text-light-900 truncate hidden md:flex">
-            {row.name}
+            {formatUUID(row.product_id)}
           </SemiboldSmallText>
           <SemiboldSmallerText className="truncate md:hidden text-light-700 hover:text-light-900">
-            {row.name}
+            {formatUUID(row.product_id)}
           </SemiboldSmallerText>
         </Link>
       )
     },
     {
-      header: 'Email',
-      accessor: 'email',
+      header: 'Customer',
+      accessor: 'customer_id',
       render: (row) => (
-        <Link href={`${app_routes.customers}/${row.id}`} className="text-inherit">
+        <Link href={`${app_routes.customers}/${row.customer_id}`} className="text-inherit">
           <SemiboldSmallText className="text-light-700 hover:text-light-900 truncate hidden md:flex">
-            {row.email}
+            {formatUUID(row.customer_id)}
           </SemiboldSmallText>
           <SemiboldSmallerText className="truncate md:hidden text-light-700 hover:text-light-900">
-            {row.email}
+            {formatUUID(row.customer_id)}
           </SemiboldSmallerText>
         </Link>
       )
     },
     {
-      header: 'Phone',
-      accessor: 'phone_number',
+      header: 'Active On',
+      accessor: 'active_on_date',
       render: (row) => (
-        <Link href={`${app_routes.customers}/${row.id}`} className="text-inherit">
-          <SemiboldSmallText className="text-light-700 hover:text-light-900 truncate hidden md:flex">
-            {row.phone_number}
-          </SemiboldSmallText>
-          <SemiboldSmallerText className="truncate md:hidden text-light-700 hover:text-light-900">
-            {row.phone_number}
-          </SemiboldSmallerText>
+        <Link href={`${app_routes.subscriptions}/${row.id}`}>
+          <MediumBody className="text-light-700 hover:text-light-900">
+            {formatDate(row.active_on_date, 'MMM DD, YYYY')}
+          </MediumBody>
         </Link>
       )
     }
@@ -163,7 +161,7 @@ export default function Page() {
     <div className="flex flex-col gap-3 md:gap-8 bg-primary-50 md:bg-primary-150 px-0 sm:px-3 pt-6 lg:pt-0 pb-8 w-full">
       <div className="bg-transparent xl:bg-primary-50 rounded-lg px-4 sm:px-8 py-2 lg:h-[80px] w-full flex items-center justify-between">
         <div className="sm:gap-4 md:gap-10 items-center hidden sm:flex">
-          <MediumHeader5>Customers</MediumHeader5>
+          <MediumHeader5>Subscriptions</MediumHeader5>
 
           <div className="hidden md:flex">
             <Currency />
@@ -176,7 +174,7 @@ export default function Page() {
               value={query}
               handleChange={handleQueryChange}
               name="query"
-              placeholder="Search Customers"
+              placeholder="Search Subscriptions"
               startIcon={
                 <div className="text-light-500">
                   <FontAwesomeIcon icon={faMagnifyingGlass} />
@@ -195,9 +193,7 @@ export default function Page() {
             />
           </div>
 
-          <div>
-            <AddCustomer />
-          </div>
+          <div>{/* <AddSubscription /> */}</div>
         </div>
       </div>
 
@@ -205,7 +201,7 @@ export default function Page() {
         <Table
           tableContainerClassName="products-table"
           columns={columns}
-          data={filteredCustomers as unknown as Record<string, unknown>[]}
+          data={filteredSubscriptions as unknown as Record<string, unknown>[]}
           rowsPerPage={10}
           currentPage={currentPage}
           onPageChange={setCurrentPage}
@@ -227,14 +223,15 @@ export default function Page() {
           tableHeader={
             <div className="w-full hidden md:flex items-center justify-between">
               <SemiboldBody className="text-light-900">
-                Customers <span className="text-light-700">({filteredCustomers.length})</span>
+                Subscriptions{' '}
+                <span className="text-light-700">({filteredSubscriptions.length})</span>
               </SemiboldBody>
 
               <DarkInput
                 value={query}
                 handleChange={handleQueryChange}
                 name="query"
-                placeholder="Search Customers"
+                placeholder="Search Subscriptions"
                 startIcon={
                   <div className="text-light-500">
                     <FontAwesomeIcon icon={faMagnifyingGlass} />
@@ -253,19 +250,19 @@ export default function Page() {
               />
             </div>
           }
-          isLoading={isCustomersLoading}
-          emptyMessage={query ? 'No Customers found' : 'No Customers'}
+          isLoading={isSubscriptionLoading}
+          emptyMessage={query ? 'No Subscriptions found' : 'No Subscriptions'}
         />
       </div>
 
-      <EditCustomer
-        customer={currentCustomer}
-        toggleEditModal={toggleEditModal}
+      {/* <EditSubscriptionModal
         isEditOpen={isEditOpen}
-      />
+        subscription={currentSubscription}
+        toggleEditModal={toggleEditModal}
+      /> */}
 
-      <DeleteCustomerModal
-        customer={currentCustomer}
+      <DeleteSubscriptionModal
+        subscription={currentSubscription}
         isDeleteOpen={isDeleteOpen}
         closeDeleteModal={closeDeleteModal}
       />
