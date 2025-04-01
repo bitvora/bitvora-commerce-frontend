@@ -6,6 +6,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
 import { SemiboldBody, RegularSmallerText, SemiboldSmallText } from './Text';
+import PhoneInput from 'react-phone-number-input';
+import { country_codes } from '@/lib/constants';
 
 interface InputProps extends HTMLAttributes<HTMLInputElement> {
   label: string;
@@ -387,6 +389,65 @@ export const DarkTextarea = ({
           {errors[name as keyof typeof errors]}
         </RegularSmallerText>
       )}
+    </div>
+  );
+};
+
+interface PhoneNumberInputProps {
+  label?: string;
+  name: string;
+  touched?: FormikTouched<Record<string, unknown>>;
+  errors?: FormikErrors<Record<string, string>>;
+  handleChange: (value: string | undefined) => void;
+  value: string;
+  showLabel?: boolean;
+  required?: boolean;
+}
+
+export const PhoneNumberInput = ({
+  label,
+  name,
+  touched,
+  errors,
+  handleChange,
+  value,
+  showLabel = false,
+  required
+}: PhoneNumberInputProps) => {
+  const showError = touched && errors && touched[name] && errors[name];
+
+  return (
+    <div className="text-left justify-start">
+      {(showLabel || value) && (
+        <div className="mb-1 pb-1 flex items-start gap-1">
+          <SemiboldBody className="text-light-700 transition-opacity duration-300">
+            {label}
+          </SemiboldBody>
+          {required && (
+            <SemiboldBody className="text-light-700 transition-opacity duration-300">
+              *
+            </SemiboldBody>
+          )}
+        </div>
+      )}
+
+      <div className="relative mt-1" id="phone-number">
+        <PhoneInput
+          placeholder="Phone number"
+          value={value}
+          onChange={(value) => {
+            handleChange(value?.toString());
+          }}
+          international
+          countries={country_codes}
+        />
+      </div>
+
+      {showError ? (
+        <RegularSmallerText className="pt-1 text-red-700">
+          {errors[name]?.toString()}
+        </RegularSmallerText>
+      ) : null}
     </div>
   );
 };

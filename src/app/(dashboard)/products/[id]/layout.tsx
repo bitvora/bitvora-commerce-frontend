@@ -47,8 +47,8 @@ export default async function Layout({
   });
 
   return (
-    <ProductContextProvider>
-      <HydrationBoundary state={dehydrate(queryClient)}>{children}</HydrationBoundary>
-    </ProductContextProvider>
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <ProductContextProvider>{children}</ProductContextProvider>
+    </HydrationBoundary>
   );
 }

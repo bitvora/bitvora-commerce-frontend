@@ -136,6 +136,56 @@ input[type='number'] {
   background: transparent !important;
 }
 
+#phone-number .PhoneInput {
+  padding: 7px 15px !important;
+  border: 1px solid var(--color-light-400) !important;
+  border-radius: 7px;
+  background: var(--color-dark) !important;
+  width: 100% !important;
+}
+
+#phone-number .PhoneInput:hover {
+  border: 1px solid var(--color-primary-500) !important;
+}
+
+#phone-number input {
+  background: var(--color-dark) !important;
+  border: unset !important;
+  color: var(--color-light-900) !important;
+}
+
+.PhoneInput .PhoneInput--focus input:focus,
+.PhoneInput .PhoneInput--focus input,
+.PhoneInput--focus,
+.PhoneInputInput,
+.PhoneInputInput:focus {
+  border: unset !important;
+}
+
+#phone-number input:hover,
+#phone-number input:focus {
+  border: unset !important;
+}
+
+.PhoneInputInput::placeholder {
+  color: var(--color-light-500) !important;
+  font-weight: 600;
+}
+
+.PhoneInputInput {
+  height: 34px !important;
+  border: unset !important;
+}
+
+#phone-number .PhoneInputCountry {
+  outline: none;
+}
+
+.PhoneInputCountryIcon {
+  color: var(--color-light-900) !important;
+  outline: none;
+}
+
 @media (max-width: 639.98px) {
   .products-table {
     padding: 0 !important;
@@ -183,4 +233,11 @@ input[type='number'] {
     width: 600px !important;
     padding: 20px !important;
   }
+}
+
+input[type='tel'],
+input[type='tel']:focus,
+input[type='tel']:hover {
+  border: 0px !important;
+  outline: none !important;
 }

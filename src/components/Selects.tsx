@@ -30,6 +30,7 @@ interface SelectProps {
   touched?: FormikTouched<Record<string, unknown>>;
   errors?: FormikErrors<Record<string, string>>;
   listClassName?: string;
+  position?: 'top' | 'bottom';
 }
 
 export default function Select({
@@ -41,7 +42,8 @@ export default function Select({
   dropdownClass,
   errors,
   touched,
-  listClassName = 'text-light-900'
+  listClassName = 'text-light-900',
+  position = 'bottom'
 }: SelectProps) {
   const selectedOption = options.find((option) => option.value === value);
 
@@ -51,6 +53,7 @@ export default function Select({
 
   return (
     <Dropdown
+      position={position}
       buttonClass={clsx(
         'w-full flex font-bold text-sm justify-between items-center px-4 py-2 rounded-md text-light-500 cursor-pointer bg-dark h-[50px] border-[1px]',
         {
