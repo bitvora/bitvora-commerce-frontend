@@ -104,6 +104,7 @@ interface CountriesSelectProps extends HTMLAttributes<HTMLSelectElement> {
   name: string;
   label?: string;
   placeholder?: string;
+  position?: 'top' | 'bottom';
 }
 
 export const CountrySelect = ({
@@ -113,7 +114,8 @@ export const CountrySelect = ({
   touched,
   name,
   label,
-  placeholder = 'Countries'
+  placeholder = 'Countries',
+  position
 }: CountriesSelectProps) => {
   const showError = touched && errors && touched[name] && errors[name];
   const notAllowedCountries = [
@@ -159,7 +161,16 @@ export const CountrySelect = ({
       )}
 
       <div className="mb-1 pb-1 mt-1 pt-1">
-        <Select placeholder={placeholder} value={value} onChange={handleChange} options={options} />
+        <Select
+          placeholder={placeholder}
+          value={value}
+          onChange={handleChange}
+          options={options}
+          position={position}
+          dropdownClass="bg-primary-40 product-currency"
+          className="hover:border-primary-500"
+          listClassName="text-light-700 hover:text-light-900 product-currency-item"
+        />
       </div>
 
       {showError ? (

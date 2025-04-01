@@ -11,14 +11,14 @@ import { createCustomer, deleteCustomer } from './actions';
 import { useCustomerContext } from './context';
 import { useEffect, useState } from 'react';
 import { usePathname, useSearchParams, useRouter } from 'next/navigation';
-import { app_routes, billing_period_hours, currencies } from '@/lib/constants';
+import { app_routes, currencies } from '@/lib/constants';
 import { CloseIcon, DeleteIcon } from '@/components/Icons';
-import { Checkbox } from '@/components/Checkbox';
-import Select from '@/components/Selects';
+import Select, { CountrySelect } from '@/components/Selects';
 import { useAppContext } from '@/app/contexts';
 import Modal from '@/components/Modal';
 import Accordion from '@/components/Accordion';
 import { countNonEmptyFields } from '@/lib/helpers';
+import { Customer } from '@/types/customers';
 
 export const AddCustomer = () => {
   const { currentAccount } = useAppContext();
@@ -30,11 +30,11 @@ export const AddCustomer = () => {
 
   const [open, setOpen] = useState(true);
 
-  // useEffect(() => {
-  //   if (pathname === app_routes.customers && searchParams.get('action') === 'new-customer') {
-  //     setOpen(true);
-  //   }
-  // }, [pathname, searchParams]);
+  useEffect(() => {
+    if (pathname === app_routes.customers && searchParams.get('action') === 'new-customer') {
+      setOpen(true);
+    }
+  }, [pathname, searchParams]);
 
   const handleClose = () => {
     setOpen(false);
@@ -107,17 +107,17 @@ export const AddCustomer = () => {
                   const result = await createCustomer(values);
 
                   if (!result.success) {
-                    toast.error(result.error || 'Error creating product');
+                    toast.error(result.error || 'Error creating customer');
                     return;
                   }
 
                   refetchCustomers();
-                  toast.success('Product created successfully');
+                  toast.success('Customer created successfully');
                   handleClose();
                   resetForm();
                 } catch (err) {
                   console.error(err);
-                  toast.error('Error creating product');
+                  toast.error('Error creating customer');
                 }
               }}>
               {({
@@ -139,6 +139,24 @@ export const AddCustomer = () => {
                   'currency'
                 ]);
 
+                const billingAddressStats = countNonEmptyFields(values, [
+                  'billing_address_line1',
+                  'billing_address_line2',
+                  'billing_city',
+                  'billing_state',
+                  'billing_postal_code',
+                  'billing_country'
+                ]);
+
+                const shippingAddressStats = countNonEmptyFields(values, [
+                  'shipping_address_line1',
+                  'shipping_address_line2',
+                  'shipping_city',
+                  'shipping_state',
+                  'shipping_postal_code',
+                  'shipping_country'
+                ]);
+
                 return (
                   <Form noValidate onSubmit={handleSubmit}>
                     <div className="rounded-lg px-5 lg:px-5 py-5 lg:py-6 bg-primary-150 w-full h-full overflow-auto">
@@ -156,7 +174,7 @@ export const AddCustomer = () => {
                               </div>
                             ),
                             content: (
-                              <div className="flex flex-col gap-3 px-2 mb-2 relative">
+                              <div className="flex flex-col gap-5 px-2 mb-2 relative">
                                 <div>
                                   <DarkInput
                                     label="Name"
@@ -200,7 +218,7 @@ export const AddCustomer = () => {
                                   />
                                 </div>
 
-                                <div className="flex gap-2 items-start w-full">
+                                <div className="flex flex-col sm:flex-row gap-5 sm:gap-3 md:gap-2 items-start w-full">
                                   <div className="w-full">
                                     <PhoneNumberInput
                                       handleChange={async (value) =>
@@ -216,7 +234,7 @@ export const AddCustomer = () => {
                                     />
                                   </div>
 
-                                  <div className="mb-2 pb-2 w-1/3">
+                                  <div className="mb-2 pb-2 w-full md:w-1/3">
                                     <div className="pb-1 flex items-start gap-1">
                                       <SemiboldBody className="text-light-700 transition-opacity duration-300">
                                         Currency
@@ -249,8 +267,214 @@ export const AddCustomer = () => {
                               </div>
                             )
                           },
-                          { label: 'Item 2', content: 'This is the content for item 2.' },
-                          { label: 'Item 3', content: 'This is the content for item 3.' }
+
+                          {
+                            label: (
+                              <div className="w-full justify-start text-start">
+                                <SemiboldBody className="text-light-900">
+                                  Billing Address{' '}
+                                  <span className="text-light-700">
+                                    {billingAddressStats?.nonEmptyFields}/
+                                    {billingAddressStats?.totalFields}
+                                  </span>
+                                </SemiboldBody>
+                              </div>
+                            ),
+                            content: (
+                              <div className="flex flex-col gap-5 px-2 mb-2 relative">
+                                <div>
+                                  <DarkInput
+                                    label="Billing Address Line 1"
+                                    handleChange={handleChange}
+                                    name="billing_address_line1"
+                                    errors={errors}
+                                    touched={touched}
+                                    placeholder="Enter Address"
+                                    value={values.billing_address_line1}
+                                    showLabel
+                                    required
+                                  />
+                                </div>
+                                <div>
+                                  <DarkInput
+                                    label="Billing Address Line 2"
+                                    handleChange={handleChange}
+                                    name="billing_address_line2"
+                                    errors={errors}
+                                    touched={touched}
+                                    placeholder="Enter Address"
+                                    value={values.billing_address_line2}
+                                    showLabel
+                                  />
+                                </div>
+
+                                <div className="flex flex-col sm:flex-row gap-5 sm:gap-3 md:gap-2 items-start w-full">
+                                  <div className="w-full">
+                                    <DarkInput
+                                      label="City"
+                                      handleChange={handleChange}
+                                      name="billing_city"
+                                      errors={errors}
+                                      touched={touched}
+                                      placeholder="Enter City"
+                                      value={values.billing_city}
+                                      showLabel
+                                      required
+                                    />
+                                  </div>
+
+                                  <div className="w-full">
+                                    <DarkInput
+                                      label="State"
+                                      handleChange={handleChange}
+                                      name="billing_state"
+                                      errors={errors}
+                                      touched={touched}
+                                      placeholder="Enter State"
+                                      value={values.billing_state}
+                                      showLabel
+                                      required
+                                    />
+                                  </div>
+                                </div>
+
+                                <div className="flex flex-col sm:flex-row gap-5 sm:gap-3 md:gap-2 items-start w-full">
+                                  <div className="w-full">
+                                    <DarkInput
+                                      label="Postal Code"
+                                      handleChange={handleChange}
+                                      name="billing_postal_code"
+                                      errors={errors}
+                                      touched={touched}
+                                      placeholder="Enter Postal Code"
+                                      value={values.billing_postal_code}
+                                      showLabel
+                                      required
+                                    />
+                                  </div>
+
+                                  <div className="w-full">
+                                    <CountrySelect
+                                      handleChange={async (value) =>
+                                        await setFieldValue('billing_country', value)
+                                      }
+                                      errors={errors}
+                                      touched={touched}
+                                      value={values.billing_country}
+                                      name="billing_country"
+                                      label="Country"
+                                      placeholder="Select your Country"
+                                      position="top"
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                            )
+                          },
+
+                          {
+                            label: (
+                              <div className="w-full justify-start text-start">
+                                <SemiboldBody className="text-light-900">
+                                  Shipping Address{' '}
+                                  <span className="text-light-700">
+                                    {shippingAddressStats?.nonEmptyFields}/
+                                    {shippingAddressStats?.totalFields}
+                                  </span>
+                                </SemiboldBody>
+                              </div>
+                            ),
+                            content: (
+                              <div className="flex flex-col gap-5 px-2 mb-2 relative">
+                                <div>
+                                  <DarkInput
+                                    label="Shipping Address Line 1"
+                                    handleChange={handleChange}
+                                    name="shipping_address_line1"
+                                    errors={errors}
+                                    touched={touched}
+                                    placeholder="Enter Address"
+                                    value={values.shipping_address_line1}
+                                    showLabel
+                                    required
+                                  />
+                                </div>
+                                <div>
+                                  <DarkInput
+                                    label="Shipping Address Line 2"
+                                    handleChange={handleChange}
+                                    name="shipping_address_line2"
+                                    errors={errors}
+                                    touched={touched}
+                                    placeholder="Enter Address"
+                                    value={values.shipping_address_line2}
+                                    showLabel
+                                  />
+                                </div>
+
+                                <div className="flex flex-col sm:flex-row gap-5 sm:gap-3 md:gap-2 items-start w-full">
+                                  <div className="w-full">
+                                    <DarkInput
+                                      label="City"
+                                      handleChange={handleChange}
+                                      name="shipping_city"
+                                      errors={errors}
+                                      touched={touched}
+                                      placeholder="Enter City"
+                                      value={values.shipping_city}
+                                      showLabel
+                                      required
+                                    />
+                                  </div>
+
+                                  <div className="w-full">
+                                    <DarkInput
+                                      label="State"
+                                      handleChange={handleChange}
+                                      name="shipping_state"
+                                      errors={errors}
+                                      touched={touched}
+                                      placeholder="Enter State"
+                                      value={values.shipping_state}
+                                      showLabel
+                                      required
+                                    />
+                                  </div>
+                                </div>
+
+                                <div className="flex flex-col sm:flex-row gap-5 sm:gap-3 md:gap-2 items-start w-full">
+                                  <div className="w-full">
+                                    <DarkInput
+                                      label="Postal Code"
+                                      handleChange={handleChange}
+                                      name="shipping_postal_code"
+                                      errors={errors}
+                                      touched={touched}
+                                      placeholder="Enter Postal Code"
+                                      value={values.shipping_postal_code}
+                                      showLabel
+                                      required
+                                    />
+                                  </div>
+
+                                  <div className="w-full">
+                                    <CountrySelect
+                                      handleChange={async (value) =>
+                                        await setFieldValue('shipping_country', value)
+                                      }
+                                      errors={errors}
+                                      touched={touched}
+                                      value={values.shipping_country}
+                                      name="shipping_country"
+                                      label="Country"
+                                      placeholder="Select your Country"
+                                      position="top"
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                            )
+                          }
                         ]}
                         contentClassName="w-full mt-2 pt-2"
                         triggerClassName=""
