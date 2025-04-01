@@ -55,12 +55,12 @@ export async function createCustomer(payload: CreateCustomerType) {
   }
 }
 
-export async function updateProduct(id: string, payload: UpdateProductType) {
+export async function updateCustomer(id: string, payload: CreateCustomerType) {
   try {
     const session = await getSessionFromServer();
 
     const response = await api.fetch(
-      `/product/${id}`,
+      `/customer/${id}`,
       {
         method: 'PUT',
         headers: {
@@ -77,7 +77,7 @@ export async function updateProduct(id: string, payload: UpdateProductType) {
 
     if (!response.ok) {
       const errorData = await response.json();
-      return { success: false, error: errorData.message || 'Failed to update product' };
+      return { success: false, error: errorData.message || 'Failed to update customer' };
     }
 
     const data = await response.json();

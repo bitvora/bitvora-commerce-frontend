@@ -7,7 +7,7 @@ import {
   SemiboldSmallerText,
   SemiboldSmallText
 } from '@/components/Text';
-import { AddCustomer, DeleteCustomerModal } from './components';
+import { AddCustomer, DeleteCustomerModal, EditCustomer } from './components';
 import { useCustomerContext } from './context';
 import Table from '@/components/Table';
 import { DeleteIcon, EditIcon } from '@/components/Icons';
@@ -258,13 +258,11 @@ export default function Page() {
         />
       </div>
 
-      {/* <EditProduct
-        isEditOpen={isEditOpen}
-        product={currentCustomer}
+      <EditCustomer
+        customer={currentCustomer}
         toggleEditModal={toggleEditModal}
+        isEditOpen={isEditOpen}
       />
-
-       */}
 
       <DeleteCustomerModal
         customer={currentCustomer}

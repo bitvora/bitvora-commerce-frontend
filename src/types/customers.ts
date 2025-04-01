@@ -12,6 +12,7 @@ export interface Customer {
   billing_postal_code: string;
   billing_country: string;
   shipping_address_line1: string;
+  shipping_address_line2?: string | null;
   shipping_city: string;
   shipping_state: string;
   shipping_postal_code: string;
