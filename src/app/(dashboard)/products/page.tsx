@@ -115,7 +115,7 @@ export default function Page() {
       header: 'ID',
       accessor: 'id',
       render: (row) => (
-        <Link href={`${app_routes.customers}/${row.id}`} className="text-inherit">
+        <Link href={`${app_routes.products}/${row.id}`} className="text-inherit">
           <SemiboldSmallerText className="truncate text-light-700 hover:text-light-900">
             {formatUUID(row.id)}
           </SemiboldSmallerText>

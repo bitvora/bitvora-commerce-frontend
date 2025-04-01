@@ -155,7 +155,7 @@ export default function Page({ params }: { params: { id: string } }) {
             <RedButton
               className="h-11 w-full border-none outline-none"
               onClick={() => setIsDeleteOpen(true)}>
-              Delete
+              Delete Product
             </RedButton>
           </div>
 

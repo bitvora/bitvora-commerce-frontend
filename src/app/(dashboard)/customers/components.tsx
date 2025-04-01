@@ -19,6 +19,7 @@ import Modal from '@/components/Modal';
 import Accordion from '@/components/Accordion';
 import { countNonEmptyFields } from '@/lib/helpers';
 import { Customer } from '@/types/customers';
+import { QueryClient } from '@tanstack/react-query';
 
 export const AddCustomer = () => {
   const { currentAccount } = useAppContext();
@@ -28,7 +29,7 @@ export const AddCustomer = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     if (pathname === app_routes.customers && searchParams.get('action') === 'new-customer') {
@@ -529,6 +530,8 @@ export const EditCustomer = ({
     toggleEditModal(false);
   };
 
+  const queryClient = new QueryClient();
+
   return (
     <Drawer
       open={isEditOpen}
@@ -598,6 +601,12 @@ export const EditCustomer = ({
                 }
 
                 refetchCustomers();
+                await queryClient.refetchQueries({
+                  queryKey: ['customer', customer.id],
+                  type: 'active',
+                  exact: true
+                });
+
                 toast.success('Customer updated successfully');
                 handleClose();
                 resetForm();
@@ -613,8 +622,6 @@ export const EditCustomer = ({
               isSubmitting,
               touched,
               values,
-              isValid,
-              dirty,
               setFieldValue
             }) => {
               const customerStats = countNonEmptyFields(values, [
@@ -974,7 +981,7 @@ export const EditCustomer = ({
                         className="w-full h-12"
                         loading={isSubmitting}
                         type="submit"
-                        disabled={!isValid || !dirty}>
+                        disabled={isSubmitting}>
                         Update Customer
                       </PrimaryButton>
                     </div>
