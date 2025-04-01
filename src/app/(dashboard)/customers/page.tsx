@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 'use client';
 
 import Currency from '@/components/Currency';
@@ -8,8 +7,8 @@ import {
   SemiboldSmallerText,
   SemiboldSmallText
 } from '@/components/Text';
-import { AddProduct, DeleteProductModal, EditProduct, ProductImageModal } from './components';
-import { useProductContext } from './context';
+import { AddCustomer, DeleteCustomerModal, EditCustomer } from './components';
+import { useCustomerContext } from './context';
 import Table from '@/components/Table';
 import { DeleteIcon, EditIcon } from '@/components/Icons';
 import { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
@@ -18,12 +17,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { app_routes } from '@/lib/constants';
-import { Product } from '@/lib/types';
-import { formatUUID, renderPrice } from '@/lib/helpers';
+import { formatUUID } from '@/lib/helpers';
 import { Link } from '@/components/Links';
+import { Customer } from '@/types/customers';
 
 export default function Page() {
-  const { products, isProductsLoading } = useProductContext();
+  const { isCustomersLoading, customers } = useCustomerContext();
 
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -35,19 +34,13 @@ export default function Page() {
   const [debouncedQuery, setDebouncedQuery] = useState(initialQuery);
   const [currentPage, setCurrentPage] = useState(initialPage);
 
-  const [currentProduct, setCurrentProduct] = useState<Product>({} as Product);
+  const [currentCustomer, setCurrentCustomer] = useState<Customer>({} as Customer);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-  const [isImageOpen, setIsImageOpen] = useState(false);
 
   const closeDeleteModal = () => {
-    setCurrentProduct({} as Product);
+    setCurrentCustomer({} as Customer);
     setIsDeleteOpen(false);
-  };
-
-  const closeImageModal = () => {
-    setCurrentProduct({} as Product);
-    setIsImageOpen(false);
   };
 
   useEffect(() => {
@@ -55,7 +48,7 @@ export default function Page() {
     if (debouncedQuery) params.set('q', debouncedQuery);
     if (currentPage > 1) params.set('page', String(currentPage));
 
-    router.push(`${app_routes.products}?${params.toString()}`, { scroll: false });
+    router.push(`${app_routes.customers}?${params.toString()}`, { scroll: false });
   }, [debouncedQuery, currentPage, router]);
 
   useEffect(() => {
@@ -68,15 +61,15 @@ export default function Page() {
     };
   }, [query]);
 
-  const filteredProducts = useMemo(() => {
-    if (!debouncedQuery) return products;
+  const filteredCustomers = useMemo(() => {
+    if (!debouncedQuery) return customers;
 
-    return products.filter((product) =>
-      Object.values(product).some((value) =>
+    return customers.filter((customer) =>
+      Object.values(customer).some((value) =>
         String(value).toLowerCase().includes(debouncedQuery.toLowerCase())
       )
     );
-  }, [products, debouncedQuery]);
+  }, [customers, debouncedQuery]);
 
   const handleQueryChange = (event: ChangeEvent<HTMLInputElement>) => {
     setQuery(event.target.value);
@@ -93,20 +86,20 @@ export default function Page() {
       setIsEditOpen(value);
 
       if (!value) {
-        setCurrentProduct({} as Product);
-        router.replace(app_routes.products);
+        setCurrentCustomer({} as Customer);
+        router.replace(app_routes.customers);
       }
     },
     [router]
   );
 
-  const handleEdit = (product) => {
-    setCurrentProduct(product);
+  const handleEdit = (customer) => {
+    setCurrentCustomer(customer);
     toggleEditModal(true);
   };
 
-  const handleDelete = (product) => {
-    setCurrentProduct(product);
+  const handleDelete = (customer) => {
+    setCurrentCustomer(customer);
     setIsDeleteOpen(true);
   };
 
@@ -115,7 +108,7 @@ export default function Page() {
       header: 'ID',
       accessor: 'id',
       render: (row) => (
-        <Link href={`${app_routes.products}/${row.id}`} className="text-inherit">
+        <Link href={`${app_routes.customers}/${row.id}`} className="text-inherit">
           <SemiboldSmallerText className="truncate text-light-700 hover:text-light-900">
             {formatUUID(row.id)}
           </SemiboldSmallerText>
@@ -123,69 +116,43 @@ export default function Page() {
       )
     },
     {
-      header: 'Product',
+      header: 'Name',
       accessor: 'name',
       render: (row) => (
-        <div className="flex items-center gap-3">
-          <button
-            className="cursor-pointer border-none outline-none hidden md:flex"
-            onClick={() => {
-              setCurrentProduct(row);
-              setIsImageOpen(true);
-            }}>
-            <img src={row.image} alt={row.name} className="w-10 h-10 rounded-md object-cover" />
-          </button>
-
-          <Link href={`${app_routes.products}/${row.id}`} className="text-inherit">
-            <SemiboldSmallText className="text-light-700 hover:text-light-900 truncate hidden md:flex">
-              {row.name}
-            </SemiboldSmallText>
-            <SemiboldSmallerText className="truncate md:hidden text-light-700 hover:text-light-900">
-              {row.name}
-            </SemiboldSmallerText>
-          </Link>
-        </div>
-      )
-    },
-    {
-      header: 'Price',
-      accessor: 'amount',
-      render: (row) => (
-        <Link href={`${app_routes.products}/${row.id}`}>
-          <SemiboldSmallText className="text-light-700 hover:text-light-900 hidden md:flex">
-            {renderPrice({ amount: row.amount, currency: row.currency })}
+        <Link href={`${app_routes.customers}/${row.id}`} className="text-inherit">
+          <SemiboldSmallText className="text-light-700 hover:text-light-900 truncate hidden md:flex">
+            {row.name}
           </SemiboldSmallText>
-
           <SemiboldSmallerText className="truncate md:hidden text-light-700 hover:text-light-900">
-            {renderPrice({ amount: row.amount, currency: row.currency })}
+            {row.name}
           </SemiboldSmallerText>
         </Link>
       )
     },
     {
-      header: 'Sales',
-      accessor: 'total_sales',
+      header: 'Email',
+      accessor: 'email',
       render: (row) => (
-        <Link href={`${app_routes.products}/${row.id}`}>
-          <SemiboldSmallText className="text-light-700 hover:text-light-900 hidden md:flex">
-            N/A
+        <Link href={`${app_routes.customers}/${row.id}`} className="text-inherit">
+          <SemiboldSmallText className="text-light-700 hover:text-light-900 truncate hidden md:flex">
+            {row.email}
           </SemiboldSmallText>
           <SemiboldSmallerText className="truncate md:hidden text-light-700 hover:text-light-900">
-            N/A
+            {row.email}
           </SemiboldSmallerText>
         </Link>
       )
     },
     {
-      header: 'Subscriptions',
-      accessor: 'subscriptions',
+      header: 'Phone',
+      accessor: 'phone_number',
       render: (row) => (
-        <Link href={`${app_routes.products}/${row.id}`}>
-          <SemiboldSmallText className="text-light-700 hover:text-light-900 hidden md:flex">
-            N/A
+        <Link href={`${app_routes.customers}/${row.id}`} className="text-inherit">
+          <SemiboldSmallText className="text-light-700 hover:text-light-900 truncate hidden md:flex">
+            {row.phone_number}
           </SemiboldSmallText>
           <SemiboldSmallerText className="truncate md:hidden text-light-700 hover:text-light-900">
-            N/A
+            {row.phone_number}
           </SemiboldSmallerText>
         </Link>
       )
@@ -196,7 +163,7 @@ export default function Page() {
     <div className="flex flex-col gap-3 md:gap-8 bg-primary-50 md:bg-primary-150 px-0 sm:px-3 pt-6 lg:pt-0 pb-8 w-full">
       <div className="bg-transparent xl:bg-primary-50 rounded-lg px-4 sm:px-8 py-2 lg:h-[80px] w-full flex items-center justify-between">
         <div className="sm:gap-4 md:gap-10 items-center hidden sm:flex">
-          <MediumHeader5>Products</MediumHeader5>
+          <MediumHeader5>Customers</MediumHeader5>
 
           <div className="hidden md:flex">
             <Currency />
@@ -209,7 +176,7 @@ export default function Page() {
               value={query}
               handleChange={handleQueryChange}
               name="query"
-              placeholder="Search Products"
+              placeholder="Search Customers"
               startIcon={
                 <div className="text-light-500">
                   <FontAwesomeIcon icon={faMagnifyingGlass} />
@@ -229,7 +196,7 @@ export default function Page() {
           </div>
 
           <div>
-            <AddProduct />
+            <AddCustomer />
           </div>
         </div>
       </div>
@@ -238,7 +205,7 @@ export default function Page() {
         <Table
           tableContainerClassName="products-table"
           columns={columns}
-          data={filteredProducts as unknown as Record<string, unknown>[]}
+          data={filteredCustomers as unknown as Record<string, unknown>[]}
           rowsPerPage={10}
           currentPage={currentPage}
           onPageChange={setCurrentPage}
@@ -260,14 +227,14 @@ export default function Page() {
           tableHeader={
             <div className="w-full hidden md:flex items-center justify-between">
               <SemiboldBody className="text-light-900">
-                Products <span className="text-light-700">({filteredProducts.length})</span>
+                Customers <span className="text-light-700">({filteredCustomers.length})</span>
               </SemiboldBody>
 
               <DarkInput
                 value={query}
                 handleChange={handleQueryChange}
                 name="query"
-                placeholder="Search Products"
+                placeholder="Search Customers"
                 startIcon={
                   <div className="text-light-500">
                     <FontAwesomeIcon icon={faMagnifyingGlass} />
@@ -286,27 +253,21 @@ export default function Page() {
               />
             </div>
           }
-          isLoading={isProductsLoading}
-          emptyMessage={query ? 'No Products found' : 'No Products'}
+          isLoading={isCustomersLoading}
+          emptyMessage={query ? 'No Customers found' : 'No Customers'}
         />
       </div>
 
-      <EditProduct
-        isEditOpen={isEditOpen}
-        product={currentProduct}
+      <EditCustomer
+        customer={currentCustomer}
         toggleEditModal={toggleEditModal}
+        isEditOpen={isEditOpen}
       />
 
-      <DeleteProductModal
-        product={currentProduct}
+      <DeleteCustomerModal
+        customer={currentCustomer}
         isDeleteOpen={isDeleteOpen}
         closeDeleteModal={closeDeleteModal}
-      />
-
-      <ProductImageModal
-        product={currentProduct}
-        isImageOpen={isImageOpen}
-        closeImageModal={closeImageModal}
       />
     </div>
   );

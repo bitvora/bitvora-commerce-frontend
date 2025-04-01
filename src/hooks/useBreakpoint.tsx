@@ -1,3 +1,5 @@
+'use client'
+
 import { Breakpoint } from '@/lib/types';
 import { useState, useEffect } from 'react';
 

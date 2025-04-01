@@ -72,3 +72,16 @@ export const renderPrice = ({ amount, currency }: { amount: number; currency: st
 
   return price;
 };
+
+export const countNonEmptyFields = <T extends Record<string, unknown>>(
+  values: T,
+  fieldsToCheck: (keyof T)[]
+) => {
+  const totalFields = fieldsToCheck.length;
+
+  const nonEmptyFields = fieldsToCheck.filter(
+    (key) => values[key] !== '' && values[key] !== null
+  ).length;
+
+  return { totalFields, nonEmptyFields };
+};

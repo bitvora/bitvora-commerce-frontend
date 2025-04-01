@@ -25,9 +25,12 @@ const ProductContext = createContext<ProductContextType | undefined>(undefined);
 export default function ProductContextProvider({ children }: { children: ReactNode }) {
   const [products, setProducts] = useState<Product[]>([]);
   const { currentAccount } = useAppContext();
-  const [isProductsLoading, setIsProductsLoading] = useState(true);
 
-  const { data: productsData, refetch } = useQuery({
+  const {
+    data,
+    refetch,
+    isLoading: isProductsLoading
+  } = useQuery({
     queryKey: ['products', currentAccount?.id],
     queryFn: () => getProducts(),
     enabled: !!currentAccount?.id
@@ -38,13 +41,10 @@ export default function ProductContextProvider({ children }: { children: ReactNo
   }, [refetch]);
 
   useEffect(() => {
-    if (productsData) {
-      if (productsData?.data) {
-        setProducts(productsData?.data);
-      }
-      setIsProductsLoading(false);
+    if (data?.data) {
+      setProducts(data?.data);
     }
-  }, [productsData]);
+  }, [data]);
 
   const values = useMemo(() => {
     return {

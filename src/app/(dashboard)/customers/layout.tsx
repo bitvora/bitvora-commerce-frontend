@@ -1,25 +1,26 @@
 import type { Metadata } from 'next';
-import ProductContextProvider from './context';
+import CustomersContextProvider from './context';
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
-import { getProducts } from './actions';
+import { getCustomers } from './actions';
 import { getSessionFromServer } from '@/lib/session';
 
 export const metadata: Metadata = {
-  title: 'Products'
+  title: 'Customers'
 };
 
 export default async function Layout({ children }: { children: React.ReactNode }) {
   const queryClient = new QueryClient();
+
   const session = await getSessionFromServer();
 
   await queryClient.prefetchQuery({
-    queryKey: ['products', session?.activeAccount],
-    queryFn: () => getProducts()
+    queryKey: ['customers', session?.activeAccount],
+    queryFn: () => getCustomers()
   });
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <ProductContextProvider>{children}</ProductContextProvider>
+      <CustomersContextProvider>{children}</CustomersContextProvider>
     </HydrationBoundary>
   );
 }

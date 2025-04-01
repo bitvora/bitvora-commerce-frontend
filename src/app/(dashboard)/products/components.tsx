@@ -19,6 +19,7 @@ import Select from '@/components/Selects';
 import { useAppContext } from '@/app/contexts';
 import { CreateProductType, Product, UpdateProductType } from '@/lib/types';
 import Modal from '@/components/Modal';
+import { QueryClient } from '@tanstack/react-query';
 
 export const AddProduct = () => {
   const { currentAccount } = useAppContext();
@@ -303,6 +304,8 @@ export const EditProduct = ({
     toggleEditModal(false);
   };
 
+  const queryClient = new QueryClient();
+
   return (
     <Drawer
       open={isEditOpen}
@@ -366,6 +369,11 @@ export const EditProduct = ({
 
                 refetchProducts();
                 toast.success('Product updated successfully');
+                await queryClient.refetchQueries({
+                  queryKey: ['product', product.id],
+                  type: 'active',
+                  exact: true
+                });
                 handleClose();
                 resetForm();
               } catch (err) {

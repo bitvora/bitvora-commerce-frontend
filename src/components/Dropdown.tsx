@@ -11,6 +11,7 @@ interface Props {
   className?: string;
   buttonClass?: string;
   onSelectClose?: boolean;
+  position?: 'top' | 'bottom';
 }
 
 export default function Dropdown({
@@ -19,7 +20,8 @@ export default function Dropdown({
   contentClass,
   className,
   buttonClass,
-  onSelectClose = false
+  onSelectClose = false,
+  position = 'bottom'
 }: Props) {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -58,13 +60,15 @@ export default function Dropdown({
       <AnimatePresence>
         {open && (
           <motion.div
-            initial={{ opacity: 0, y: 10 }}
+            initial={{ opacity: 0, y: position === 'bottom' ? 10 : -10 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 10 }}
+            exit={{ opacity: 0, y: position === 'bottom' ? 10 : -10 }}
             transition={{ duration: 0.3, ease: 'easeInOut' }}
             className={clsx(
               contentClass,
-              'absolute left-0 top-full mt-2 bg-primary-250 shadow-lg rounded-md z-10'
+              'absolute left-0',
+              position === 'bottom' ? 'top-full mt-2' : 'bottom-full mb-2',
+              'bg-primary-250 shadow-lg rounded-md z-10'
             )}
             onClick={onSelectClose ? closeDropdown : undefined}>
             {content}
