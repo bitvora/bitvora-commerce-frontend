@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 'use client';
 
 import { CreateSubscriptionType, Subscription } from '@/types/subscriptions';
@@ -126,7 +127,7 @@ export const AddSubscription = () => {
   return (
     <>
       <PrimaryButton
-        className="h-10 md:h-12 w-[140px] min-w-[140px] lg:w-[auto]"
+        className="h-10 md:h-12 w-[140px] min-w-[170px] lg:w-[auto]"
         onClick={handleOpen}>
         <SemiboldSmallText>New Subscription</SemiboldSmallText>
       </PrimaryButton>
@@ -267,6 +268,14 @@ export const AddSubscription = () => {
                             onChange={(value) => setFieldValue('product_id', value.id)}
                             showLabel
                             getOptionLabel={(option) => option.name}
+                            renderOption={(option) => (
+                              <div className="flex items-center gap-4">
+                                <img src={option.image} className="w-7 h-7 rounded-sm" alt={option?.name} />
+                                <SemiboldSmallText className="text-inherit">
+                                  {option.name}
+                                </SemiboldSmallText>
+                              </div>
+                            )}
                           />
 
                           <Link

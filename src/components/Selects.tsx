@@ -287,7 +287,7 @@ export const CalendarInput = ({
               </motion.ul>
             </div>
           }
-          contentClass={clsx('mt-2 w-full sm:min-w-[300px]')}
+          contentClass={clsx('mt-2 w-full sm:min-w-[300px] border-[0.5px] border-primary-600')}
         />
       </div>
 

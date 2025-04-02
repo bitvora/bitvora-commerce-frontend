@@ -245,15 +245,16 @@ input[type='tel']:hover {
 }
 
 .calendar-input {
-  background: var(--color-dark) !important;
+  background: var(--color-primary-40) !important;
   border: unset !important;
-  color: var(--color-light-700) !important;
+  color: var(--color-light-900) !important;
+  font-weight: 600;
 }
 
 .calendar-input .react-calendar__navigation__arrow:hover,
 .calendar-input .react-calendar__navigation__next-button:hover,
 .react-calendar__tile:hover {
-  background: var(--color-dark) !important;
+  background: var(--color-primary-40) !important;
   color: var(--color-light-900) !important;
 }
 
@@ -264,13 +265,13 @@ input[type='tel']:hover {
 }
 
 .react-calendar__tile:disabled {
-  background: var(--color-primary-50) !important;
+  background: var(--color-primary-40) !important;
   color: var(--color-light-300) !important;
 }
 
 .react-calendar__navigation button:disabled,
 .react-calendar__navigation button:disabled:hover {
-  background: var(--color-primary-50) !important;
+  background: var(--color-primary-40) !important;
   color: var(--color-light-300) !important;
 }
 
@@ -282,4 +283,8 @@ input[type='tel']:hover {
 .react-calendar__tile--active {
   background: var(--color-primary-400) !important;
   color: var(--color-light-900) !important;
+}
+
+.react-calendar__navigation__label__labelText.react-calendar__navigation__label__labelText--from {
+  font-weight: 600;
 }

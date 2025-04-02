@@ -7,16 +7,19 @@ import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import Drawer from 'react-modern-drawer';
-import { SemiboldBody, SemiboldTitle } from '@/components/Text';
+import { SemiboldTitle } from '@/components/Text';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { SubscriptionDetailsItem, Skeleton } from './components';
 import { RedButton, SecondaryButton } from '@/components/Buttons';
-import { formatDate, formatUUID } from '@/lib/helpers';
+import { formatDate } from '@/lib/helpers';
 import { DeleteSubscriptionModal } from '@/app/(dashboard)/subscriptions/components';
 // import { DeleteCustomerModal, EditCustomer } from './components';
+import { useParams } from 'next/navigation';
 
-export default function Page({ params }: { params: { id: string } }) {
+export default function Page() {
+  const params = useParams<{ id: string }>();
+
   const { id } = params;
 
   const router = useRouter();
@@ -73,26 +76,37 @@ export default function Page({ params }: { params: { id: string } }) {
             </div>
 
             <div className="rounded-lg px-5 lg:px-5 py-5 lg:py-6 bg-primary-150 w-full overflow-auto flex flex-col gap-6">
+              <SubscriptionDetailsItem label="Subscription ID" value={subscription?.id} id={true} />
+
               <SubscriptionDetailsItem
                 label="Customer ID"
-                value={formatUUID(subscription?.customer_id)}
+                value={subscription?.customer_id}
+                url={`${app_routes.customers}/${subscription?.customer_id}`}
+                id={true}
               />
+
               <SubscriptionDetailsItem
                 label="Product ID"
-                value={formatUUID(subscription?.product_id)}
+                value={subscription?.product_id}
+                url={`${app_routes.products}/${subscription?.product_id}`}
+                id={true}
               />
+
               <SubscriptionDetailsItem
                 label="Billing Start Date"
-                value={formatDate(subscription?.billing_start_date)}
+                value={formatDate(subscription?.billing_start_date, 'MMM DD, YYYY')}
               />
+
               <SubscriptionDetailsItem
                 label="Active On Date"
-                value={formatDate(subscription?.active_on_date)}
+                value={formatDate(subscription?.active_on_date, 'MMM DD, YYYY')}
               />
+
               <SubscriptionDetailsItem
                 label="Nostr Public Relay"
                 value={subscription?.nostr_relay}
               />
+
               <SubscriptionDetailsItem
                 label="Created On"
                 value={formatDate(subscription?.created_at)}
@@ -115,6 +129,7 @@ export default function Page({ params }: { params: { id: string } }) {
       </Drawer>
 
       {/* <EditCustomer customer={customer} toggleEditModal={toggleEditModal} isEditOpen={isEditOpen} />*/}
+
       <DeleteSubscriptionModal
         subscription={subscription}
         isDeleteOpen={isDeleteOpen}

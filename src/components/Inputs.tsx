@@ -12,7 +12,7 @@ import { type FormikErrors, type FormikTouched } from 'formik';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash, faMagnifyingGlass, faXmark } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
-import { SemiboldBody, RegularSmallerText, SemiboldSmallText } from './Text';
+import { SemiboldBody, RegularSmallerText, SemiboldSmallText, SemiboldSmallerText } from './Text';
 import PhoneInput from 'react-phone-number-input';
 import { country_codes } from '@/lib/constants';
 
@@ -471,6 +471,7 @@ interface DarkAutocompleteProps<T> {
   errors?: FormikErrors<Record<string, string>>;
   showLabel?: boolean;
   getOptionLabel?: (option: T) => string;
+  renderOption?: (option: T) => ReactNode;
 }
 
 export const DarkAutocomplete = <T,>({
@@ -484,7 +485,8 @@ export const DarkAutocomplete = <T,>({
   touched,
   errors,
   showLabel,
-  getOptionLabel = (option) => String(option)
+  getOptionLabel = (option) => String(option),
+  renderOption
 }: DarkAutocompleteProps<T>) => {
   const [inputValue, setInputValue] = useState('');
   const [filteredOptions, setFilteredOptions] = useState<T[]>(options);
@@ -492,6 +494,7 @@ export const DarkAutocomplete = <T,>({
   const [activeIndex, setActiveIndex] = useState(-1);
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLUListElement>(null);
+  const [isComplete, setIsComplete] = useState(false);
 
   const showError =
     touched?.[name as keyof typeof touched] && errors?.[name as keyof typeof errors];
@@ -517,6 +520,8 @@ export const DarkAutocomplete = <T,>({
     setInputValue(getOptionLabel(option));
     onChange(option);
     setShowDropdown(false);
+    setFilteredOptions(options);
+    setIsComplete(true);
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -563,57 +568,74 @@ export const DarkAutocomplete = <T,>({
       )}
 
       <div className="relative mt-1 mb-1 w-full">
-        <input
-          ref={inputRef}
-          type="text"
-          name={name}
-          value={inputValue}
-          onChange={handleInputChange}
-          onKeyDown={handleKeyDown}
-          onFocus={() => setShowDropdown(true)}
-          placeholder={placeholder}
-          required={required}
-          className={clsx(
-            'border-[1px] rounded-md py-3.5 px-4 font-bold text-sm xl:text-base w-full bg-dark',
-            'placeholder:text-light-500 text-light-900 disabled:text-light-500 focus:outline-none',
-            {
-              'border-red-700 focus:border-red-700 hover:border-red-700': showError,
-              'border-light-400 focus:hover:border-primary-500 hover:hover:border-primary-500':
-                !showError
-            },
-            className
-          )}
-          autoComplete="off"
-        />
+        {isComplete ? (
+          <div
+            ref={inputRef}
+            className={clsx(
+              'border-[1px] rounded-md py-6 px-4 font-bold text-sm xl:text-base w-full bg-dark h-[50px] flex items-center border-light-400'
+            )}>
+            <div className="text-light-900 flex gap-1 bg-light-overlay-50 rounded-3xl pl-4 pr-3 items-center h-8">
+              <SemiboldSmallerText>{inputValue}</SemiboldSmallerText>
 
-        <div className="absolute right-4 top-1/2 transform -translate-y-1/2 text-light-700">
-          {inputValue ? (
-            <button
-              className="outline-none border-none text-light-900 hover:text-light-700 cursor-pointer"
-              onClick={(event) => {
-                event.preventDefault();
-                setInputValue('');
-              }}>
-              <FontAwesomeIcon icon={faXmark} />
-            </button>
-          ) : (
+              <button
+                onClick={() => {
+                  setInputValue('');
+                  setFilteredOptions(options);
+                  setIsComplete(false);
+                }}
+                className="p-2 flex items-center justify-center text-center text-light-900 hover:text-light-700 transition border-none outline-none cursor-pointer">
+                <FontAwesomeIcon icon={faXmark} style={{ width: '18px', height: '18px' }} />
+              </button>
+            </div>
+          </div>
+        ) : (
+          <input
+            ref={inputRef}
+            type="text"
+            name={name}
+            value={inputValue}
+            onChange={handleInputChange}
+            onKeyDown={handleKeyDown}
+            onFocus={() => setShowDropdown(true)}
+            placeholder={placeholder}
+            required={required}
+            className={clsx(
+              'border-[1px] rounded-md py-3.5 px-4 font-bold text-sm xl:text-base w-full bg-dark',
+              'placeholder:text-light-500 text-light-900 disabled:text-light-500 focus:outline-none',
+              {
+                'border-red-700 focus:border-red-700 hover:border-red-700': showError,
+                'border-light-400 focus:hover:border-primary-500 hover:hover:border-primary-500':
+                  !showError
+              },
+              className
+            )}
+            autoComplete="off"
+          />
+        )}
+
+        {!isComplete && (
+          <div className="absolute right-4 top-1/2 transform -translate-y-1/2 text-light-700">
             <FontAwesomeIcon icon={faMagnifyingGlass} />
-          )}
-        </div>
+          </div>
+        )}
 
         {showDropdown && filteredOptions.length > 0 && (
           <ul
             ref={dropdownRef}
-            className="absolute w-full bg-dark border border-light-400 rounded-md mt-1 max-h-40 overflow-y-auto shadow-md z-10">
+            className="absolute w-full bg-dark border border-primary-400 rounded-md mt-1 max-h-40 overflow-y-auto shadow-md z-10 px-4">
             {filteredOptions.map((option, index) => (
               <li
                 key={getOptionLabel(option)}
                 className={clsx(
-                  'py-3 px-4 cursor-pointer text-light-700 hover:text-light-900 product-currency-item',
-                  index === activeIndex ? 'bg-primary-150' : 'hover:bg-primary-150'
+                  'py-3 px-0 cursor-pointer text-light-900 hover:text-light-700 product-currency-item border-b-[0.5px] border-light-300 flex text-start justify-start',
+                  index === activeIndex ? 'bg-primary-150' : ''
                 )}
                 onMouseDown={() => handleSelect(option)}>
-                <SemiboldSmallText>{getOptionLabel(option)}</SemiboldSmallText>
+                {renderOption ? (
+                  renderOption(option)
+                ) : (
+                  <SemiboldSmallText className='text-inherit'>{getOptionLabel(option)}</SemiboldSmallText>
+                )}
               </li>
             ))}
           </ul>
