@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect, ReactNode } from 'react';
+import { useState, useRef, useEffect, ReactNode, Dispatch, SetStateAction, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import clsx from 'clsx';
 
@@ -12,6 +12,8 @@ interface Props {
   buttonClass?: string;
   onSelectClose?: boolean;
   position?: 'top' | 'bottom';
+  open?: boolean;
+  setOpen?: Dispatch<SetStateAction<boolean>>;
 }
 
 export default function Dropdown({
@@ -21,24 +23,34 @@ export default function Dropdown({
   className,
   buttonClass,
   onSelectClose = false,
-  position = 'bottom'
+  position = 'bottom',
+  open,
+  setOpen
 }: Props) {
-  const [open, setOpen] = useState(false);
+  const [internalOpen, setInternalOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const toggleOpen = () => setOpen((prev) => !prev);
-  const closeDropdown = () => setOpen(false);
+  // If `open` and `setOpen` are provided, use them; otherwise, fall back to internal state
+  const isOpen = open !== undefined ? open : internalOpen;
+  const toggleOpen = () => (setOpen ? setOpen((prev) => !prev) : setInternalOpen((prev) => !prev));
+  const closeDropdown = useCallback(() => {
+    if (setOpen) {
+      setOpen(false);
+    } else {
+      setInternalOpen(false);
+    }
+  }, [setOpen]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setOpen(false);
+        closeDropdown();
       }
     };
 
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
-        setOpen(false);
+        closeDropdown();
       }
     };
 
@@ -49,16 +61,16 @@ export default function Dropdown({
       document.removeEventListener('mousedown', handleClickOutside);
       document.removeEventListener('keydown', handleEscape);
     };
-  }, []);
+  }, [closeDropdown]);
 
   return (
     <div className={clsx('relative', className)} ref={dropdownRef}>
-      <button type="button" onClick={toggleOpen} aria-expanded={open} className={buttonClass}>
+      <button type="button" onClick={toggleOpen} aria-expanded={isOpen} className={buttonClass}>
         {trigger}
       </button>
 
       <AnimatePresence>
-        {open && (
+        {isOpen && (
           <motion.div
             initial={{ opacity: 0, y: position === 'bottom' ? 10 : -10 }}
             animate={{ opacity: 1, y: 0 }}

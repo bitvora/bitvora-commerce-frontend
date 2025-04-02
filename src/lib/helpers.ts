@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import numeral from 'numeral';
+import toast from 'react-hot-toast';
 
 dayjs.extend(relativeTime);
 
@@ -84,4 +85,20 @@ export const countNonEmptyFields = <T extends Record<string, unknown>>(
   ).length;
 
   return { totalFields, nonEmptyFields };
+};
+
+export const copyToClipboard = ({
+  text,
+  alertMessage = 'Copied to clip board'
+}: {
+  text: string;
+  alertMessage?: string;
+}) => {
+  window.navigator.clipboard.writeText(text);
+  toast(alertMessage);
+};
+
+export const pasteToClipboard = async ({ callback }: { callback: (text: string) => void }) => {
+  const text = await navigator.clipboard.readText();
+  callback(text);
 };

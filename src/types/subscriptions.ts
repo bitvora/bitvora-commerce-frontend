@@ -22,3 +22,18 @@ export interface Subscription {
 }
 
 export type SubscriptionStatus = 'active' | 'suspended' | 'cancelled';
+
+export type CreateSubscriptionType = {
+  account_id: string;
+  customer_id: string;
+  product_id: string;
+  metadata?: {
+    notes?: string;
+    additional_info?: string;
+  };
+  nostr_relay: string;
+  nostr_pubkey: string;
+  nostr_secret: string;
+  billing_start_date: string;
+  active_on_date: string;
+};

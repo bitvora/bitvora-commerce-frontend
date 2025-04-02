@@ -142,6 +142,8 @@ input[type='number'] {
   border-radius: 7px;
   background: var(--color-dark) !important;
   width: 100% !important;
+  font-weight: 700;
+  color: var(--color-light-900) !important;
 }
 
 #phone-number .PhoneInput:hover {
@@ -240,4 +242,44 @@ input[type='tel']:focus,
 input[type='tel']:hover {
   border: 0px !important;
   outline: none !important;
+}
+
+.calendar-input {
+  background: var(--color-dark) !important;
+  border: unset !important;
+  color: var(--color-light-700) !important;
+}
+
+.calendar-input .react-calendar__navigation__arrow:hover,
+.calendar-input .react-calendar__navigation__next-button:hover,
+.react-calendar__tile:hover {
+  background: var(--color-dark) !important;
+  color: var(--color-light-900) !important;
+}
+
+.calendar-input .react-calendar__navigation__label,
+.calendar-input .react-calendar__navigation__next-button,
+.calendar-input .react-calendar__navigation__next2-button {
+  background: transparent !important;
+}
+
+.react-calendar__tile:disabled {
+  background: var(--color-primary-50) !important;
+  color: var(--color-light-300) !important;
+}
+
+.react-calendar__navigation button:disabled,
+.react-calendar__navigation button:disabled:hover {
+  background: var(--color-primary-50) !important;
+  color: var(--color-light-300) !important;
+}
+
+.react-calendar__tile--now {
+  background: var(--color-dark) !important;
+  color: var(--color-light-800) !important;
+}
+
+.react-calendar__tile--active {
+  background: var(--color-primary-400) !important;
+  color: var(--color-light-900) !important;
 }

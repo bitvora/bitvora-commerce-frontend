@@ -15,9 +15,8 @@ import {
   SemiboldTitle
 } from '@/components/Text';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faXmark } from '@fortawesome/free-solid-svg-icons';
-import { formatDate, renderPrice } from '@/lib/helpers';
-import { Link } from '@/components/Links';
+import { faCopy, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { copyToClipboard, formatDate, formatUUID, renderPrice } from '@/lib/helpers';
 import { Skeleton, Subscribers } from './components';
 import Tabs from '@/components/Tab';
 import { RedButton, SecondaryButton } from '@/components/Buttons';
@@ -27,6 +26,7 @@ import {
   ProductImageModal
 } from '@/app/(dashboard)/products/components';
 import React from 'react';
+import { Link } from '@/components/Links';
 
 export default function Page({ params }: { params: { id: string } }) {
   const { id } = params;
@@ -39,7 +39,8 @@ export default function Page({ params }: { params: { id: string } }) {
   const { data } = useQuery({
     queryKey: ['products', id],
     queryFn: () => getProduct(id),
-    enabled: !!id
+    enabled: !!id,
+    refetchOnWindowFocus: true
   });
 
   useEffect(() => {
@@ -139,6 +140,22 @@ export default function Page({ params }: { params: { id: string } }) {
                     {formatDate(product?.created_at, 'MMM D, YYYY hh:mm a')}
                   </span>
                 </SemiboldSmallerText>
+              </div>
+
+              <div className="flex items-center gap-1">
+                <SemiboldSmallerText className="text-light-500">Product ID:</SemiboldSmallerText>
+
+                <div className="flex items-center gap-2">
+                  <SemiboldSmallerText className="text-light-700 ml-1">
+                    {formatUUID(product?.id)}
+                  </SemiboldSmallerText>
+
+                  <button
+                    className="border-none outline-none text-secondary-700 hover:text-secondary-500 cursor-pointer"
+                    onClick={() => copyToClipboard({ text: product?.id })}>
+                    <FontAwesomeIcon icon={faCopy} />
+                  </button>
+                </div>
               </div>
             </div>
           </div>

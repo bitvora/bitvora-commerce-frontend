@@ -2,13 +2,12 @@
 
 import Currency from '@/components/Currency';
 import {
-  MediumBody,
   MediumHeader5,
   SemiboldBody,
   SemiboldSmallerText,
   SemiboldSmallText
 } from '@/components/Text';
-import { DeleteSubscriptionModal } from './components';
+import { DeleteSubscriptionModal, AddSubscription } from './components';
 import { useSubscriptionContext } from './context';
 import Table from '@/components/Table';
 import { DeleteIcon, EditIcon } from '@/components/Icons';
@@ -149,9 +148,12 @@ export default function Page() {
       accessor: 'active_on_date',
       render: (row) => (
         <Link href={`${app_routes.subscriptions}/${row.id}`}>
-          <MediumBody className="text-light-700 hover:text-light-900">
+          <SemiboldSmallText className="text-light-700 hover:text-light-900 truncate hidden md:flex">
             {formatDate(row.active_on_date, 'MMM DD, YYYY')}
-          </MediumBody>
+          </SemiboldSmallText>
+          <SemiboldSmallerText className="truncate md:hidden text-light-700 hover:text-light-900">
+            {formatDate(row.active_on_date, 'MMM DD, YYYY')}
+          </SemiboldSmallerText>
         </Link>
       )
     }
@@ -193,7 +195,9 @@ export default function Page() {
             />
           </div>
 
-          <div>{/* <AddSubscription /> */}</div>
+          <div>
+            <AddSubscription />
+          </div>
         </div>
       </div>
 
