@@ -1,6 +1,5 @@
 import api from '@/lib/api';
 import { getSessionFromServer } from '@/lib/session';
-import { CreateProductType, UpdateProductType } from '@/lib/types';
 import { CreateCustomerType } from '@/types/customers';
 
 export async function getCustomers() {
