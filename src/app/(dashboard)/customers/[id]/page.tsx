@@ -8,7 +8,6 @@ import { useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import Drawer from 'react-modern-drawer';
 import { SemiboldBody, SemiboldTitle } from '@/components/Text';
-import { Link } from '@/components/Links';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import Accordion from '@/components/Accordion';
@@ -16,6 +15,7 @@ import { CustomerDetailsItem, Skeleton } from './components';
 import { countNonEmptyFields, formatDate } from '@/lib/helpers';
 import { RedButton, SecondaryButton } from '@/components/Buttons';
 import { DeleteCustomerModal, EditCustomer } from '@/app/(dashboard)/customers/components';
+import { Link } from '@/components/Links';
 
 export default function Page({ params }: { params: { id: string } }) {
   const { id } = params;
@@ -28,7 +28,8 @@ export default function Page({ params }: { params: { id: string } }) {
   const { data } = useQuery({
     queryKey: ['customer', id],
     queryFn: () => getCustomer(id),
-    enabled: !!id
+    enabled: !!id,
+    refetchOnWindowFocus: true
   });
 
   useEffect(() => {
@@ -39,7 +40,7 @@ export default function Page({ params }: { params: { id: string } }) {
   }, [data]);
 
   const handleClose = () => {
-    router.push(app_routes.products);
+    router.push(app_routes.customers);
   };
 
   const [isEditOpen, setIsEditOpen] = useState(false);
@@ -115,6 +116,7 @@ export default function Page({ params }: { params: { id: string } }) {
                     ),
                     content: (
                       <div className="flex flex-col gap-5 px-2 mb-2 relative">
+                        <CustomerDetailsItem label="Customer ID" value={customer?.id} id={true} />
                         <CustomerDetailsItem label="Customer Name" value={customer?.name} />
                         <CustomerDetailsItem label="Customer Email" value={customer?.email} />
                         <CustomerDetailsItem label="Description" value={customer?.description} />

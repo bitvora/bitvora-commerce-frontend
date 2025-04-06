@@ -602,9 +602,7 @@ export const EditCustomer = ({
 
                 refetchCustomers();
                 await queryClient.refetchQueries({
-                  queryKey: ['customer', customer.id],
-                  type: 'active',
-                  exact: true
+                  queryKey: ['customer', customer.id]
                 });
 
                 toast.success('Customer updated successfully');

@@ -33,7 +33,8 @@ export default function ProductContextProvider({ children }: { children: ReactNo
   } = useQuery({
     queryKey: ['products', currentAccount?.id],
     queryFn: () => getProducts(),
-    enabled: !!currentAccount?.id
+    enabled: !!currentAccount?.id,
+    refetchOnWindowFocus: 'always'
   });
 
   const refetchProducts = useCallback(() => {

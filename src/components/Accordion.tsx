@@ -37,7 +37,7 @@ const Accordion = ({ items, triggerClassName, contentClassName, containerClassNa
               event.preventDefault();
               toggleItem(index);
             }}>
-            {item.label}
+            {item?.label}
 
             <FontAwesomeIcon icon={openIndex === index ? faAngleUp : faAngleDown} color="inherit" />
           </button>
@@ -50,7 +50,7 @@ const Accordion = ({ items, triggerClassName, contentClassName, containerClassNa
             }}
             transition={{ duration: 0.3, ease: 'easeInOut' }}
             className={clsx('overflow-hidden', contentClassName)}>
-            {item.content}
+            {item?.content}
           </motion.div>
         </div>
       ))}

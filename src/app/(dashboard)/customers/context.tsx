@@ -33,7 +33,8 @@ export default function CustomerContextProvider({ children }: { children: ReactN
   } = useQuery({
     queryKey: ['customers', currentAccount?.id],
     queryFn: () => getCustomers(),
-    enabled: !!currentAccount?.id
+    enabled: !!currentAccount?.id,
+    refetchOnWindowFocus: 'always'
   });
 
   const refetchCustomers = useCallback(() => {

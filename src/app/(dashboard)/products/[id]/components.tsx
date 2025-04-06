@@ -3,7 +3,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
 import { getProductSubscription } from './actions';
-import { Subscription, SubscriptionStatus } from '@/lib/types';
+import { Subscription, SubscriptionStatus } from '@/types/subscriptions';
 import { useEffect, useState } from 'react';
 import Table from '@/components/Table';
 import { app_routes } from '@/lib/constants';

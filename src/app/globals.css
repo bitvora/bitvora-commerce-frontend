@@ -74,6 +74,18 @@
   --color-green-800: #9dddc8;
   --color-green-900: #d9f2e9;
 
+  /* Yellow */
+  --color-yellow-50: #353221;
+  --color-yellow-100: #49442a;
+  --color-yellow-200: #6f6334;
+  --color-yellow-300: #9a833c;
+  --color-yellow-400: #c4a140;
+  --color-yellow-500: #d8b45f;
+  --color-yellow-600: #e8c87d;
+  --color-yellow-700: #f4d99f;
+  --color-yellow-800: #fbedcb;
+  --color-yellow-900: #fef7e6;
+
   --color-dark: #090b0a;
   --color-light-overlay-50: #ffffff0d;
   --color-light-overlay-100: #ffffff1a;
@@ -142,6 +154,8 @@ input[type='number'] {
   border-radius: 7px;
   background: var(--color-dark) !important;
   width: 100% !important;
+  font-weight: 700;
+  color: var(--color-light-900) !important;
 }
 
 #phone-number .PhoneInput:hover {
@@ -240,4 +254,49 @@ input[type='tel']:focus,
 input[type='tel']:hover {
   border: 0px !important;
   outline: none !important;
+}
+
+.calendar-input {
+  background: var(--color-primary-40) !important;
+  border: unset !important;
+  color: var(--color-light-900) !important;
+  font-weight: 600;
+}
+
+.calendar-input .react-calendar__navigation__arrow:hover,
+.calendar-input .react-calendar__navigation__next-button:hover,
+.react-calendar__tile:hover {
+  background: var(--color-primary-40) !important;
+  color: var(--color-light-900) !important;
+}
+
+.calendar-input .react-calendar__navigation__label,
+.calendar-input .react-calendar__navigation__next-button,
+.calendar-input .react-calendar__navigation__next2-button {
+  background: transparent !important;
+}
+
+.react-calendar__tile:disabled {
+  background: var(--color-primary-40) !important;
+  color: var(--color-light-300) !important;
+}
+
+.react-calendar__navigation button:disabled,
+.react-calendar__navigation button:disabled:hover {
+  background: var(--color-primary-40) !important;
+  color: var(--color-light-300) !important;
+}
+
+.react-calendar__tile--now {
+  background: var(--color-dark) !important;
+  color: var(--color-light-800) !important;
+}
+
+.react-calendar__tile--active {
+  background: var(--color-primary-400) !important;
+  color: var(--color-light-900) !important;
+}
+
+.react-calendar__navigation__label__labelText.react-calendar__navigation__label__labelText--from {
+  font-weight: 600;
 }

@@ -1,11 +1,18 @@
 'use client';
 
-import { ReactNode, useRef, useState, type ChangeEvent, type HTMLAttributes } from 'react';
+import {
+  ReactNode,
+  useEffect,
+  useRef,
+  useState,
+  type ChangeEvent,
+  type HTMLAttributes
+} from 'react';
 import { type FormikErrors, type FormikTouched } from 'formik';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { faEye, faEyeSlash, faMagnifyingGlass, faXmark } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
-import { SemiboldBody, RegularSmallerText, SemiboldSmallText } from './Text';
+import { SemiboldBody, RegularSmallerText, SemiboldSmallText, SemiboldSmallerText } from './Text';
 import PhoneInput from 'react-phone-number-input';
 import { country_codes } from '@/lib/constants';
 
@@ -202,7 +209,7 @@ export const DarkInput = ({
           <SemiboldBody className="text-light-700 transition-opacity duration-300">
             {label}
           </SemiboldBody>
-          {required && (
+          {required && !disabled && (
             <SemiboldBody className="text-light-700 transition-opacity duration-300">
               *
             </SemiboldBody>
@@ -448,6 +455,208 @@ export const PhoneNumberInput = ({
           {errors[name]?.toString()}
         </RegularSmallerText>
       ) : null}
+    </div>
+  );
+};
+
+interface DarkAutocompleteProps<T> {
+  label?: string;
+  name: string;
+  placeholder?: string;
+  options: T[];
+  required?: boolean;
+  className?: string;
+  onChange: (value: T) => void;
+  touched?: FormikTouched<Record<string, unknown>>;
+  errors?: FormikErrors<Record<string, string>>;
+  showLabel?: boolean;
+  getOptionLabel?: (option: T) => string;
+  renderOption?: (option: T) => ReactNode;
+  isInputComplete?: boolean;
+  defaultValue?: string;
+}
+
+export const DarkAutocomplete = <T,>({
+  label,
+  name,
+  placeholder,
+  options,
+  required,
+  className,
+  onChange,
+  touched,
+  errors,
+  showLabel,
+  getOptionLabel = (option) => String(option),
+  renderOption,
+  isInputComplete = false,
+  defaultValue
+}: DarkAutocompleteProps<T>) => {
+  const [inputValue, setInputValue] = useState(defaultValue);
+  const [filteredOptions, setFilteredOptions] = useState<T[]>(options);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(-1);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const dropdownRef = useRef<HTMLUListElement>(null);
+  const [isComplete, setIsComplete] = useState(isInputComplete);
+
+  useEffect(() => {
+    if (defaultValue) {
+      const selectedOption = options.find((option) => getOptionLabel(option) === defaultValue);
+      if (selectedOption) {
+        setInputValue(getOptionLabel(selectedOption));
+        setIsComplete(true);
+      }
+    }
+  }, [defaultValue, options, getOptionLabel]);
+
+  const showError =
+    touched?.[name as keyof typeof touched] && errors?.[name as keyof typeof errors];
+
+  useEffect(() => {
+    setFilteredOptions(options);
+  }, [options]);
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    setInputValue(value);
+
+    const filtered = options.filter((option) =>
+      getOptionLabel(option).toLowerCase().includes(value.toLowerCase().trim())
+    );
+
+    setFilteredOptions(filtered);
+    setShowDropdown(true);
+    setActiveIndex(-1);
+  };
+
+  const handleSelect = (option: T) => {
+    setInputValue(getOptionLabel(option));
+    onChange(option);
+    setShowDropdown(false);
+    setFilteredOptions(options);
+    setIsComplete(true);
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'ArrowDown') {
+      setActiveIndex((prev) => Math.min(prev + 1, filteredOptions.length - 1));
+    } else if (event.key === 'ArrowUp') {
+      setActiveIndex((prev) => Math.max(prev - 1, 0));
+    } else if (event.key === 'Enter' && activeIndex >= 0) {
+      handleSelect(filteredOptions[activeIndex]);
+    } else if (event.key === 'Escape') {
+      setShowDropdown(false);
+    }
+  };
+
+  const handleClickOutside = (event: MouseEvent) => {
+    if (
+      inputRef.current &&
+      !inputRef.current.contains(event.target as Node) &&
+      dropdownRef.current &&
+      !dropdownRef.current.contains(event.target as Node)
+    ) {
+      setShowDropdown(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  return (
+    <div className="relative w-full text-left">
+      {(showLabel || inputValue) && label && (
+        <div className="mb-1 pb-1 flex items-start gap-1">
+          <SemiboldBody className="text-light-700 transition-opacity duration-300">
+            {label}
+          </SemiboldBody>
+          {required && (
+            <SemiboldBody className="text-light-700 transition-opacity duration-300">
+              *
+            </SemiboldBody>
+          )}
+        </div>
+      )}
+
+      <div className="relative mt-1 mb-1 w-full">
+        {inputValue && isComplete ? (
+          <div
+            ref={inputRef}
+            className={clsx(
+              'border-[1px] rounded-md py-6 px-4 font-bold text-sm xl:text-base w-full bg-dark h-[50px] flex items-center border-light-400'
+            )}>
+            <div className="text-light-900 flex gap-1 bg-light-overlay-50 rounded-3xl pl-4 pr-3 items-center h-8">
+              <SemiboldSmallerText>{inputValue}</SemiboldSmallerText>
+
+              <button
+                onClick={() => {
+                  setInputValue('');
+                  setFilteredOptions(options);
+                  setIsComplete(false);
+                }}
+                className="p-2 flex items-center justify-center text-center text-light-900 hover:text-light-700 transition border-none outline-none cursor-pointer">
+                <FontAwesomeIcon icon={faXmark} style={{ width: '18px', height: '18px' }} />
+              </button>
+            </div>
+          </div>
+        ) : (
+          <input
+            ref={inputRef}
+            type="text"
+            name={name}
+            value={inputValue}
+            onChange={handleInputChange}
+            onKeyDown={handleKeyDown}
+            onFocus={() => setShowDropdown(true)}
+            placeholder={placeholder}
+            required={required}
+            className={clsx(
+              'border-[1px] rounded-md py-3.5 px-4 font-bold text-sm xl:text-base w-full bg-dark',
+              'placeholder:text-light-500 text-light-900 disabled:text-light-500 focus:outline-none',
+              {
+                'border-red-700 focus:border-red-700 hover:border-red-700': showError,
+                'border-light-400 focus:hover:border-primary-500 hover:hover:border-primary-500':
+                  !showError
+              },
+              className
+            )}
+            autoComplete="off"
+          />
+        )}
+
+        {!isComplete && (
+          <div className="absolute right-4 top-1/2 transform -translate-y-1/2 text-light-700">
+            <FontAwesomeIcon icon={faMagnifyingGlass} />
+          </div>
+        )}
+
+        {showDropdown && filteredOptions.length > 0 && (
+          <ul
+            ref={dropdownRef}
+            className="absolute w-full bg-dark border border-primary-400 rounded-md mt-1 max-h-40 overflow-y-auto shadow-md z-10 px-4">
+            {filteredOptions.map((option, index) => (
+              <li
+                key={getOptionLabel(option)}
+                className={clsx(
+                  'py-3 px-0 cursor-pointer text-light-900 hover:text-light-700 product-currency-item border-b-[0.5px] border-light-300 flex text-start justify-start',
+                  index === activeIndex ? 'bg-primary-150' : ''
+                )}
+                onMouseDown={() => handleSelect(option)}>
+                {renderOption ? (
+                  renderOption(option)
+                ) : (
+                  <SemiboldSmallText className="text-inherit">
+                    {getOptionLabel(option)}
+                  </SemiboldSmallText>
+                )}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   );
 };
