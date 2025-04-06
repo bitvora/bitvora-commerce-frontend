@@ -102,3 +102,26 @@ export const pasteToClipboard = async ({ callback }: { callback: (text: string) 
   const text = await navigator.clipboard.readText();
   callback(text);
 };
+
+export const formatKeyName = (key: string) => {
+  return key
+    .split('_')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+};
+
+export const countTruePermissions = (obj) => {
+  let trueCount = 0;
+
+  for (const key in obj) {
+    
+    for (const perm in obj[key]) {
+      
+      if (obj[key][perm] === true) {
+        trueCount++;
+      }
+    }
+  }
+
+  return trueCount;
+};

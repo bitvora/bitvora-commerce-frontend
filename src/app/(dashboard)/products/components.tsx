@@ -370,9 +370,7 @@ export const EditProduct = ({
                 refetchProducts();
                 toast.success('Product updated successfully');
                 await queryClient.refetchQueries({
-                  queryKey: ['product', product.id],
-                  type: 'active',
-                  exact: true
+                  queryKey: ['product', product.id]
                 });
                 handleClose();
                 resetForm();

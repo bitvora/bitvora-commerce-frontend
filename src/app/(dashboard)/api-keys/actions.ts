@@ -1,68 +1,30 @@
 import api from '@/lib/api';
 import { getSessionFromServer } from '@/lib/session';
-import { CreateSubscriptionType } from '@/types/subscriptions';
+import { CreateAPIKeyType } from '@/types/api-keys';
 
-export async function getSubscriptions() {
+export async function getAPIKeys() {
   try {
     const session = await getSessionFromServer();
-    const response = await api.fetch(
-      `/subscription/account/${session?.activeAccount}`,
-      {},
-      session
-    );
+    const response = await api.fetch(`/api-key/account/${session?.activeAccount}`, {}, session);
     if (!response) return [];
 
     if (!response.ok) {
-      throw new Error('Failed to fetch subscriptions');
+      throw new Error('Failed to fetch api keys');
     }
 
     return await response.json();
   } catch (error) {
-    console.error('Error fetching subscriptions:', error);
+    console.error('Error fetching api keys:', error);
     return [];
   }
 }
 
-export async function deleteSubscription(id: string) {
+export async function createAPIKey(payload: CreateAPIKeyType) {
   try {
     const session = await getSessionFromServer();
 
     const response = await api.fetch(
-      `/subscription/${id}`,
-      {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      },
-      session
-    );
-
-    if (!response) {
-      return { success: false, error: 'Session expired or unauthorized' };
-    }
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      return { success: false, error: errorData.message || 'Failed to delete subscription' };
-    }
-
-    const data = await response.json();
-    return { success: true, data };
-  } catch (error) {
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : 'Something went wrong'
-    };
-  }
-}
-
-export async function createSubscription(payload: CreateSubscriptionType) {
-  try {
-    const session = await getSessionFromServer();
-
-    const response = await api.fetch(
-      '/subscription',
+      '/api-key',
       {
         method: 'POST',
         headers: {
@@ -79,7 +41,7 @@ export async function createSubscription(payload: CreateSubscriptionType) {
 
     if (!response.ok) {
       const errorData = await response.json();
-      return { success: false, error: errorData.message || 'Failed to create subscription' };
+      return { success: false, error: errorData.message || 'Failed to create api key' };
     }
 
     const data = await response.json();
@@ -92,12 +54,12 @@ export async function createSubscription(payload: CreateSubscriptionType) {
   }
 }
 
-export async function updateSubscription(id: string, payload: CreateSubscriptionType) {
+export async function updateAPIKey(id: number, payload: CreateAPIKeyType) {
   try {
     const session = await getSessionFromServer();
 
     const response = await api.fetch(
-      `/subscription/${id}`,
+      `/api-key/${id}`,
       {
         method: 'PUT',
         headers: {
@@ -114,7 +76,41 @@ export async function updateSubscription(id: string, payload: CreateSubscription
 
     if (!response.ok) {
       const errorData = await response.json();
-      return { success: false, error: errorData.message || 'Failed to update subscription' };
+      return { success: false, error: errorData.message || 'Failed to update api key' };
+    }
+
+    const data = await response.json();
+    return { success: true, data };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Something went wrong'
+    };
+  }
+}
+
+export async function deleteAPIKey(id: number) {
+  try {
+    const session = await getSessionFromServer();
+
+    const response = await api.fetch(
+      `/api-key/${id}`,
+      {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      },
+      session
+    );
+
+    if (!response) {
+      return { success: false, error: 'Session expired or unauthorized' };
+    }
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      return { success: false, error: errorData.message || 'Failed to delete api key' };
     }
 
     const data = await response.json();

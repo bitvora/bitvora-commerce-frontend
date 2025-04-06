@@ -209,7 +209,7 @@ export const DarkInput = ({
           <SemiboldBody className="text-light-700 transition-opacity duration-300">
             {label}
           </SemiboldBody>
-          {required && (
+          {required && !disabled && (
             <SemiboldBody className="text-light-700 transition-opacity duration-300">
               *
             </SemiboldBody>
@@ -472,6 +472,8 @@ interface DarkAutocompleteProps<T> {
   showLabel?: boolean;
   getOptionLabel?: (option: T) => string;
   renderOption?: (option: T) => ReactNode;
+  isInputComplete?: boolean;
+  defaultValue?: string;
 }
 
 export const DarkAutocomplete = <T,>({
@@ -486,15 +488,27 @@ export const DarkAutocomplete = <T,>({
   errors,
   showLabel,
   getOptionLabel = (option) => String(option),
-  renderOption
+  renderOption,
+  isInputComplete = false,
+  defaultValue
 }: DarkAutocompleteProps<T>) => {
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState(defaultValue);
   const [filteredOptions, setFilteredOptions] = useState<T[]>(options);
   const [showDropdown, setShowDropdown] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLUListElement>(null);
-  const [isComplete, setIsComplete] = useState(false);
+  const [isComplete, setIsComplete] = useState(isInputComplete);
+
+  useEffect(() => {
+    if (defaultValue) {
+      const selectedOption = options.find((option) => getOptionLabel(option) === defaultValue);
+      if (selectedOption) {
+        setInputValue(getOptionLabel(selectedOption));
+        setIsComplete(true);
+      }
+    }
+  }, [defaultValue, options, getOptionLabel]);
 
   const showError =
     touched?.[name as keyof typeof touched] && errors?.[name as keyof typeof errors];
@@ -568,7 +582,7 @@ export const DarkAutocomplete = <T,>({
       )}
 
       <div className="relative mt-1 mb-1 w-full">
-        {isComplete ? (
+        {inputValue && isComplete ? (
           <div
             ref={inputRef}
             className={clsx(
@@ -634,7 +648,9 @@ export const DarkAutocomplete = <T,>({
                 {renderOption ? (
                   renderOption(option)
                 ) : (
-                  <SemiboldSmallText className='text-inherit'>{getOptionLabel(option)}</SemiboldSmallText>
+                  <SemiboldSmallText className="text-inherit">
+                    {getOptionLabel(option)}
+                  </SemiboldSmallText>
                 )}
               </li>
             ))}

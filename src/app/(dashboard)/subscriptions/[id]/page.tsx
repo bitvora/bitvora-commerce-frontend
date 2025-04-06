@@ -3,7 +3,11 @@
 import { app_routes } from '@/lib/constants';
 import { getSubscription } from './actions';
 import { Subscription } from '@/types/subscriptions';
-import { useCallback, useEffect, useState } from 'react';
+import {
+  useEffect,
+  useState
+  // ,useCallback,
+} from 'react';
 import { useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import Drawer from 'react-modern-drawer';
@@ -11,10 +15,15 @@ import { SemiboldTitle } from '@/components/Text';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { SubscriptionDetailsItem, Skeleton } from './components';
-import { RedButton, SecondaryButton } from '@/components/Buttons';
+import {
+  RedButton
+  // , SecondaryButton
+} from '@/components/Buttons';
 import { formatDate } from '@/lib/helpers';
-import { DeleteSubscriptionModal } from '@/app/(dashboard)/subscriptions/components';
-// import { DeleteCustomerModal, EditCustomer } from './components';
+import {
+  DeleteSubscriptionModal
+  // EditSubscription
+} from '@/app/(dashboard)/subscriptions/components';
 import { useParams } from 'next/navigation';
 
 export default function Page() {
@@ -42,19 +51,19 @@ export default function Page() {
   }, [data]);
 
   const handleClose = () => {
-    router.push(app_routes.products);
+    router.push(app_routes.subscriptions);
   };
 
-  const [isEditOpen, setIsEditOpen] = useState(false);
+  // const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
   const closeDeleteModal = () => {
     setIsDeleteOpen(false);
   };
 
-  const toggleEditModal = useCallback((value: boolean) => {
-    setIsEditOpen(value);
-  }, []);
+  // const toggleEditModal = useCallback((value: boolean) => {
+  //   setIsEditOpen(value);
+  // }, []);
 
   return (
     <>
@@ -114,9 +123,9 @@ export default function Page() {
             </div>
 
             <div className="w-full flex gap-4 items-center border-none outline-none">
-              <SecondaryButton className="h-11 w-full" onClick={() => toggleEditModal(true)}>
+              {/* <SecondaryButton className="h-11 w-full" onClick={() => toggleEditModal(true)}>
                 Edit Subscription
-              </SecondaryButton>
+              </SecondaryButton> */}
 
               <RedButton
                 className="h-11 w-full border-none outline-none"
@@ -128,7 +137,11 @@ export default function Page() {
         )}
       </Drawer>
 
-      {/* <EditCustomer customer={customer} toggleEditModal={toggleEditModal} isEditOpen={isEditOpen} />*/}
+      {/* <EditSubscription
+        isEditOpen={isEditOpen}
+        subscription={subscription}
+        toggleEditModal={toggleEditModal}
+      /> */}
 
       <DeleteSubscriptionModal
         subscription={subscription}
