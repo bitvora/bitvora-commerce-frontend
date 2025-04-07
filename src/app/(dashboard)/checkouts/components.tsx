@@ -34,7 +34,7 @@ export const NewCheckout = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     if (pathname === app_routes.checkouts && searchParams.get('action') === 'new-checkout') {

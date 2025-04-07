@@ -12,7 +12,7 @@ export const app_routes = {
   subscriptions: '/subscriptions',
   checkouts: '/checkouts',
   payment_links: '/payment-links',
-  wallet: '/wallet',
+  wallet: '/wallets',
   api_keys: '/api-keys',
   webhooks: '/webhooks',
   profile: '/profile'

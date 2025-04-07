@@ -60,3 +60,20 @@ export async function fetchSession() {
 
   return data.session;
 }
+
+export async function getWallets() {
+  try {
+    const session = await getSessionFromServer();
+    const response = await api.fetch(`/wallet/account/${session?.activeAccount}`, {}, session);
+    if (!response) return [];
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch wallets');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching wallets:', error);
+    return [];
+  }
+}
