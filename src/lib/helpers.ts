@@ -8,7 +8,8 @@ dayjs.extend(relativeTime);
 export const formatDate = (date: string, format = 'MMM DD, YYYY hh:mm a'): string =>
   dayjs(date).format(format);
 
-export const formatUUID = (uuid: string, length = 8): string => uuid.slice(0, length);
+export const formatUUID = (uuid: string, length = 8): string =>
+  uuid ? uuid.slice(0, length) : uuid;
 
 export const getPastDate = (days: number) => {
   const date = new Date();
@@ -114,9 +115,7 @@ export const countTruePermissions = (obj) => {
   let trueCount = 0;
 
   for (const key in obj) {
-    
     for (const perm in obj[key]) {
-      
       if (obj[key][perm] === true) {
         trueCount++;
       }
@@ -125,3 +124,10 @@ export const countTruePermissions = (obj) => {
 
   return trueCount;
 };
+
+export function formatSnakeCaseToTitle(str: string): string {
+  return str
+    .split('_')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+}
