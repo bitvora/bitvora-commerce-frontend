@@ -5,7 +5,7 @@ import { useAppContext } from '@/app/contexts';
 import { PrimaryButton, RedButton, SecondaryButton } from '@/components/Buttons';
 import { app_routes } from '@/lib/constants';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Drawer from 'react-modern-drawer';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
@@ -135,7 +135,7 @@ export const CreateAPIKey = () => {
   const searchParams = useSearchParams();
 
   const [open, setOpen] = useState(false);
-
+  const scrollRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (pathname === app_routes.api_keys && searchParams.get('action') === 'new-key') {
       setOpen(true);
@@ -188,6 +188,7 @@ export const CreateAPIKey = () => {
 
               refetchAPIKeys();
               toast.success('Api key created successfully');
+              scrollRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
               setTab(2);
             } catch (err) {
               console.error(err);
@@ -206,7 +207,9 @@ export const CreateAPIKey = () => {
             setFieldValue,
             resetForm
           }) => (
-            <div className="h-full w-full relative px-4 lg:px-6 py-4 lg:py-6 rounded-lg flex flex-col bg-primary-40 gap-6 lg:gap-10">
+            <div
+              ref={scrollRef}
+              className="h-full w-full relative px-4 lg:px-6 py-4 lg:py-6 rounded-lg flex flex-col bg-primary-40 gap-6 lg:gap-10">
               <div className="flex w-full justify-between items-center">
                 <SemiboldTitle className="text-light-900">New Key</SemiboldTitle>
 
@@ -409,6 +412,8 @@ export const EditAPIKey = ({
   const { refetchAPIKeys } = useAPIKeysContext();
   const queryClient = new QueryClient();
 
+  const scrollRef = useRef<HTMLDivElement>(null);
+
   return (
     <Drawer
       open={isEditOpen}
@@ -444,6 +449,8 @@ export const EditAPIKey = ({
             await queryClient.refetchQueries({
               queryKey: ['api-key', apiKey.id]
             });
+
+            scrollRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
           } catch (err) {
             console.error(err);
             toast.error('Error updating api key');
@@ -461,7 +468,9 @@ export const EditAPIKey = ({
           setFieldValue,
           resetForm
         }) => (
-          <div className="h-full w-full relative px-4 lg:px-6 py-4 lg:py-6 rounded-lg flex flex-col bg-primary-40 gap-6 lg:gap-10">
+          <div
+            className="h-full w-full relative px-4 lg:px-6 py-4 lg:py-6 rounded-lg flex flex-col bg-primary-40 gap-6 lg:gap-10"
+            ref={scrollRef}>
             <div className="flex w-full justify-between items-center">
               <SemiboldTitle className="text-light-900">Update Key</SemiboldTitle>
 

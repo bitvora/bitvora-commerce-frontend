@@ -5,8 +5,11 @@ import {
   useEffect,
   useRef,
   useState,
+  useImperativeHandle,
+  forwardRef,
   type ChangeEvent,
-  type HTMLAttributes
+  type HTMLAttributes,
+  JSX
 } from 'react';
 import { type FormikErrors, type FormikTouched } from 'formik';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -459,6 +462,10 @@ export const PhoneNumberInput = ({
   );
 };
 
+export interface DarkAutocompleteHandle {
+  clear: () => void;
+}
+
 interface DarkAutocompleteProps<T> {
   label?: string;
   name: string;
@@ -476,22 +483,25 @@ interface DarkAutocompleteProps<T> {
   defaultValue?: string;
 }
 
-export const DarkAutocomplete = <T,>({
-  label,
-  name,
-  placeholder,
-  options,
-  required,
-  className,
-  onChange,
-  touched,
-  errors,
-  showLabel,
-  getOptionLabel = (option) => String(option),
-  renderOption,
-  isInputComplete = false,
-  defaultValue
-}: DarkAutocompleteProps<T>) => {
+export const InnerDarkAutocomplete = <T,>(
+  {
+    label,
+    name,
+    placeholder,
+    options,
+    required,
+    className,
+    onChange,
+    touched,
+    errors,
+    showLabel,
+    getOptionLabel = (option) => String(option),
+    renderOption,
+    isInputComplete = false,
+    defaultValue
+  }: DarkAutocompleteProps<T>,
+  ref: React.Ref<DarkAutocompleteHandle>
+) => {
   const [inputValue, setInputValue] = useState(defaultValue);
   const [filteredOptions, setFilteredOptions] = useState<T[]>(options);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -499,6 +509,14 @@ export const DarkAutocomplete = <T,>({
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLUListElement>(null);
   const [isComplete, setIsComplete] = useState(isInputComplete);
+
+  useImperativeHandle(ref, () => ({
+    clear: () => {
+      setInputValue('');
+      setFilteredOptions(options);
+      setIsComplete(false);
+    }
+  }));
 
   useEffect(() => {
     if (defaultValue) {
@@ -660,3 +678,7 @@ export const DarkAutocomplete = <T,>({
     </div>
   );
 };
+
+export const DarkAutocomplete = forwardRef(InnerDarkAutocomplete) as <T>(
+  props: DarkAutocompleteProps<T> & { ref?: React.Ref<DarkAutocompleteHandle> }
+) => JSX.Element;

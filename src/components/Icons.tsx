@@ -27,9 +27,13 @@ export const DeleteIcon = ({ height = 17, width = 17 }: { width?: number; height
 };
 
 export const CopyIcon = () => {
-  return <Image src="/img/copy.svg" alt="bitcoin" width={20} height={20} />;
+  return <Image src="/img/copy.svg" alt="copy" width={20} height={20} />;
 };
 
 export const WarningIcon = () => {
-  return <Image src="/icons/warning.svg" alt="bitcoin" width={22} height={22} />;
+  return <Image src="/icons/warning.svg" alt="warning" width={22} height={22} />;
+};
+
+export const ViewIcon = () => {
+  return <Image src="/icons/view.svg" alt="view" width={22} height={22} />;
 };
