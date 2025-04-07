@@ -299,3 +299,71 @@ export const CalendarInput = ({
     </div>
   );
 };
+
+type SelectFieldProps = {
+  label: string;
+  required?: boolean;
+  options: Option[];
+  value: string | number;
+  onChange: (value: string | number) => void;
+  placeholder?: string;
+  className?: string;
+  dropdownClass?: string;
+  touched?: FormikTouched<Record<string, unknown>>;
+  errors?: FormikErrors<Record<string, string>>;
+  listClassName?: string;
+  position?: 'top' | 'bottom';
+  name: string;
+};
+
+export const SelectField = ({
+  label,
+  required,
+  onChange,
+  options,
+  value,
+  className = 'hover:border-primary-500',
+  dropdownClass = 'bg-primary-40 product-currency',
+  errors,
+  listClassName = 'text-light-700 hover:text-light-900 product-currency-item',
+  placeholder,
+  position = 'bottom',
+  touched,
+  name
+}: SelectFieldProps) => {
+  const showError =
+    touched?.[name as keyof typeof touched] && errors?.[name as keyof typeof errors];
+
+  return (
+    <div className="flex flex-col">
+      <div className="flex items-start gap-1">
+        <SemiboldBody className="text-light-700 transition-opacity duration-300">
+          {label}
+        </SemiboldBody>
+
+        {required && (
+          <SemiboldBody className="text-light-700 transition-opacity duration-300">*</SemiboldBody>
+        )}
+      </div>
+
+      <div className="mt-1 pt-1">
+        <Select
+          placeholder={placeholder}
+          value={value}
+          onChange={onChange}
+          options={options}
+          dropdownClass={dropdownClass}
+          className={className}
+          listClassName={listClassName}
+          position={position}
+        />
+      </div>
+
+      {showError && (
+        <RegularSmallerText className="pt-1 text-red-700">
+          {errors[name as keyof typeof errors]}
+        </RegularSmallerText>
+      )}
+    </div>
+  );
+};

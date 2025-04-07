@@ -1,4 +1,5 @@
 import { CurrencyType } from '@/lib/types';
+import { CheckoutType } from '@/types/checkout';
 
 export const app_routes = {
   home: '/',
@@ -306,4 +307,9 @@ export const country_codes: any[] = [
   'ZA',
   'ZM',
   'ZW'
+];
+
+export const checkout_types: { label: string; value: CheckoutType }[] = [
+  { label: 'Single', value: 'single' },
+  { label: 'Subscription', value: 'subscription' }
 ];

@@ -3,7 +3,7 @@
 
 import { CreateSubscriptionType, Subscription } from '@/types/subscriptions';
 import { useSubscriptionContext } from './context';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { createSubscription, deleteSubscription, updateSubscription } from './actions';
 import toast from 'react-hot-toast';
@@ -16,7 +16,12 @@ import Drawer from 'react-modern-drawer';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { useAppContext } from '@/app/contexts';
-import { DarkAutocomplete, DarkInput, DarkTextarea } from '@/components/Inputs';
+import {
+  DarkAutocomplete,
+  DarkAutocompleteHandle,
+  DarkInput,
+  DarkTextarea
+} from '@/components/Inputs';
 import { useCustomerContext } from '@/app/(dashboard)/customers/context';
 import { Link } from '@/components/Links';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -105,6 +110,9 @@ export const AddSubscription = () => {
   const { products } = useProductContext();
   const { currentAccount } = useAppContext();
   const { refetchSubscriptions } = useSubscriptionContext();
+
+  const customerAutocompleteRef = useRef<DarkAutocompleteHandle>(null);
+  const productAutocompleteRef = useRef<DarkAutocompleteHandle>(null);
 
   const handleClose = () => {
     setOpen(false);
@@ -212,6 +220,8 @@ export const AddSubscription = () => {
                   }
                   refetchSubscriptions();
                   toast.success('Subscription created successfully');
+                  customerAutocompleteRef.current?.clear();
+                  productAutocompleteRef.current?.clear();
                   handleClose();
                   resetForm();
                 } catch (err) {
@@ -236,6 +246,7 @@ export const AddSubscription = () => {
                       <div className="rounded-lg px-5 lg:px-6 py-5 lg:py-6 bg-primary-150 w-full h-full flex flex-col gap-6">
                         <div className="flex flex-col w-full gap-2">
                           <DarkAutocomplete
+                            ref={customerAutocompleteRef}
                             label="Customer"
                             name="customer_id"
                             placeholder="Search Customer"
@@ -261,6 +272,7 @@ export const AddSubscription = () => {
 
                         <div className="flex flex-col w-full gap-2">
                           <DarkAutocomplete
+                            ref={productAutocompleteRef}
                             label="Product"
                             name="product_id"
                             placeholder="Search Product"

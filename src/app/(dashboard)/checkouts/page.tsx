@@ -53,8 +53,8 @@ export default function Page() {
   const filteredCheckouts = useMemo(() => {
     if (!debouncedQuery) return checkouts;
 
-    return checkouts.filter((customer) =>
-      Object.values(customer).some((value) =>
+    return checkouts.filter((checkout) =>
+      Object.values(checkout).some((value) =>
         String(value).toLowerCase().includes(debouncedQuery.toLowerCase())
       )
     );
@@ -135,7 +135,7 @@ export default function Page() {
     <div className="flex flex-col gap-3 md:gap-8 bg-primary-50 md:bg-primary-150 px-0 sm:px-3 pt-6 lg:pt-0 pb-8 w-full">
       <div className="bg-transparent xl:bg-primary-50 rounded-lg px-4 sm:px-8 py-2 lg:h-[80px] w-full flex items-center justify-between">
         <div className="sm:gap-4 md:gap-10 items-center hidden sm:flex">
-          <MediumHeader5>Customers</MediumHeader5>
+          <MediumHeader5>Checkouts</MediumHeader5>
 
           <div className="hidden md:flex">
             <Currency />
@@ -148,7 +148,7 @@ export default function Page() {
               value={query}
               handleChange={handleQueryChange}
               name="query"
-              placeholder="Search Customers"
+              placeholder="Search Checkouts"
               startIcon={
                 <div className="text-light-500">
                   <FontAwesomeIcon icon={faMagnifyingGlass} />
@@ -191,14 +191,14 @@ export default function Page() {
           tableHeader={
             <div className="w-full hidden md:flex items-center justify-between">
               <SemiboldBody className="text-light-900">
-                Customers <span className="text-light-700">({filteredCheckouts.length})</span>
+                Checkouts <span className="text-light-700">({filteredCheckouts.length})</span>
               </SemiboldBody>
 
               <DarkInput
                 value={query}
                 handleChange={handleQueryChange}
                 name="query"
-                placeholder="Search Customers"
+                placeholder="Search Checkouts"
                 startIcon={
                   <div className="text-light-500">
                     <FontAwesomeIcon icon={faMagnifyingGlass} />
@@ -218,7 +218,7 @@ export default function Page() {
             </div>
           }
           isLoading={isCheckoutsLoading}
-          emptyMessage={query ? 'No Customers found' : 'No Customers'}
+          emptyMessage={query ? 'No Checkouts found' : 'No Checkouts'}
         />
       </div>
     </div>

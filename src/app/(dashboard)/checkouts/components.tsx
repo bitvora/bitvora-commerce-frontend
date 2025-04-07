@@ -5,25 +5,20 @@ import Drawer from 'react-modern-drawer';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import toast from 'react-hot-toast';
-import {
-  SemiboldBody,
-  SemiboldSmallerText,
-  SemiboldSmallText,
-  SemiboldTitle
-} from '@/components/Text';
+import { SemiboldSmallerText, SemiboldSmallText, SemiboldTitle } from '@/components/Text';
 import { PrimaryButton } from '@/components/Buttons';
 import { createCheckout } from './actions';
 import { useCheckoutContext } from './context';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { usePathname, useSearchParams, useRouter } from 'next/navigation';
-import { app_routes, currencies } from '@/lib/constants';
+import { app_routes, checkout_types, currencies } from '@/lib/constants';
 import { CloseIcon } from '@/components/Icons';
 import { useAppContext } from '@/app/contexts';
 import { CheckoutState, CreateCheckoutType } from '@/types/checkout';
 import { Link } from '@/components/Links';
 import clsx from 'clsx';
-import { DarkAutocomplete, DarkInput } from '@/components/Inputs';
-import Select from '@/components/Selects';
+import { DarkAutocomplete, DarkAutocompleteHandle, DarkInput } from '@/components/Inputs';
+import { SelectField } from '@/components/Selects';
 import { useCustomerContext } from '@/app/(dashboard)/customers/context';
 import { useProductContext } from '@/app/(dashboard)/products/context';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -56,6 +51,9 @@ export const NewCheckout = () => {
     setOpen(true);
     router.replace(`${app_routes.checkouts}?action=new-checkout`);
   };
+
+  const customerAutocompleteRef = useRef<DarkAutocompleteHandle>(null);
+  const productAutocompleteRef = useRef<DarkAutocompleteHandle>(null);
 
   return (
     <>
@@ -91,8 +89,6 @@ export const NewCheckout = () => {
                 amount: '',
                 currency: '',
                 redirect_url: '',
-                metadata: {},
-                items: {},
                 expiry_minutes: ''
               }}
               enableReinitialize
@@ -101,23 +97,22 @@ export const NewCheckout = () => {
                   .required('Amount is required')
                   .positive('Amount must be greater than zero'),
                 currency: Yup.string().required('Currency is required'),
-                customer_id: Yup.string().required('Customer is required'),
+                type: Yup.string().required('Type is required'),
                 product_id: Yup.string().required('Product is required')
               })}
               onSubmit={async (values, { resetForm }) => {
                 const payload: CreateCheckoutType = {
                   account_id: currentAccount?.id || '',
-                  //@ts-expect-error None
+                  //@ts-expect-error Too lazy to fix this
                   type: values.type,
                   amount: Number(values.amount),
                   currency: values.currency,
                   redirect_url: values?.redirect_url,
-                  metadata: values?.metadata,
-                  items: values?.items,
+                  metadata: {},
+                  items: {},
                   expiry_minutes: Number(values.expiry_minutes),
                   customer_id: values?.customer_id,
-                  product_id: values?.product_id,
-                  subscription_id: values?.subscription_id
+                  product_id: values?.product_id
                 };
 
                 try {
@@ -130,8 +125,13 @@ export const NewCheckout = () => {
 
                   refetchCheckouts();
                   toast.success('Customer created successfully');
-                  handleClose();
+
+                  customerAutocompleteRef.current?.clear();
+                  productAutocompleteRef.current?.clear();
                   resetForm();
+                  handleClose();
+
+                  router.push(`${app_routes.checkouts}/${result.data?.id}`);
                 } catch (err) {
                   console.error(err);
                   toast.error('Error creating checkout');
@@ -151,13 +151,12 @@ export const NewCheckout = () => {
                 return (
                   <Form noValidate onSubmit={handleSubmit}>
                     <div className="rounded-lg px-5 lg:px-5 py-5 lg:py-6 bg-primary-150 w-full h-full overflow-auto flex flex-col gap-6">
-                      <div className="w-full flex justify-between items-center gap-3">
+                      <div className="w-full flex justify-between gap-3">
                         <div className="w-2/3">
                           <DarkInput
                             label="Amount"
                             handleChange={handleChange}
                             name="amount"
-                            //@ts-expect-error None
                             errors={errors}
                             touched={touched}
                             placeholder="0.00"
@@ -169,42 +168,51 @@ export const NewCheckout = () => {
                         </div>
 
                         <div className="w-1/3">
-                          <div className="mb-1 flex items-start gap-1">
-                            <SemiboldBody className="text-light-700 transition-opacity duration-300">
-                              Currency
-                            </SemiboldBody>
-
-                            <SemiboldBody className="text-light-700 transition-opacity duration-300">
-                              *
-                            </SemiboldBody>
-                          </div>
-
-                          <div className="mt-1">
-                            <Select
-                              placeholder="Currency"
-                              value={values.currency}
-                              onChange={(value) => setFieldValue('currency', value)}
-                              options={currencies.map(({ label, value }) => {
-                                return {
-                                  label,
-                                  value
-                                };
-                              })}
-                              dropdownClass="bg-primary-40 product-currency"
-                              className="hover:border-primary-500"
-                              listClassName="text-light-700 hover:text-light-900 product-currency-item"
-                            />
-                          </div>
+                          <SelectField
+                            label="Currency"
+                            name="currency"
+                            value={values.currency}
+                            onChange={(value) => setFieldValue('currency', value)}
+                            options={currencies.map(({ label, value }) => {
+                              return {
+                                label,
+                                value
+                              };
+                            })}
+                            placeholder="Currency"
+                            errors={errors}
+                            touched={touched}
+                            required
+                          />
                         </div>
+                      </div>
+
+                      <div>
+                        <SelectField
+                          label="Type"
+                          name="type"
+                          onChange={(value) => setFieldValue('type', value)}
+                          placeholder="Checkout Type"
+                          value={values.type}
+                          options={checkout_types.map(({ label, value }) => {
+                            return {
+                              label,
+                              value
+                            };
+                          })}
+                          required
+                          errors={errors}
+                          touched={touched}
+                        />
                       </div>
 
                       <div className="flex flex-col w-full gap-2">
                         <DarkAutocomplete
+                          ref={customerAutocompleteRef}
                           label="Customer"
                           name="customer_id"
                           placeholder="Search Customer"
                           options={customers}
-                          required
                           onChange={(value) => setFieldValue('customer_id', value.id)}
                           showLabel
                           getOptionLabel={(option) => option.name}
@@ -225,10 +233,11 @@ export const NewCheckout = () => {
 
                       <div className="flex flex-col w-full gap-2">
                         <DarkAutocomplete
+                          ref={productAutocompleteRef}
                           label="Product"
                           name="product_id"
                           placeholder="Search Product"
-                          options={products.filter((product) => product.is_recurring)}
+                          options={products}
                           required
                           onChange={(value) => setFieldValue('product_id', value.id)}
                           showLabel
@@ -265,7 +274,6 @@ export const NewCheckout = () => {
                           label="Expires (in minutes)"
                           handleChange={handleChange}
                           name="expiry_minutes"
-                          //@ts-expect-error None
                           errors={errors}
                           touched={touched}
                           placeholder="0 minutes"
@@ -282,13 +290,11 @@ export const NewCheckout = () => {
                           handleChange={handleChange}
                           name="redirect_url"
                           type="url"
-                          //@ts-expect-error None
                           errors={errors}
                           touched={touched}
                           placeholder="https://"
                           value={values.redirect_url}
                           showLabel
-                          required
                         />
                       </div>
                     </div>
@@ -300,7 +306,7 @@ export const NewCheckout = () => {
                           loading={isSubmitting}
                           type="submit"
                           disabled={!isValid || !dirty}>
-                          Create Customer
+                          Create Checkout
                         </PrimaryButton>
                       </div>
                     </div>
