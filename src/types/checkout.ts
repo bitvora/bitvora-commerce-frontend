@@ -39,6 +39,13 @@ export interface Checkout {
   expires_at: string;
   created_at: string;
   updated_at: string;
+  customer_id?: string;
+  product_id?: string;
+  metadata?: Record<string, unknown>;
+  items?: Record<string, unknown>;
+  currency: string;
+  bitcoin_address?: string;
+  lightning_invoice?: string;
 }
 
 export interface CreateCheckoutType {

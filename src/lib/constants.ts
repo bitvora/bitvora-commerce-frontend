@@ -313,3 +313,11 @@ export const checkout_types: { label: string; value: CheckoutType }[] = [
   { label: 'Single', value: 'single' },
   { label: 'Subscription', value: 'subscription' }
 ];
+
+export const webhook_events = [
+  'checkout.created',
+  'checkout.paid',
+  'checkout.underpaid',
+  'checkout.overpaid',
+  'checkout.expired'
+];

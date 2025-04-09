@@ -1,0 +1,36 @@
+{
+    "data": {
+        "id": "deab2076-643c-4267-b284-d86650edd345",
+        "user_id": "5eb6fabf-3473-4c6a-b978-4864c708fb7f",
+        "account_id": "e027d4d6-3cc1-4089-be26-80d49ffea142",
+        "customer_id": "469f8c77-2499-45a4-9577-b87ef94ccbf6",
+        "product_id": "a98188dd-9a41-4764-9e85-da52a725f45e",
+        "type": "single",
+        "state": "open",
+        "amount": 120000000000,
+        "received_amount": 0,
+        "bitcoin_address": "tb1qp8jfsrva84gkmtpcg7ud9qmpqnksutase2e709w73wtmsu2xherq2lpzmv",
+        "redirect_url": "https://www.wawure.biz",
+        "metadata": {},
+        "items": {},
+        "rates": {
+            "rates": {
+                "aud": 133152,
+                "cad": 113600,
+                "chf": 68608,
+                "cny": 583178,
+                "eur": 73102,
+                "gbp": 62664,
+                "hkd": 619702,
+                "jpy": 11807065,
+                "nzd": 144028,
+                "usd": 79765
+            },
+            "updated_at": "2025-04-07T23:29:22.865208761+01:00"
+        },
+        "expires_at": "2025-04-08T00:29:55.893319Z",
+        "created_at": "2025-04-07T23:29:55.893322Z",
+        "updated_at": "2025-04-07T23:29:55.893323Z"
+    },
+    "message": "Checkout created successfully"
+}

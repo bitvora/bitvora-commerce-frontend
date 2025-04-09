@@ -89,6 +89,7 @@ export const ConnectWallet = () => {
                   toast.success('Wallet connected successfully');
                   handleClose();
                   resetForm();
+                  router.push(`${app_routes.wallet}/${result?.data?.data?.id}`);
                 } catch (err) {
                   console.error(err);
                   toast.error('Error connecting wallet');

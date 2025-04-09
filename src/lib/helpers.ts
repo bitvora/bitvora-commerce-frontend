@@ -131,3 +131,31 @@ export function formatSnakeCaseToTitle(str: string): string {
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ');
 }
+
+export const generateCheckoutLink = (id: string) => `${process.env.NEXT_PUBLIC_APP_URL}/c/${id}`;
+
+export const generateProductLink = (id: string) =>
+  `${process.env.NEXT_PUBLIC_APP_URL}/products/${id}`;
+
+export const generateCustomerLink = (id: string) =>
+  `${process.env.NEXT_PUBLIC_APP_URL}/customers/${id}`;
+
+export const formatCurrency = (amount: number, currency: string) => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: currency || 'USD'
+  }).format(amount);
+};
+
+export function formatWebhookEvent(event: string): string {
+  const [first, ...rest] = event.split('.');
+  return [capitalize(first), ...rest].join(' ');
+}
+
+function capitalize(word: string): string {
+  return word.charAt(0).toUpperCase() + word.slice(1);
+}
+
+export function maskString(input: string): string {
+  return '*'.repeat(input.length);
+}

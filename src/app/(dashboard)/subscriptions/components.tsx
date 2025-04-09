@@ -28,7 +28,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useProductContext } from '@/app/(dashboard)/products/context';
 import { CalendarInput } from '@/components/Selects';
-import { QueryClient } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 
 export const DeleteSubscriptionModal = ({
   subscription,
@@ -460,12 +460,13 @@ export const EditSubscription = ({
 
   const { customers } = useCustomerContext();
   const { products } = useProductContext();
+  const router = useRouter();
 
   const handleClose = () => {
     toggleEditModal(false);
   };
 
-  const queryClient = new QueryClient();
+  const queryClient = useQueryClient();
 
   return (
     <Drawer
@@ -553,6 +554,7 @@ export const EditSubscription = ({
 
                 handleClose();
                 resetForm();
+                router.push(`${app_routes.subscriptions}/${result?.data?.data?.id}`);
               } catch (err) {
                 console.error(err);
                 toast.error('Error updating subscription');

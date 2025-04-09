@@ -119,19 +119,19 @@ export const NewCheckout = () => {
                   const result = await createCheckout(payload);
 
                   if (!result.success) {
-                    toast.error(result.error || 'Error creating customer');
+                    toast.error(result.error || 'Error creating checkout');
                     return;
                   }
 
                   refetchCheckouts();
-                  toast.success('Customer created successfully');
+                  toast.success('Checkout created successfully');
 
                   customerAutocompleteRef.current?.clear();
                   productAutocompleteRef.current?.clear();
                   resetForm();
                   handleClose();
 
-                  router.push(`${app_routes.checkouts}/${result.data?.id}`);
+                  router.push(`${app_routes.checkouts}/${result.data?.data?.id}`);
                 } catch (err) {
                   console.error(err);
                   toast.error('Error creating checkout');

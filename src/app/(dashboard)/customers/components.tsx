@@ -18,8 +18,9 @@ import { useAppContext } from '@/app/contexts';
 import Modal from '@/components/Modal';
 import Accordion from '@/components/Accordion';
 import { countNonEmptyFields } from '@/lib/helpers';
-import { Customer } from '@/types/customers';
-import { QueryClient } from '@tanstack/react-query';
+import { CreateCustomerType, Customer } from '@/types/customers';
+import { useQueryClient } from '@tanstack/react-query';
+import { Checkbox } from '@/components/Checkbox';
 
 export const AddCustomer = () => {
   const { currentAccount } = useAppContext();
@@ -46,6 +47,8 @@ export const AddCustomer = () => {
     setOpen(true);
     router.replace(`${app_routes.customers}?action=new-customer`);
   };
+
+  const [isShippingSimilar, setIsShippingSimilar] = useState(false);
 
   return (
     <>
@@ -101,21 +104,42 @@ export const AddCustomer = () => {
                   .required('Email address is required'),
                 phone_number: Yup.string().required('Phone Number is required'),
                 currency: Yup.string().required('Currency is required'),
-                description: Yup.string().required('Description is required'),
-                billing_address_line1: Yup.string().required('Billing Address is required'),
-                billing_city: Yup.string().required('City is required'),
-                billing_state: Yup.string().required('State is required'),
-                billing_postal_code: Yup.string().required('Postal Code is required'),
-                billing_country: Yup.string().required('Country is required'),
-                shipping_address_line1: Yup.string().required('Shipping Address is required'),
-                shipping_city: Yup.string().required('City is required'),
-                shipping_state: Yup.string().required('State is required'),
-                shipping_postal_code: Yup.string().required('Postal Code is required'),
-                shipping_country: Yup.string().required('COuntry is required')
+                description: Yup.string().required('Description is required')
               })}
               onSubmit={async (values, { resetForm }) => {
                 try {
-                  const result = await createCustomer(values);
+                  const payload: CreateCustomerType = {
+                    account_id: currentAccount?.id,
+                    name: values.name,
+                    currency: values.currency,
+                    description: values.description,
+                    email: values.email,
+                    phone_number: values.phone_number,
+                    billing_address_line1: values.billing_address_line1,
+                    billing_address_line2: values.billing_address_line2,
+                    billing_city: values.billing_city,
+                    billing_state: values.billing_state,
+                    billing_postal_code: values.billing_postal_code,
+                    billing_country: values.billing_country,
+                    shipping_address_line1: isShippingSimilar
+                      ? values.billing_address_line1
+                      : values.shipping_address_line1,
+                    shipping_address_line2: isShippingSimilar
+                      ? values.billing_address_line2
+                      : values.shipping_address_line2,
+                    shipping_city: isShippingSimilar ? values.billing_city : values.shipping_city,
+                    shipping_state: isShippingSimilar
+                      ? values.billing_state
+                      : values.shipping_state,
+                    shipping_postal_code: isShippingSimilar
+                      ? values.billing_postal_code
+                      : values.shipping_postal_code,
+                    shipping_country: isShippingSimilar
+                      ? values.billing_country
+                      : values.shipping_country
+                  };
+
+                  const result = await createCustomer(payload);
 
                   if (!result.success) {
                     toast.error(result.error || 'Error creating customer');
@@ -126,6 +150,7 @@ export const AddCustomer = () => {
                   toast.success('Customer created successfully');
                   handleClose();
                   resetForm();
+                  router.push(`${app_routes.customers}/${result?.data?.data?.id}`);
                 } catch (err) {
                   console.error(err);
                   toast.error('Error creating customer');
@@ -303,7 +328,6 @@ export const AddCustomer = () => {
                                     placeholder="Enter Address"
                                     value={values.billing_address_line1}
                                     showLabel
-                                    required
                                   />
                                 </div>
                                 <div>
@@ -330,7 +354,6 @@ export const AddCustomer = () => {
                                       placeholder="Enter City"
                                       value={values.billing_city}
                                       showLabel
-                                      required
                                     />
                                   </div>
 
@@ -344,7 +367,6 @@ export const AddCustomer = () => {
                                       placeholder="Enter State"
                                       value={values.billing_state}
                                       showLabel
-                                      required
                                     />
                                   </div>
                                 </div>
@@ -360,7 +382,6 @@ export const AddCustomer = () => {
                                       placeholder="Enter Postal Code"
                                       value={values.billing_postal_code}
                                       showLabel
-                                      required
                                     />
                                   </div>
 
@@ -398,91 +419,103 @@ export const AddCustomer = () => {
                             content: (
                               <div className="flex flex-col gap-5 px-2 mb-2 relative">
                                 <div>
-                                  <DarkInput
-                                    label="Shipping Address Line 1"
-                                    handleChange={handleChange}
-                                    name="shipping_address_line1"
-                                    errors={errors}
-                                    touched={touched}
-                                    placeholder="Enter Address"
-                                    value={values.shipping_address_line1}
-                                    showLabel
-                                    required
-                                  />
-                                </div>
-                                <div>
-                                  <DarkInput
-                                    label="Shipping Address Line 2"
-                                    handleChange={handleChange}
-                                    name="shipping_address_line2"
-                                    errors={errors}
-                                    touched={touched}
-                                    placeholder="Enter Address"
-                                    value={values.shipping_address_line2}
-                                    showLabel
+                                  <Checkbox
+                                    label={
+                                      <SemiboldSmallText className="text-light-600">
+                                        Same as billing address
+                                      </SemiboldSmallText>
+                                    }
+                                    name="similar"
+                                    checked={isShippingSimilar}
+                                    onChange={(checked) => setIsShippingSimilar(checked)}
                                   />
                                 </div>
 
-                                <div className="flex flex-col sm:flex-row gap-5 sm:gap-3 md:gap-2 items-start w-full">
-                                  <div className="w-full">
-                                    <DarkInput
-                                      label="City"
-                                      handleChange={handleChange}
-                                      name="shipping_city"
-                                      errors={errors}
-                                      touched={touched}
-                                      placeholder="Enter City"
-                                      value={values.shipping_city}
-                                      showLabel
-                                      required
-                                    />
-                                  </div>
+                                {!isShippingSimilar && (
+                                  <>
+                                    {' '}
+                                    <div>
+                                      <DarkInput
+                                        label="Shipping Address Line 1"
+                                        handleChange={handleChange}
+                                        name="shipping_address_line1"
+                                        errors={errors}
+                                        touched={touched}
+                                        placeholder="Enter Address"
+                                        value={values.shipping_address_line1}
+                                        showLabel
+                                      />
+                                    </div>
+                                    <div>
+                                      <DarkInput
+                                        label="Shipping Address Line 2"
+                                        handleChange={handleChange}
+                                        name="shipping_address_line2"
+                                        errors={errors}
+                                        touched={touched}
+                                        placeholder="Enter Address"
+                                        value={values.shipping_address_line2}
+                                        showLabel
+                                      />
+                                    </div>
+                                    <div className="flex flex-col sm:flex-row gap-5 sm:gap-3 md:gap-2 items-start w-full">
+                                      <div className="w-full">
+                                        <DarkInput
+                                          label="City"
+                                          handleChange={handleChange}
+                                          name="shipping_city"
+                                          errors={errors}
+                                          touched={touched}
+                                          placeholder="Enter City"
+                                          value={values.shipping_city}
+                                          showLabel
+                                        />
+                                      </div>
 
-                                  <div className="w-full">
-                                    <DarkInput
-                                      label="State"
-                                      handleChange={handleChange}
-                                      name="shipping_state"
-                                      errors={errors}
-                                      touched={touched}
-                                      placeholder="Enter State"
-                                      value={values.shipping_state}
-                                      showLabel
-                                      required
-                                    />
-                                  </div>
-                                </div>
+                                      <div className="w-full">
+                                        <DarkInput
+                                          label="State"
+                                          handleChange={handleChange}
+                                          name="shipping_state"
+                                          errors={errors}
+                                          touched={touched}
+                                          placeholder="Enter State"
+                                          value={values.shipping_state}
+                                          showLabel
+                                        />
+                                      </div>
+                                    </div>
+                                    <div className="flex flex-col sm:flex-row gap-5 sm:gap-3 md:gap-2 items-start w-full">
+                                      <div className="w-full">
+                                        <DarkInput
+                                          label="Postal Code"
+                                          handleChange={handleChange}
+                                          name="shipping_postal_code"
+                                          errors={errors}
+                                          touched={touched}
+                                          placeholder="Enter Postal Code"
+                                          value={values.shipping_postal_code}
+                                          showLabel
+                                        />
+                                      </div>
 
-                                <div className="flex flex-col sm:flex-row gap-5 sm:gap-3 md:gap-2 items-start w-full">
-                                  <div className="w-full">
-                                    <DarkInput
-                                      label="Postal Code"
-                                      handleChange={handleChange}
-                                      name="shipping_postal_code"
-                                      errors={errors}
-                                      touched={touched}
-                                      placeholder="Enter Postal Code"
-                                      value={values.shipping_postal_code}
-                                      showLabel
-                                      required
-                                    />
-                                  </div>
-
-                                  <div className="w-full">
-                                    <CountrySelect
-                                      handleChange={async (value) =>
-                                        await setFieldValue('shipping_country', value)
-                                      }
-                                      errors={errors}
-                                      touched={touched}
-                                      value={values.shipping_country}
-                                      name="shipping_country"
-                                      label="Country"
-                                      placeholder="Select your Country"
-                                      position="top"
-                                    />
-                                  </div>
-                                </div>
+                                      <div className="w-full">
+                                        <CountrySelect
+                                          handleChange={async (value) =>
+                                            await setFieldValue('shipping_country', value)
+                                          }
+                                          errors={errors}
+                                          touched={touched}
+                                          value={values.shipping_country}
+                                          name="shipping_country"
+                                          label="Country"
+                                          placeholder="Select your Country"
+                                          position="top"
+                                        />
+                                      </div>
+                                    </div>
+                                  </>
+                                )}
                               </div>
                             )
                           }
@@ -530,7 +563,7 @@ export const EditCustomer = ({
     toggleEditModal(false);
   };
 
-  const queryClient = new QueryClient();
+  const queryClient = useQueryClient();
 
   return (
     <Drawer
