@@ -3,25 +3,20 @@
 import { useRouter } from 'next/navigation';
 import { getCheckout } from './actions';
 import { useQuery } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Drawer from 'react-modern-drawer';
 import { app_routes } from '@/lib/constants';
 import { MediumBody, SemiboldBody, SemiboldTitle } from '@/components/Text';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
-import {
-  copyToClipboard,
-  formatDate,
-  generateCheckoutLink,
-  generateCustomerLink,
-  generateProductLink,
-  renderPrice
-} from '@/lib/helpers';
+import { copyToClipboard, formatDate, generateCheckoutLink, renderPrice } from '@/lib/helpers';
 import { Skeleton, CheckoutDetailsItem, CheckoutStatus } from './components';
 import { PrimaryButton, SecondaryButton } from '@/components/Buttons';
 import React from 'react';
 import { Link } from '@/components/Links';
 import { Checkout } from '@/types/checkout';
+import { useProductContext } from '@/app/(dashboard)/products/context';
+import { useCustomerContext } from '@/app/(dashboard)/customers/context';
 
 export default function Page({ params }: { params: { id: string } }) {
   const { id } = params;
@@ -50,6 +45,19 @@ export default function Page({ params }: { params: { id: string } }) {
     router.push(app_routes.checkouts);
   };
 
+  const { getProductById } = useProductContext();
+  const { getCustomerById } = useCustomerContext();
+
+  const product = useMemo(
+    () => getProductById(checkout.product_id),
+    [getProductById, checkout.product_id]
+  );
+
+  const customer = useMemo(
+    () => getCustomerById(checkout.customer_id),
+    [getCustomerById, checkout.customer_id]
+  );
+
   return (
     <Drawer open onClose={handleClose} direction="right" className="drawer" overlayOpacity={0.9}>
       {loading ? (
@@ -77,23 +85,21 @@ export default function Page({ params }: { params: { id: string } }) {
             />
 
             <CheckoutDetailsItem
-              label="Amount"
-              value={renderPrice({ amount: checkout?.amount, currency: 'sats' })}
+              label="Product"
+              value={product?.name}
+              url={product?.product_link}
             />
 
             <CheckoutDetailsItem
-              label="Product ID"
-              value={checkout?.product_id}
-              url={generateProductLink(checkout?.product_id)}
-              id={true}
+              label="Amount"
+              value={renderPrice({ amount: checkout?.amount, currency: 'sats' })}
             />
 
             {checkout?.customer_id && (
               <CheckoutDetailsItem
                 label="Customer ID"
-                value={checkout?.customer_id}
-                url={generateCustomerLink(checkout?.customer_id)}
-                id={true}
+                value={customer?.name}
+                url={customer?.customer_link}
               />
             )}
 

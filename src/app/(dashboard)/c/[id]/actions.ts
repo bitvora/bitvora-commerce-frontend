@@ -4,7 +4,7 @@ import { getSessionFromServer } from '@/lib/session';
 export async function getCheckout(id: string) {
   try {
     const session = await getSessionFromServer();
-    const response = await api.fetch(`/c/${id}`, {}, session);
+    const response = await api.fetch(`/checkout/${id}`, {}, session);
     if (!response) return [];
 
     if (!response.ok) {

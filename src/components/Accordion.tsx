@@ -17,7 +17,7 @@ type Props = {
 };
 
 const Accordion = ({ items, triggerClassName, contentClassName, containerClassName }: Props) => {
-  const [openIndex, setOpenIndex] = useState(null);
+  const [openIndex, setOpenIndex] = useState(0);
 
   const toggleItem = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);

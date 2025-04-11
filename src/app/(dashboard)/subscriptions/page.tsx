@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 'use client';
 
 import Currency from '@/components/Currency';
@@ -33,9 +34,13 @@ import { app_routes } from '@/lib/constants';
 import { formatDate, formatUUID } from '@/lib/helpers';
 import { Link } from '@/components/Links';
 import { Subscription } from '@/types/subscriptions';
+import { useProductContext } from '@/app/(dashboard)/products/context';
+import { useCustomerContext } from '@/app/(dashboard)/customers/context';
 
 export default function Page() {
   const { subscriptions, isSubscriptionLoading } = useSubscriptionContext();
+  const { getProductById } = useProductContext();
+  const { getCustomerById } = useCustomerContext();
 
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -48,7 +53,7 @@ export default function Page() {
   const [currentPage, setCurrentPage] = useState(initialPage);
 
   const [currentSubscription, setCurrentSubscription] = useState<Subscription>({} as Subscription);
-  // const [isEditOpen, setIsEditOpen] = useState(false);
+
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
   const closeDeleteModal = () => {
@@ -94,23 +99,6 @@ export default function Page() {
     setCurrentPage(1);
   };
 
-  // const toggleEditModal = useCallback(
-  //   (value: boolean) => {
-  //     setIsEditOpen(value);
-
-  //     if (!value) {
-  //       setCurrentSubscription({} as Subscription);
-  //       router.replace(app_routes.subscriptions);
-  //     }
-  //   },
-  //   [router]
-  // );
-
-  // const handleEdit = (subscription) => {
-  //   setCurrentSubscription(subscription);
-  //   toggleEditModal(true);
-  // };
-
   const handleDelete = (subscription) => {
     setCurrentSubscription(subscription);
     setIsDeleteOpen(true);
@@ -131,30 +119,51 @@ export default function Page() {
     {
       header: 'Product',
       accessor: 'product_id',
-      render: (row) => (
-        <Link href={`${app_routes.products}/${row.product_id}`} className="text-inherit">
-          <SemiboldSmallText className="text-light-700 hover:text-light-900 truncate hidden md:flex">
-            {formatUUID(row.product_id)}
-          </SemiboldSmallText>
-          <SemiboldSmallerText className="truncate md:hidden text-light-700 hover:text-light-900">
-            {formatUUID(row.product_id)}
-          </SemiboldSmallerText>
-        </Link>
-      )
+      render: (row) => {
+        const product = getProductById(row.product_id);
+
+        return (
+          <div className="flex items-center gap-3">
+            <button className="cursor-pointer border-none outline-none hidden md:flex">
+              <img src={product.image} alt={product.name} className="w-10 h-10 rounded-md object-cover" />
+            </button>
+
+            <Link
+              href={product.product_link}
+              target="_blank"
+              referrerPolicy="same-origin"
+              className="text-inherit">
+              <SemiboldSmallText className="text-light-700 hover:text-light-900 truncate hidden md:flex">
+                {product.name}
+              </SemiboldSmallText>
+              <SemiboldSmallerText className="truncate md:hidden text-light-700 hover:text-light-900">
+                {product.name}
+              </SemiboldSmallerText>
+            </Link>
+          </div>
+        );
+      }
     },
     {
       header: 'Customer',
       accessor: 'customer_id',
-      render: (row) => (
-        <Link href={`${app_routes.customers}/${row.customer_id}`} className="text-inherit">
-          <SemiboldSmallText className="text-light-700 hover:text-light-900 truncate hidden md:flex">
-            {formatUUID(row.customer_id)}
-          </SemiboldSmallText>
-          <SemiboldSmallerText className="truncate md:hidden text-light-700 hover:text-light-900">
-            {formatUUID(row.customer_id)}
-          </SemiboldSmallerText>
-        </Link>
-      )
+      render: (row) => {
+        const customer = getCustomerById(row.customer_id);
+        return (
+          <Link
+            href={customer.customer_link}
+            className="text-inherit"
+            target="_blank"
+            referrerPolicy="same-origin">
+            <SemiboldSmallText className="text-light-700 hover:text-light-900 truncate hidden md:flex">
+              {customer.name}
+            </SemiboldSmallText>
+            <SemiboldSmallerText className="truncate md:hidden text-light-700 hover:text-light-900">
+              {customer.name}
+            </SemiboldSmallerText>
+          </Link>
+        );
+      }
     },
     {
       header: 'Active On',
@@ -224,12 +233,6 @@ export default function Page() {
           onPageChange={setCurrentPage}
           actionColumn={(row) => (
             <div className="flex gap-1 items-center">
-              {/* <button
-                onClick={() => handleEdit(row)}
-                className="h-8 w-8 cursor-pointer rounded-md hover:bg-light-overlay-50 flex items-center text-center justify-center border-none outline-none">
-                <EditIcon />
-              </button> */}
-
               <button
                 onClick={() => handleDelete(row)}
                 className="h-8 w-8 cursor-pointer rounded-md hover:bg-light-overlay-50 flex items-center text-center justify-center border-none outline-none">

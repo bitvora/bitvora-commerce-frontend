@@ -41,7 +41,7 @@ export const SubscriptionDetailsItem = ({
       {id ? (
         <div className="w-full sm:max-w-2/3 text-start sm:text-end justify-start sm:justify-end flex items-center gap-2">
           {url ? (
-            <Link href={url} target="_blank" referrerPolicy="no-referrer">
+            <Link href={url} target="_blank" referrerPolicy="same-origin">
               <SemiboldBody className="underline">{formattedValue}</SemiboldBody>
             </Link>
           ) : (
@@ -57,10 +57,16 @@ export const SubscriptionDetailsItem = ({
           )}
         </div>
       ) : (
-        <div className="w-full sm:max-w-2/3 text-start sm:text-end flex flex-wrap items-center gap-2 break-words overflow-visible">
-          <SemiboldBody className="break-words overflow-visible w-full">
-            {formattedValue}
-          </SemiboldBody>
+        <div className="w-full sm:max-w-2/3 text-start sm:text-end flex flex-wrap items-center gap-2 break-words overflow-visible md:justify-end">
+          {url ? (
+            <Link href={url} target="_blank" referrerPolicy="same-origin">
+              <SemiboldBody className="underline">{formattedValue}</SemiboldBody>
+            </Link>
+          ) : (
+            <SemiboldBody className="break-words overflow-visible w-full">
+              {formattedValue}
+            </SemiboldBody>
+          )}
         </div>
       )}
     </div>

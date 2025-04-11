@@ -224,6 +224,7 @@ export const AddSubscription = () => {
                   productAutocompleteRef.current?.clear();
                   handleClose();
                   resetForm();
+                  router.push(`${app_routes.subscriptions}/${result?.data?.data?.id}`);
                 } catch (err) {
                   console.error(err);
                   toast.error('Error creating subscription');
@@ -260,7 +261,7 @@ export const AddSubscription = () => {
                           <Link
                             href={`${app_routes.customers}?action=new-customer`}
                             target="_blank"
-                            referrerPolicy="no-referrer">
+                            referrerPolicy="same-origin">
                             <div className="text-secondary-700 hover:text-secondary-400 flex items-center gap-2">
                               <FontAwesomeIcon icon={faPlus} />
                               <SemiboldSmallText className="text-inherit">
@@ -298,7 +299,7 @@ export const AddSubscription = () => {
                           <Link
                             href={`${app_routes.products}?action=new-product`}
                             target="_blank"
-                            referrerPolicy="no-referrer">
+                            referrerPolicy="same-origin">
                             <div className="text-secondary-700 hover:text-secondary-400 flex items-center gap-2">
                               <FontAwesomeIcon icon={faPlus} />
                               <SemiboldSmallText className="text-inherit">
@@ -600,7 +601,7 @@ export const EditSubscription = ({
                         <Link
                           href={`${app_routes.customers}?action=new-customer`}
                           target="_blank"
-                          referrerPolicy="no-referrer">
+                          referrerPolicy="same-origin">
                           <div className="text-secondary-700 hover:text-secondary-400 flex items-center gap-2">
                             <FontAwesomeIcon icon={faPlus} />
                             <SemiboldSmallText className="text-inherit">
@@ -639,7 +640,7 @@ export const EditSubscription = ({
                         <Link
                           href={`${app_routes.products}?action=new-product`}
                           target="_blank"
-                          referrerPolicy="no-referrer">
+                          referrerPolicy="same-origin">
                           <div className="text-secondary-700 hover:text-secondary-400 flex items-center gap-2">
                             <FontAwesomeIcon icon={faPlus} />
                             <SemiboldSmallText className="text-inherit">

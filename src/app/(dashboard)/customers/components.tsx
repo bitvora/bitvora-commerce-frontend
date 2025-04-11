@@ -103,8 +103,7 @@ export const AddCustomer = () => {
                   .max(255)
                   .required('Email address is required'),
                 phone_number: Yup.string().required('Phone Number is required'),
-                currency: Yup.string().required('Currency is required'),
-                description: Yup.string().required('Description is required')
+                currency: Yup.string().required('Currency is required')
               })}
               onSubmit={async (values, { resetForm }) => {
                 try {
@@ -195,7 +194,7 @@ export const AddCustomer = () => {
 
                 return (
                   <Form noValidate onSubmit={handleSubmit}>
-                    <div className="rounded-lg px-5 lg:px-5 py-5 lg:py-6 bg-primary-150 w-full h-full overflow-auto">
+                    <div className="rounded-lg px-5 lg:px-5 py-5 lg:py-6 bg-primary-150 w-full h-full overflow-auto mb-12">
                       <Accordion
                         items={[
                           {
@@ -250,7 +249,6 @@ export const AddCustomer = () => {
                                     value={values.description}
                                     showLabel
                                     rows={3}
-                                    required
                                   />
                                 </div>
 
@@ -526,7 +524,7 @@ export const AddCustomer = () => {
                       />
                     </div>
 
-                    <div className="flex flex-col gap-2 w-full mt-6">
+                    <div className="flex flex-col gap-2 mt-6 fixed bottom-4 md:bottom-10 left-4 md:left-10 right-4 md:right-10">
                       <div className="mt-4 pt-4 w-full">
                         <PrimaryButton
                           className="w-full h-12"
@@ -612,7 +610,6 @@ export const EditCustomer = ({
                 .required('Email address is required'),
               phone_number: Yup.string().required('Phone Number is required'),
               currency: Yup.string().required('Currency is required'),
-              description: Yup.string().required('Description is required'),
               billing_address_line1: Yup.string().required('Billing Address is required'),
               billing_city: Yup.string().required('City is required'),
               billing_state: Yup.string().required('State is required'),
@@ -683,7 +680,7 @@ export const EditCustomer = ({
 
               return (
                 <Form noValidate onSubmit={handleSubmit}>
-                  <div className="rounded-lg px-5 lg:px-5 py-5 lg:py-6 bg-primary-150 w-full h-full overflow-auto">
+                  <div className="rounded-lg px-5 lg:px-5 py-5 lg:py-6 bg-primary-150 w-full h-full overflow-auto mb-12">
                     <Accordion
                       items={[
                         {
@@ -738,7 +735,7 @@ export const EditCustomer = ({
                                   value={values.description}
                                   showLabel
                                   rows={3}
-                                  required
+                                  
                                 />
                               </div>
 
@@ -1006,7 +1003,7 @@ export const EditCustomer = ({
                     />
                   </div>
 
-                  <div className="flex flex-col gap-2 w-full mt-6">
+                  <div className="flex flex-col gap-2 mt-6 fixed bottom-4 md:bottom-10 left-4 md:left-10 right-4 md:right-10">
                     <div className="mt-4 pt-4 w-full">
                       <PrimaryButton
                         className="w-full h-12"

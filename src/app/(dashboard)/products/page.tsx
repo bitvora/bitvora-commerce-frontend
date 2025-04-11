@@ -115,7 +115,7 @@ export default function Page() {
       header: 'ID',
       accessor: 'id',
       render: (row) => (
-        <Link href={`${app_routes.products}/${row.id}`} className="text-inherit">
+        <Link href={row?.product_link} className="text-inherit">
           <SemiboldSmallText className="truncate text-light-700 hover:text-light-900">
             {formatUUID(row.id)}
           </SemiboldSmallText>
@@ -136,7 +136,7 @@ export default function Page() {
             <img src={row.image} alt={row.name} className="w-10 h-10 rounded-md object-cover" />
           </button>
 
-          <Link href={`${app_routes.products}/${row.id}`} className="text-inherit">
+          <Link href={row?.product_link} className="text-inherit">
             <SemiboldSmallText className="text-light-700 hover:text-light-900 truncate hidden md:flex">
               {row.name}
             </SemiboldSmallText>
@@ -151,7 +151,7 @@ export default function Page() {
       header: 'Price',
       accessor: 'amount',
       render: (row) => (
-        <Link href={`${app_routes.products}/${row.id}`}>
+        <Link href={row?.product_link}>
           <SemiboldSmallText className="text-light-700 hover:text-light-900 hidden md:flex">
             {renderPrice({ amount: row.amount, currency: row.currency })}
           </SemiboldSmallText>
@@ -166,7 +166,7 @@ export default function Page() {
       header: 'Sales',
       accessor: 'total_sales',
       render: (row) => (
-        <Link href={`${app_routes.products}/${row.id}`}>
+        <Link href={row?.product_link}>
           <SemiboldSmallText className="text-light-700 hover:text-light-900 hidden md:flex">
             N/A
           </SemiboldSmallText>
@@ -180,7 +180,7 @@ export default function Page() {
       header: 'Subscriptions',
       accessor: 'subscriptions',
       render: (row) => (
-        <Link href={`${app_routes.products}/${row.id}`}>
+        <Link href={row?.product_link}>
           <SemiboldSmallText className="text-light-700 hover:text-light-900 hidden md:flex">
             N/A
           </SemiboldSmallText>

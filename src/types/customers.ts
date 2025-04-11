@@ -21,6 +21,7 @@ export interface Customer {
   currency: string;
   created_at: string;
   updated_at: string;
+  customer_link?: string;
 }
 
 export interface CreateCustomerType {

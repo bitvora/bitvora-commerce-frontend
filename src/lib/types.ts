@@ -120,6 +120,7 @@ export interface Product {
   billing_period_hours: number;
   created_at: string;
   updated_at: string;
+  product_link?: string;
 }
 
 export interface CreateProductType {

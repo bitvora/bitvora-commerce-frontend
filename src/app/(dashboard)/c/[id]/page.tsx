@@ -46,6 +46,7 @@ export default function Page({ params }: { params: { id: string } }) {
   useEffect(() => {
     if (data?.data) {
       setCheckout(data?.data);
+
       setLoading(false);
     }
   }, [data]);
@@ -89,6 +90,7 @@ export default function Page({ params }: { params: { id: string } }) {
 
   useEffect(() => {
     if (checkoutPollingData?.data) {
+      console.log(JSON.stringify(checkoutPollingData?.data));
       const { state, received_amount, amount } = checkoutPollingData.data;
       if (state === 'paid' && received_amount >= amount) {
         setPaymentConfirmed(true);
