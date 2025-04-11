@@ -28,7 +28,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useProductContext } from '@/app/(dashboard)/products/context';
 import { CalendarInput } from '@/components/Selects';
-import { QueryClient } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 
 export const DeleteSubscriptionModal = ({
   subscription,
@@ -224,6 +224,7 @@ export const AddSubscription = () => {
                   productAutocompleteRef.current?.clear();
                   handleClose();
                   resetForm();
+                  router.push(`${app_routes.subscriptions}/${result?.data?.data?.id}`);
                 } catch (err) {
                   console.error(err);
                   toast.error('Error creating subscription');
@@ -260,7 +261,7 @@ export const AddSubscription = () => {
                           <Link
                             href={`${app_routes.customers}?action=new-customer`}
                             target="_blank"
-                            referrerPolicy="no-referrer">
+                            referrerPolicy="same-origin">
                             <div className="text-secondary-700 hover:text-secondary-400 flex items-center gap-2">
                               <FontAwesomeIcon icon={faPlus} />
                               <SemiboldSmallText className="text-inherit">
@@ -298,7 +299,7 @@ export const AddSubscription = () => {
                           <Link
                             href={`${app_routes.products}?action=new-product`}
                             target="_blank"
-                            referrerPolicy="no-referrer">
+                            referrerPolicy="same-origin">
                             <div className="text-secondary-700 hover:text-secondary-400 flex items-center gap-2">
                               <FontAwesomeIcon icon={faPlus} />
                               <SemiboldSmallText className="text-inherit">
@@ -460,12 +461,13 @@ export const EditSubscription = ({
 
   const { customers } = useCustomerContext();
   const { products } = useProductContext();
+  const router = useRouter();
 
   const handleClose = () => {
     toggleEditModal(false);
   };
 
-  const queryClient = new QueryClient();
+  const queryClient = useQueryClient();
 
   return (
     <Drawer
@@ -553,6 +555,7 @@ export const EditSubscription = ({
 
                 handleClose();
                 resetForm();
+                router.push(`${app_routes.subscriptions}/${result?.data?.data?.id}`);
               } catch (err) {
                 console.error(err);
                 toast.error('Error updating subscription');
@@ -598,7 +601,7 @@ export const EditSubscription = ({
                         <Link
                           href={`${app_routes.customers}?action=new-customer`}
                           target="_blank"
-                          referrerPolicy="no-referrer">
+                          referrerPolicy="same-origin">
                           <div className="text-secondary-700 hover:text-secondary-400 flex items-center gap-2">
                             <FontAwesomeIcon icon={faPlus} />
                             <SemiboldSmallText className="text-inherit">
@@ -637,7 +640,7 @@ export const EditSubscription = ({
                         <Link
                           href={`${app_routes.products}?action=new-product`}
                           target="_blank"
-                          referrerPolicy="no-referrer">
+                          referrerPolicy="same-origin">
                           <div className="text-secondary-700 hover:text-secondary-400 flex items-center gap-2">
                             <FontAwesomeIcon icon={faPlus} />
                             <SemiboldSmallText className="text-inherit">

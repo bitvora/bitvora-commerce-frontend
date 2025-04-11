@@ -181,11 +181,13 @@ export default function Page() {
           rowsPerPage={10}
           currentPage={currentPage}
           onPageChange={setCurrentPage}
-          actionColumn={() => (
+          actionColumn={(row) => (
             <div className="flex gap-1 items-center">
-              <button className="h-8 w-8 cursor-pointer rounded-md hover:bg-light-overlay-50 flex items-center text-center justify-center border-none outline-none">
-                <ViewIcon />
-              </button>
+              <Link href={`${app_routes.checkouts}/${row.id}`}>
+                <button className="h-8 w-8 cursor-pointer rounded-md hover:bg-light-overlay-50 flex items-center text-center justify-center border-none outline-none">
+                  <ViewIcon />
+                </button>
+              </Link>
             </div>
           )}
           tableHeader={

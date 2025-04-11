@@ -3,11 +3,7 @@
 import { app_routes } from '@/lib/constants';
 import { getSubscription } from './actions';
 import { Subscription } from '@/types/subscriptions';
-import {
-  useEffect,
-  useState
-  // ,useCallback,
-} from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import Drawer from 'react-modern-drawer';
@@ -15,16 +11,12 @@ import { SemiboldTitle } from '@/components/Text';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { SubscriptionDetailsItem, Skeleton } from './components';
-import {
-  RedButton
-  // , SecondaryButton
-} from '@/components/Buttons';
+import { RedButton } from '@/components/Buttons';
 import { formatDate } from '@/lib/helpers';
-import {
-  DeleteSubscriptionModal
-  // EditSubscription
-} from '@/app/(dashboard)/subscriptions/components';
+import { DeleteSubscriptionModal } from '@/app/(dashboard)/subscriptions/components';
 import { useParams } from 'next/navigation';
+import { useProductContext } from '@/app/(dashboard)/products/context';
+import { useCustomerContext } from '@/app/(dashboard)/customers/context';
 
 export default function Page() {
   const params = useParams<{ id: string }>();
@@ -54,16 +46,24 @@ export default function Page() {
     router.push(app_routes.subscriptions);
   };
 
-  // const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
   const closeDeleteModal = () => {
     setIsDeleteOpen(false);
   };
 
-  // const toggleEditModal = useCallback((value: boolean) => {
-  //   setIsEditOpen(value);
-  // }, []);
+  const { getProductById } = useProductContext();
+  const { getCustomerById } = useCustomerContext();
+
+  const product = useMemo(
+    () => getProductById(subscription.product_id),
+    [getProductById, subscription.product_id]
+  );
+
+  const customer = useMemo(
+    () => getCustomerById(subscription.customer_id),
+    [getCustomerById, subscription.customer_id]
+  );
 
   return (
     <>
@@ -88,17 +88,15 @@ export default function Page() {
               <SubscriptionDetailsItem label="Subscription ID" value={subscription?.id} id={true} />
 
               <SubscriptionDetailsItem
-                label="Customer ID"
-                value={subscription?.customer_id}
-                url={`${app_routes.customers}/${subscription?.customer_id}`}
-                id={true}
+                label="Customer"
+                value={customer?.name}
+                url={customer?.customer_link}
               />
 
               <SubscriptionDetailsItem
-                label="Product ID"
-                value={subscription?.product_id}
-                url={`${app_routes.products}/${subscription?.product_id}`}
-                id={true}
+                label="Product"
+                value={product?.name}
+                url={product?.product_link}
               />
 
               <SubscriptionDetailsItem
@@ -122,11 +120,7 @@ export default function Page() {
               />
             </div>
 
-            <div className="w-full flex gap-4 items-center border-none outline-none">
-              {/* <SecondaryButton className="h-11 w-full" onClick={() => toggleEditModal(true)}>
-                Edit Subscription
-              </SecondaryButton> */}
-
+            <div className="fixed bottom-4 md:bottom-10 left-4 md:left-10 right-4 md:right-10 flex gap-4 items-center border-none outline-none">
               <RedButton
                 className="h-11 w-full border-none outline-none"
                 onClick={() => setIsDeleteOpen(true)}>
@@ -136,12 +130,6 @@ export default function Page() {
           </div>
         )}
       </Drawer>
-
-      {/* <EditSubscription
-        isEditOpen={isEditOpen}
-        subscription={subscription}
-        toggleEditModal={toggleEditModal}
-      /> */}
 
       <DeleteSubscriptionModal
         subscription={subscription}

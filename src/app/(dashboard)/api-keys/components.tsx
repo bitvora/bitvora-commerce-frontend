@@ -15,7 +15,7 @@ import { CloseIcon, CopyIcon, DeleteIcon, WarningIcon } from '@/components/Icons
 import { APIKey, CreateAPIKeyType } from '@/types/api-keys';
 import Modal from '@/components/Modal';
 import { deleteAPIKey, createAPIKey, updateAPIKey } from './actions';
-import { QueryClient } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { DarkInput } from '@/components/Inputs';
 import Tabs from '@/components/Tab';
 import Accordion from '@/components/Accordion';
@@ -410,7 +410,7 @@ export const EditAPIKey = ({
   const { currentAccount } = useAppContext();
 
   const { refetchAPIKeys } = useAPIKeysContext();
-  const queryClient = new QueryClient();
+  const queryClient = useQueryClient();
 
   const scrollRef = useRef<HTMLDivElement>(null);
 

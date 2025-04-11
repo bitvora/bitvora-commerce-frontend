@@ -11,7 +11,7 @@ import { createCheckout } from './actions';
 import { useCheckoutContext } from './context';
 import { useEffect, useRef, useState } from 'react';
 import { usePathname, useSearchParams, useRouter } from 'next/navigation';
-import { app_routes, checkout_types, currencies } from '@/lib/constants';
+import { app_routes, checkout_types } from '@/lib/constants';
 import { CloseIcon } from '@/components/Icons';
 import { useAppContext } from '@/app/contexts';
 import { CheckoutState, CreateCheckoutType } from '@/types/checkout';
@@ -44,6 +44,7 @@ export const NewCheckout = () => {
 
   const handleClose = () => {
     setOpen(false);
+
     router.replace(app_routes.checkouts);
   };
 
@@ -93,45 +94,49 @@ export const NewCheckout = () => {
               }}
               enableReinitialize
               validationSchema={Yup.object({
-                amount: Yup.number()
-                  .required('Amount is required')
-                  .positive('Amount must be greater than zero'),
-                currency: Yup.string().required('Currency is required'),
+                // amount: Yup.number()
+                //   .required('Amount is required')
+                //   .positive('Amount must be greater than zero'),
+                // currency: Yup.string().required('Currency is required'),
                 type: Yup.string().required('Type is required'),
-                product_id: Yup.string().required('Product is required')
+                product_id: Yup.string().required('Product is required'),
+                expiry_minutes: Yup.string().required('Expiry time is required')
               })}
               onSubmit={async (values, { resetForm }) => {
                 const payload: CreateCheckoutType = {
                   account_id: currentAccount?.id || '',
                   //@ts-expect-error Too lazy to fix this
                   type: values.type,
-                  amount: Number(values.amount),
-                  currency: values.currency,
+                  // amount: Number(values.amount),
+                  // currency: values.currency,
                   redirect_url: values?.redirect_url,
                   metadata: {},
                   items: {},
                   expiry_minutes: Number(values.expiry_minutes),
-                  customer_id: values?.customer_id,
                   product_id: values?.product_id
                 };
+
+                if (values?.customer_id) {
+                  payload.customer_id = values?.customer_id;
+                }
 
                 try {
                   const result = await createCheckout(payload);
 
                   if (!result.success) {
-                    toast.error(result.error || 'Error creating customer');
+                    toast.error(result.error || 'Error creating checkout');
                     return;
                   }
 
                   refetchCheckouts();
-                  toast.success('Customer created successfully');
+                  toast.success('Checkout created successfully');
 
                   customerAutocompleteRef.current?.clear();
                   productAutocompleteRef.current?.clear();
                   resetForm();
                   handleClose();
 
-                  router.push(`${app_routes.checkouts}/${result.data?.id}`);
+                  router.push(`${app_routes.checkouts}/${result.data?.data?.id}`);
                 } catch (err) {
                   console.error(err);
                   toast.error('Error creating checkout');
@@ -151,86 +156,6 @@ export const NewCheckout = () => {
                 return (
                   <Form noValidate onSubmit={handleSubmit}>
                     <div className="rounded-lg px-5 lg:px-5 py-5 lg:py-6 bg-primary-150 w-full h-full overflow-auto flex flex-col gap-6">
-                      <div className="w-full flex justify-between gap-3">
-                        <div className="w-2/3">
-                          <DarkInput
-                            label="Amount"
-                            handleChange={handleChange}
-                            name="amount"
-                            errors={errors}
-                            touched={touched}
-                            placeholder="0.00"
-                            value={values.amount}
-                            showLabel
-                            required
-                            type="number"
-                          />
-                        </div>
-
-                        <div className="w-1/3">
-                          <SelectField
-                            label="Currency"
-                            name="currency"
-                            value={values.currency}
-                            onChange={(value) => setFieldValue('currency', value)}
-                            options={currencies.map(({ label, value }) => {
-                              return {
-                                label,
-                                value
-                              };
-                            })}
-                            placeholder="Currency"
-                            errors={errors}
-                            touched={touched}
-                            required
-                          />
-                        </div>
-                      </div>
-
-                      <div>
-                        <SelectField
-                          label="Type"
-                          name="type"
-                          onChange={(value) => setFieldValue('type', value)}
-                          placeholder="Checkout Type"
-                          value={values.type}
-                          options={checkout_types.map(({ label, value }) => {
-                            return {
-                              label,
-                              value
-                            };
-                          })}
-                          required
-                          errors={errors}
-                          touched={touched}
-                        />
-                      </div>
-
-                      <div className="flex flex-col w-full gap-2">
-                        <DarkAutocomplete
-                          ref={customerAutocompleteRef}
-                          label="Customer"
-                          name="customer_id"
-                          placeholder="Search Customer"
-                          options={customers}
-                          onChange={(value) => setFieldValue('customer_id', value.id)}
-                          showLabel
-                          getOptionLabel={(option) => option.name}
-                        />
-
-                        <Link
-                          href={`${app_routes.customers}?action=new-customer`}
-                          target="_blank"
-                          referrerPolicy="no-referrer">
-                          <div className="text-secondary-700 hover:text-secondary-400 flex items-center gap-2">
-                            <FontAwesomeIcon icon={faPlus} />
-                            <SemiboldSmallText className="text-inherit">
-                              New Customer
-                            </SemiboldSmallText>
-                          </div>
-                        </Link>
-                      </div>
-
                       <div className="flex flex-col w-full gap-2">
                         <DarkAutocomplete
                           ref={productAutocompleteRef}
@@ -239,7 +164,9 @@ export const NewCheckout = () => {
                           placeholder="Search Product"
                           options={products}
                           required
-                          onChange={(value) => setFieldValue('product_id', value.id)}
+                          onChange={(value) => {
+                            setFieldValue('product_id', value.id);
+                          }}
                           showLabel
                           getOptionLabel={(option) => option.name}
                           renderOption={(option) => (
@@ -259,11 +186,95 @@ export const NewCheckout = () => {
                         <Link
                           href={`${app_routes.products}?action=new-product`}
                           target="_blank"
-                          referrerPolicy="no-referrer">
+                          referrerPolicy="same-origin">
                           <div className="text-secondary-700 hover:text-secondary-400 flex items-center gap-2">
                             <FontAwesomeIcon icon={faPlus} />
                             <SemiboldSmallText className="text-inherit">
                               New Product
+                            </SemiboldSmallText>
+                          </div>
+                        </Link>
+                      </div>
+
+                      {/* {!values?.product_id && (
+                        <div className="w-full flex justify-between gap-3">
+                          <div className="w-2/3">
+                            <DarkInput
+                              label="Amount"
+                              handleChange={handleChange}
+                              name="amount"
+                              errors={errors}
+                              touched={touched}
+                              placeholder="0.00"
+                              value={values.amount}
+                              showLabel
+                              required
+                              type="number"
+                            />
+                          </div>
+
+                          <div className="w-1/3">
+                            <SelectField
+                              label="Currency"
+                              name="currency"
+                              value={values.currency}
+                              onChange={(value) => setFieldValue('currency', value)}
+                              options={currencies.map(({ label, value }) => {
+                                return {
+                                  label,
+                                  value
+                                };
+                              })}
+                              placeholder="Currency"
+                              errors={errors}
+                              touched={touched}
+                              required
+                            />
+                          </div>
+                        </div>
+                      )} */}
+
+                      {values?.product_id && (
+                        <div>
+                          <SelectField
+                            label="Type"
+                            name="type"
+                            onChange={(value) => setFieldValue('type', value)}
+                            placeholder="Checkout Type"
+                            value={values.type}
+                            options={checkout_types.map(({ label, value }) => {
+                              return {
+                                label,
+                                value
+                              };
+                            })}
+                            required
+                            errors={errors}
+                            touched={touched}
+                          />
+                        </div>
+                      )}
+
+                      <div className="flex flex-col w-full gap-2">
+                        <DarkAutocomplete
+                          ref={customerAutocompleteRef}
+                          label="Customer"
+                          name="customer_id"
+                          placeholder="Search Customer"
+                          options={customers}
+                          onChange={(value) => setFieldValue('customer_id', value.id)}
+                          showLabel
+                          getOptionLabel={(option) => option.name}
+                        />
+
+                        <Link
+                          href={`${app_routes.customers}?action=new-customer`}
+                          target="_blank"
+                          referrerPolicy="same-origin">
+                          <div className="text-secondary-700 hover:text-secondary-400 flex items-center gap-2">
+                            <FontAwesomeIcon icon={faPlus} />
+                            <SemiboldSmallText className="text-inherit">
+                              New Customer
                             </SemiboldSmallText>
                           </div>
                         </Link>

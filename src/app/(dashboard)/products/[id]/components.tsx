@@ -85,7 +85,7 @@ export const Subscribers = () => {
     return (
       <div
         className={clsx(
-          'h-6 w-auto px-2 py-1 rounded-lg flex text-center justify-center items-center',
+          'h-6 w-fit px-4 py-1.5 rounded-lg flex text-center justify-center items-center',
           className
         )}>
         <SemiboldSmallerText className="text-inherit capitalize">{status}</SemiboldSmallerText>

@@ -164,7 +164,7 @@ export default function Page({ params }: { params: { id: string } }) {
             <Tabs tabs={[{ label: 'Subscriptions', content: <Subscribers /> }]} />
           </div>
 
-          <div className="w-full flex gap-4 items-center border-none outline-none">
+          <div className="flex gap-4 items-center border-none outline-none fixed bottom-4 md:bottom-10 left-4 md:left-10 right-4 md:right-10">
             <SecondaryButton className="h-11 w-full" onClick={() => toggleEditModal(true)}>
               Edit Product
             </SecondaryButton>

@@ -108,7 +108,7 @@ export default function Page() {
       header: 'ID',
       accessor: 'id',
       render: (row) => (
-        <Link href={`${app_routes.customers}/${row.id}`} className="text-inherit">
+        <Link href={row?.customer_link} className="text-inherit">
           <SemiboldSmallText className="truncate text-light-700 hover:text-light-900">
             {formatUUID(row.id)}
           </SemiboldSmallText>
@@ -119,7 +119,7 @@ export default function Page() {
       header: 'Name',
       accessor: 'name',
       render: (row) => (
-        <Link href={`${app_routes.customers}/${row.id}`} className="text-inherit">
+        <Link href={row?.customer_link} className="text-inherit">
           <SemiboldSmallText className="text-light-700 hover:text-light-900 truncate hidden md:flex">
             {row.name}
           </SemiboldSmallText>
@@ -133,7 +133,7 @@ export default function Page() {
       header: 'Email',
       accessor: 'email',
       render: (row) => (
-        <Link href={`${app_routes.customers}/${row.id}`} className="text-inherit">
+        <Link href={row?.customer_link} className="text-inherit">
           <SemiboldSmallText className="text-light-700 hover:text-light-900 truncate hidden md:flex">
             {row.email}
           </SemiboldSmallText>
@@ -147,7 +147,7 @@ export default function Page() {
       header: 'Phone',
       accessor: 'phone_number',
       render: (row) => (
-        <Link href={`${app_routes.customers}/${row.id}`} className="text-inherit">
+        <Link href={row?.customer_link} className="text-inherit">
           <SemiboldSmallText className="text-light-700 hover:text-light-900 truncate hidden md:flex">
             {row.phone_number}
           </SemiboldSmallText>
@@ -201,7 +201,7 @@ export default function Page() {
         </div>
       </div>
 
-      <div className="w-full">
+      <div className="w-full px-3">
         <Table
           tableContainerClassName="products-table"
           columns={columns}

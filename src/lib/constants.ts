@@ -21,7 +21,7 @@ export const app_routes = {
 export const api_url = process.env.NEXT_PUBLIC_API_URL || 'https://api.commerce.bitvora.com';
 
 export const currencies: CurrencyType[] = [
-  { label: 'SATS', value: 'sats', image: '/currencies/sats.svg' },
+  { label: 'SATS', value: 'sat', image: '/currencies/sats.svg' },
   { label: 'BTC', image: '/currencies/btc.svg', value: 'btc' },
   { label: 'USD', image: '/currencies/usd.svg', value: 'usd' },
   {
@@ -312,4 +312,12 @@ export const country_codes: any[] = [
 export const checkout_types: { label: string; value: CheckoutType }[] = [
   { label: 'Single', value: 'single' },
   { label: 'Subscription', value: 'subscription' }
+];
+
+export const webhook_events = [
+  'checkout.created',
+  'checkout.paid',
+  'checkout.underpaid',
+  'checkout.overpaid',
+  'checkout.expired'
 ];

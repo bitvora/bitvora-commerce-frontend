@@ -13,11 +13,18 @@ import {
 } from 'react';
 import { type FormikErrors, type FormikTouched } from 'formik';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye, faEyeSlash, faMagnifyingGlass, faXmark } from '@fortawesome/free-solid-svg-icons';
+import {
+  faCopy,
+  faEye,
+  faEyeSlash,
+  faMagnifyingGlass,
+  faXmark
+} from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
 import { SemiboldBody, RegularSmallerText, SemiboldSmallText, SemiboldSmallerText } from './Text';
 import PhoneInput from 'react-phone-number-input';
 import { country_codes } from '@/lib/constants';
+import { copyToClipboard, maskString } from '@/lib/helpers';
 
 interface InputProps extends HTMLAttributes<HTMLInputElement> {
   label: string;
@@ -682,3 +689,55 @@ export const InnerDarkAutocomplete = <T,>(
 export const DarkAutocomplete = forwardRef(InnerDarkAutocomplete) as <T>(
   props: DarkAutocompleteProps<T> & { ref?: React.Ref<DarkAutocompleteHandle> }
 ) => JSX.Element;
+
+export const ReadonlyInput = ({
+  label,
+  value,
+  hidden = false
+}: {
+  label: string;
+  value: string;
+  hidden?: boolean;
+}) => {
+  const [isShown, setIsShown] = useState(false);
+
+  return (
+    <div className="flex flex-col gap-2">
+      <SemiboldBody className="text-light-500">{label}</SemiboldBody>
+
+      <div className="rounded-md px-4 py-3 flex items-center border-[0.5px] border-light-600 w-full justify-between gap-4 relative">
+        <div className="flex items-center w-full overflow-x-scroll pr-10 mr-10">
+          {hidden ? (
+            <SemiboldSmallText className={!isShown && 'pt-1'}>
+              {isShown ? value : maskString(value)}
+            </SemiboldSmallText>
+          ) : (
+            <SemiboldSmallText>{value}</SemiboldSmallText>
+          )}
+        </div>
+
+        {hidden && (
+          <div className="absolute right-2 top-1/2 transform -translate-y-1/2">
+            {!isShown && (
+              <button
+                onClick={() => setIsShown(true)}
+                className="text-light-700 focus:text-light-900 hover:text-light-900 cursor-pointer bg-primary-50 h-8 w-8 rounded-md"
+                type="button">
+                <FontAwesomeIcon icon={faEye} className="text-current" />
+              </button>
+            )}
+
+            {isShown && (
+              <button
+                onClick={() => copyToClipboard({ text: value })}
+                className="text-light-700 focus:text-light-900 hover:text-light-900 cursor-pointer bg-primary-50 h-8 w-8 rounded-md"
+                type="button">
+                <FontAwesomeIcon icon={faCopy} />
+              </button>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};

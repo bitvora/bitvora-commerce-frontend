@@ -13,11 +13,13 @@ import {
 } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useAppContext } from '@/app/contexts';
+import { generateProductLink } from '@/lib/helpers';
 
 interface ProductContextType {
   products: Product[];
   isProductsLoading?: boolean;
   refetchProducts: () => void;
+  getProductById: (id: string) => Product;
 }
 
 const ProductContext = createContext<ProductContextType | undefined>(undefined);
@@ -43,17 +45,31 @@ export default function ProductContextProvider({ children }: { children: ReactNo
 
   useEffect(() => {
     if (data?.data) {
-      setProducts(data?.data);
+      const products: Product[] = data?.data;
+      setProducts(
+        products.map((product) => {
+          return {
+            ...product,
+            product_link: generateProductLink(product.id)
+          };
+        })
+      );
     }
   }, [data]);
+
+  const getProductById = useCallback(
+    (id: string) => products.find((product) => product.id === id),
+    [products]
+  );
 
   const values = useMemo(() => {
     return {
       products,
       isProductsLoading,
-      refetchProducts
+      refetchProducts,
+      getProductById
     };
-  }, [products, isProductsLoading, refetchProducts]);
+  }, [products, isProductsLoading, refetchProducts, getProductById]);
 
   return <ProductContext.Provider value={values}>{children}</ProductContext.Provider>;
 }

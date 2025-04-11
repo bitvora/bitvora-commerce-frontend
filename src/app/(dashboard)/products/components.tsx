@@ -19,7 +19,7 @@ import Select from '@/components/Selects';
 import { useAppContext } from '@/app/contexts';
 import { CreateProductType, Product, UpdateProductType } from '@/lib/types';
 import Modal from '@/components/Modal';
-import { QueryClient } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 
 export const AddProduct = () => {
   const { currentAccount } = useAppContext();
@@ -119,6 +119,7 @@ export const AddProduct = () => {
                   toast.success('Product created successfully');
                   handleClose();
                   resetForm();
+                  router.push(`${app_routes.products}/${result?.data?.data?.id}`);
                 } catch (err) {
                   console.error(err);
                   toast.error('Error creating product');
@@ -304,7 +305,7 @@ export const EditProduct = ({
     toggleEditModal(false);
   };
 
-  const queryClient = new QueryClient();
+  const queryClient = useQueryClient();
 
   return (
     <Drawer

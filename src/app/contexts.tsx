@@ -116,7 +116,6 @@ export default function ContextProvider({ children }: { children: React.ReactNod
   }, []);
 
   useEffect(() => {
-    console.log({ walletsData });
     if (walletsData?.data) {
       setWallets(walletsData.data);
     }

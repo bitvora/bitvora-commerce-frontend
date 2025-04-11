@@ -16,8 +16,7 @@ export default function Tabs({ tabs, defaultActiveIndex = 0 }: TabsProps) {
 
   return (
     <div className="w-full">
-      {/* Tab Headers */}
-      <div className="flex border-b border-light-200">
+      <div className="flex border-b border-light-200 gap-2">
         {tabs.map((tab, index) => (
           <button
             key={index}
@@ -32,7 +31,6 @@ export default function Tabs({ tabs, defaultActiveIndex = 0 }: TabsProps) {
         ))}
       </div>
 
-      {/* Tab Content */}
       <div>{tabs[activeIndex]?.content}</div>
     </div>
   );
