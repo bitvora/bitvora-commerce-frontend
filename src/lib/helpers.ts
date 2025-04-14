@@ -148,6 +148,8 @@ export const formatCurrency = (amount: number, currency: string) => {
 };
 
 export function formatWebhookEvent(event: string): string {
+  if(!event) return ''
+  
   const [first, ...rest] = event.split('.');
   return [capitalize(first), ...rest].join(' ');
 }
