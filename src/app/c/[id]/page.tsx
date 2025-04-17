@@ -69,12 +69,18 @@ export default function Page({ params }: { params: { id: string } }) {
 
   useEffect(() => {
     if (checkoutPollingData?.data) {
-      const { state, received_amount, amount } = checkoutPollingData.data;
+      const { state, received_amount, amount, redirect_url } = checkoutPollingData.data;
       if (state === 'paid' && received_amount >= amount) {
         setPaymentConfirmed(true);
+
+        if (redirect_url) {
+          setTimeout(() => {
+            router.push(redirect_url);
+          }, 5000);
+        }
       }
     }
-  }, [checkoutPollingData]);
+  }, [checkoutPollingData, router]);
 
   const getUnifiedQRCodeValue = () => {
     const { bitcoin_address, lightning_invoice, amount } = checkout || {};

@@ -144,7 +144,7 @@ export default function NewCustomers() {
 
         {difference !== 0 && (
           <div
-            className={clsx('inline-flex items-center gap-3 h-6 px-2 rounded-sm w-fit xl:w-full', {
+            className={clsx('inline-flex items-center gap-3 h-6 px-2 rounded-sm w-fit', {
               'text-green-700 bg-green-50': difference > 0,
               'text-red-700 bg-red-50': difference < 0,
               'text-light-700': difference === 0
