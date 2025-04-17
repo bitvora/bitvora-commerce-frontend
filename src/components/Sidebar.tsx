@@ -143,7 +143,7 @@ export default function Sidebar() {
           </div>
         </div>
 
-        <hr className="bg-light-400 w-full h-[1px] border-0" />
+        <hr className="bg-light-300 w-full h-[1px] border-0" />
 
         <div className="flex flex-col gap-2 w-full">
           <SemiboldSmallerText className="text-light-500 uppercase mx-2 pb-2">
@@ -160,7 +160,7 @@ export default function Sidebar() {
 
       {!isAccountLoading && (
         <div className="flex flex-col gap-2 sticky bottom-[40px] left-0 right-[30px] bg-primary-100 cursor-pointer px-2">
-          <hr className="bg-light-400 w-full h-[1px] border-0" />
+          <hr className="bg-light-300 w-full h-[1px] border-0" />
 
           <div className="flex gap-2 items-center w-full justify-between mt-2">
             <div className="flex gap-4 items-center flex-1 min-w-0">

@@ -110,7 +110,7 @@ export default function Page() {
       header: 'ID',
       accessor: 'id',
       render: (row) => (
-        <Link href={row?.id} className="text-inherit">
+        <Link href={`${app_routes.payment_links}/${row.id}`}>
           <SemiboldSmallText className="truncate text-light-700 hover:text-light-900">
             {formatUUID(row.id)}
           </SemiboldSmallText>
@@ -121,7 +121,7 @@ export default function Page() {
       header: 'Amount',
       accessor: 'amount',
       render: (row) => (
-        <Link href={row?.id}>
+        <Link href={`${app_routes.payment_links}/${row.id}`}>
           <SemiboldSmallText className="text-light-700 hover:text-light-900 hidden md:flex">
             {renderPrice({ amount: row.amount, currency: row.currency })}
           </SemiboldSmallText>
@@ -143,21 +143,21 @@ export default function Page() {
             <button className="cursor-pointer border-none outline-none hidden md:flex">
               <img
                 src={product?.image}
-                alt={product.name}
+                alt={product?.name}
                 className="w-10 h-10 rounded-md object-cover"
               />
             </button>
 
             <Link
-              href={product.product_link}
+              href={product?.product_link}
               target="_blank"
               referrerPolicy="same-origin"
               className="text-inherit">
               <SemiboldSmallText className="text-light-700 hover:text-light-900 truncate hidden md:flex">
-                {product.name}
+                {product?.name}
               </SemiboldSmallText>
               <SemiboldSmallerText className="truncate md:hidden text-light-700 hover:text-light-900">
-                {product.name}
+                {product?.name}
               </SemiboldSmallerText>
             </Link>
           </div>
@@ -168,7 +168,7 @@ export default function Page() {
       header: 'Date',
       accessor: 'created_at',
       render: (row) => (
-        <Link href={`${app_routes.subscriptions}/${row.id}`}>
+        <Link href={`${app_routes.payment_links}/${row.id}`}>
           <SemiboldSmallText className="text-light-700 hover:text-light-900 truncate hidden md:flex">
             {formatDate(row.created_at, 'MMM DD, YYYY')}
           </SemiboldSmallText>

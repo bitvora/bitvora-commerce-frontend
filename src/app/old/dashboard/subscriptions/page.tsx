@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 interface Subscription {
   id: string;
@@ -57,18 +57,18 @@ export default function SubscriptionsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentSubscription, setCurrentSubscription] = useState<Subscription | null>(null);
   const [formData, setFormData] = useState<SubscriptionFormData>({
-    account_id: "",
-    customer_id: "",
-    product_id: "",
-    billing_start_date: "",
-    active_on_date: "",
+    account_id: '',
+    customer_id: '',
+    product_id: '',
+    billing_start_date: '',
+    active_on_date: '',
     metadata: {
-      notes: "",
-      additional_info: "",
+      notes: '',
+      additional_info: ''
     },
-    nostr_relay: "",
-    nostr_pubkey: "",
-    nostr_secret: "",
+    nostr_relay: '',
+    nostr_pubkey: '',
+    nostr_secret: ''
   });
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
@@ -98,22 +98,22 @@ export default function SubscriptionsPage() {
   const fetchSubscriptions = async () => {
     setLoading(true);
     setError(null);
-    
+
     try {
-      const sessionId = localStorage.getItem("session_id");
-      const selectedAccountId = localStorage.getItem("selected_account_id");
-      
+      const sessionId = localStorage.getItem('session_id');
+      const selectedAccountId = localStorage.getItem('selected_account_id');
+
       if (!sessionId) {
-        router.push("/login");
+        router.push('/login');
         return;
       }
 
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://api.commerce.bitvora.com";
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api.commerce.bitvora.com';
       const endpoint = `${apiUrl}/subscription/account/${selectedAccountId}`;
-      
+
       const response = await fetch(endpoint, {
         headers: {
-          "Session-ID": sessionId
+          'Session-ID': sessionId
         }
       });
 
@@ -124,7 +124,9 @@ export default function SubscriptionsPage() {
         throw new Error(`Error ${response.status}: ${response.statusText}`);
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred while fetching subscriptions');
+      setError(
+        err instanceof Error ? err.message : 'An error occurred while fetching subscriptions'
+      );
     } finally {
       setLoading(false);
     }
@@ -132,20 +134,20 @@ export default function SubscriptionsPage() {
 
   const fetchCustomers = async () => {
     try {
-      const sessionId = localStorage.getItem("session_id");
-      const selectedAccountId = localStorage.getItem("selected_account_id");
-      
+      const sessionId = localStorage.getItem('session_id');
+      const selectedAccountId = localStorage.getItem('selected_account_id');
+
       if (!sessionId) {
-        router.push("/login");
+        router.push('/login');
         return;
       }
 
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://api.commerce.bitvora.com";
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api.commerce.bitvora.com';
       const endpoint = `${apiUrl}/customer/account/${selectedAccountId}`;
-      
+
       const response = await fetch(endpoint, {
         headers: {
-          "Session-ID": sessionId
+          'Session-ID': sessionId
         }
       });
 
@@ -154,26 +156,26 @@ export default function SubscriptionsPage() {
         setCustomers(data.data || []);
       }
     } catch (err) {
-      console.error("Error fetching customers:", err);
+      console.error('Error fetching customers:', err);
     }
   };
 
   const fetchProducts = async () => {
     try {
-      const sessionId = localStorage.getItem("session_id");
-      const selectedAccountId = localStorage.getItem("selected_account_id");
-      
+      const sessionId = localStorage.getItem('session_id');
+      const selectedAccountId = localStorage.getItem('selected_account_id');
+
       if (!sessionId) {
-        router.push("/login");
+        router.push('/login');
         return;
       }
 
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://api.commerce.bitvora.com";
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api.commerce.bitvora.com';
       const endpoint = `${apiUrl}/product/account/${selectedAccountId}`;
-      
+
       const response = await fetch(endpoint, {
         headers: {
-          "Session-ID": sessionId
+          'Session-ID': sessionId
         }
       });
 
@@ -182,7 +184,7 @@ export default function SubscriptionsPage() {
         setProducts(data.data || []);
       }
     } catch (err) {
-      console.error("Error fetching products:", err);
+      console.error('Error fetching products:', err);
     }
   };
 
@@ -204,29 +206,30 @@ export default function SubscriptionsPage() {
     setIsProductDropdownOpen(false);
   };
 
-  const filteredCustomers = customers.filter(customer => 
-    (customer.name?.toLowerCase().includes(customerSearchTerm.toLowerCase()) || 
-     customer.email?.toLowerCase().includes(customerSearchTerm.toLowerCase()))
+  const filteredCustomers = customers.filter(
+    (customer) =>
+      customer.name?.toLowerCase().includes(customerSearchTerm.toLowerCase()) ||
+      customer.email?.toLowerCase().includes(customerSearchTerm.toLowerCase())
   );
 
-  const filteredProducts = products.filter(product => 
-    product.name.toLowerCase().includes(productSearchTerm.toLowerCase())
+  const filteredProducts = products.filter((product) =>
+    product?.name.toLowerCase().includes(productSearchTerm.toLowerCase())
   );
 
   const resetForm = () => {
     setFormData({
-      account_id: "",
-      customer_id: "",
-      product_id: "",
-      billing_start_date: "",
-      active_on_date: "",
+      account_id: '',
+      customer_id: '',
+      product_id: '',
+      billing_start_date: '',
+      active_on_date: '',
       metadata: {
-        notes: "",
-        additional_info: "",
+        notes: '',
+        additional_info: ''
       },
-      nostr_relay: "",
-      nostr_pubkey: "",
-      nostr_secret: "",
+      nostr_relay: '',
+      nostr_pubkey: '',
+      nostr_secret: ''
     });
     setSelectedCustomer(null);
     setSelectedProduct(null);
@@ -242,14 +245,14 @@ export default function SubscriptionsPage() {
 
   const openEditModal = (subscription: Subscription) => {
     setCurrentSubscription(subscription);
-    
+
     // Find the selected customer and product
-    const customer = customers.find(c => c.id === subscription.customer_id) || null;
-    const product = products.find(p => p.id === subscription.product_id) || null;
-    
+    const customer = customers.find((c) => c.id === subscription.customer_id) || null;
+    const product = products.find((p) => p.id === subscription.product_id) || null;
+
     setSelectedCustomer(customer);
     setSelectedProduct(product);
-    
+
     setFormData({
       account_id: subscription.account_id,
       customer_id: subscription.customer_id,
@@ -259,7 +262,7 @@ export default function SubscriptionsPage() {
       metadata: subscription.metadata,
       nostr_relay: subscription.nostr_relay,
       nostr_pubkey: subscription.nostr_pubkey,
-      nostr_secret: subscription.nostr_secret,
+      nostr_secret: subscription.nostr_secret
     });
     setIsModalOpen(true);
   };
@@ -285,44 +288,44 @@ export default function SubscriptionsPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
-    
+
     setLoading(true);
     setError(null);
-    
+
     try {
-      const sessionId = localStorage.getItem("session_id");
+      const sessionId = localStorage.getItem('session_id');
       if (!sessionId) {
-        router.push("/login");
+        router.push('/login');
         return;
       }
 
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://api.commerce.bitvora.com";
-      
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api.commerce.bitvora.com';
+
       const subscriptionData = {
         ...formData,
-        account_id: localStorage.getItem("selected_account_id"),
-        billing_start_date: formData.billing_start_date 
-          ? new Date(formData.billing_start_date).toISOString() 
+        account_id: localStorage.getItem('selected_account_id'),
+        billing_start_date: formData.billing_start_date
+          ? new Date(formData.billing_start_date).toISOString()
           : new Date().toISOString(), // Default to now if not provided
-        active_on_date: formData.active_on_date 
-          ? new Date(formData.active_on_date).toISOString() 
-          : new Date().toISOString(), // Default to now if not provided
+        active_on_date: formData.active_on_date
+          ? new Date(formData.active_on_date).toISOString()
+          : new Date().toISOString() // Default to now if not provided
       };
-      
+
       const isUpdating = !!currentSubscription;
-      const url = isUpdating 
+      const url = isUpdating
         ? `${apiUrl}/subscription/${currentSubscription.id}`
         : `${apiUrl}/subscription`;
-      
+
       const response = await fetch(url, {
         method: isUpdating ? 'PUT' : 'POST',
         headers: {
-          "Content-Type": "application/json",
-          "Session-ID": sessionId
+          'Content-Type': 'application/json',
+          'Session-ID': sessionId
         },
         body: JSON.stringify(subscriptionData)
       });
@@ -331,13 +334,17 @@ export default function SubscriptionsPage() {
         throw new Error(`Error ${response.status}: ${response.statusText}`);
       }
 
-      setSuccessMessage(isUpdating ? "Subscription updated successfully!" : "Subscription created successfully!");
+      setSuccessMessage(
+        isUpdating ? 'Subscription updated successfully!' : 'Subscription created successfully!'
+      );
       setTimeout(() => setSuccessMessage(null), 3000);
-      
+
       await fetchSubscriptions();
       closeModal();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred while saving the subscription');
+      setError(
+        err instanceof Error ? err.message : 'An error occurred while saving the subscription'
+      );
     } finally {
       setLoading(false);
     }
@@ -346,19 +353,19 @@ export default function SubscriptionsPage() {
   const handleDelete = async (id: string) => {
     setLoading(true);
     setError(null);
-    
+
     try {
-      const sessionId = localStorage.getItem("session_id");
+      const sessionId = localStorage.getItem('session_id');
       if (!sessionId) {
-        router.push("/login");
+        router.push('/login');
         return;
       }
 
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://api.commerce.bitvora.com";
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api.commerce.bitvora.com';
       const response = await fetch(`${apiUrl}/subscription/${id}`, {
         method: 'DELETE',
         headers: {
-          "Session-ID": sessionId
+          'Session-ID': sessionId
         }
       });
 
@@ -366,12 +373,14 @@ export default function SubscriptionsPage() {
         throw new Error(`Error ${response.status}: ${response.statusText}`);
       }
 
-      setSuccessMessage("Subscription deleted successfully!");
+      setSuccessMessage('Subscription deleted successfully!');
       setTimeout(() => setSuccessMessage(null), 3000);
-      
+
       await fetchSubscriptions();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred while deleting the subscription');
+      setError(
+        err instanceof Error ? err.message : 'An error occurred while deleting the subscription'
+      );
     } finally {
       setLoading(false);
     }
@@ -383,8 +392,7 @@ export default function SubscriptionsPage() {
         <h1 className="text-2xl font-bold">Subscriptions</h1>
         <button
           onClick={openCreateModal}
-          className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors flex items-center"
-        >
+          className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors flex items-center">
           New Subscription
         </button>
       </div>
@@ -416,8 +424,7 @@ export default function SubscriptionsPage() {
           <h3 className="mt-4 text-lg font-medium text-gray-300">No subscriptions found</h3>
           <button
             onClick={openCreateModal}
-            className="mt-4 px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors"
-          >
+            className="mt-4 px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors">
             Create Subscription
           </button>
         </div>
@@ -427,16 +434,24 @@ export default function SubscriptionsPage() {
             <table className="min-w-full divide-y divide-gray-700">
               <thead className="bg-gray-700/50">
                 <tr>
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                     Customer ID
                   </th>
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                     Product ID
                   </th>
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                     Active On
                   </th>
-                  <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-300 uppercase tracking-wider">
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-right text-xs font-medium text-gray-300 uppercase tracking-wider">
                     Actions
                   </th>
                 </tr>
@@ -458,14 +473,12 @@ export default function SubscriptionsPage() {
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <button
                         onClick={() => openEditModal(subscription)}
-                        className="text-indigo-400 hover:text-indigo-300"
-                      >
+                        className="text-indigo-400 hover:text-indigo-300">
                         Edit
                       </button>
                       <button
                         onClick={() => handleDelete(subscription.id)}
-                        className="text-red-400 hover:text-red-300 ml-3"
-                      >
+                        className="text-red-400 hover:text-red-300 ml-3">
                         Delete
                       </button>
                     </td>
@@ -483,14 +496,16 @@ export default function SubscriptionsPage() {
           <div className="bg-gray-800 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-gray-700">
             <div className="p-6 border-b border-gray-700">
               <h2 className="text-xl font-semibold">
-                {currentSubscription ? "Edit Subscription" : "Create New Subscription"}
+                {currentSubscription ? 'Edit Subscription' : 'Create New Subscription'}
               </h2>
             </div>
             <form onSubmit={handleSubmit} className="p-6 space-y-6">
               {/* Basic Info */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="relative">
-                  <label htmlFor="customer_id" className="block text-sm font-medium text-gray-300 mb-1">
+                  <label
+                    htmlFor="customer_id"
+                    className="block text-sm font-medium text-gray-300 mb-1">
                     Customer
                   </label>
                   <div className="relative">
@@ -500,16 +515,28 @@ export default function SubscriptionsPage() {
                       value={customerSearchTerm}
                       onChange={(e) => setCustomerSearchTerm(e.target.value)}
                       onFocus={() => setIsCustomerDropdownOpen(true)}
-                      placeholder={selectedCustomer ? selectedCustomer.name || selectedCustomer.email || selectedCustomer.id : "Search customers..."}
+                      placeholder={
+                        selectedCustomer
+                          ? selectedCustomer.name || selectedCustomer.email || selectedCustomer.id
+                          : 'Search customers...'
+                      }
                       className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                     />
-                    <button 
+                    <button
                       type="button"
                       onClick={() => setIsCustomerDropdownOpen(!isCustomerDropdownOpen)}
-                      className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400"
-                    >
-                      <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400">
+                      <svg
+                        className="h-5 w-5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 9l-7 7-7-7"
+                        />
                       </svg>
                     </button>
                   </div>
@@ -517,13 +544,14 @@ export default function SubscriptionsPage() {
                     <div className="absolute z-10 mt-1 w-full bg-gray-700 border border-gray-600 rounded-md shadow-lg max-h-60 overflow-auto">
                       {filteredCustomers.length > 0 ? (
                         filteredCustomers.map((customer) => (
-                          <div 
+                          <div
                             key={customer.id}
                             onClick={() => handleSelectCustomer(customer)}
-                            className="px-4 py-2 hover:bg-gray-600 cursor-pointer"
-                          >
-                            <div className="font-medium">{customer.name || "Unnamed Customer"}</div>
-                            <div className="text-sm text-gray-400">{customer.email || customer.id}</div>
+                            className="px-4 py-2 hover:bg-gray-600 cursor-pointer">
+                            <div className="font-medium">{customer.name || 'Unnamed Customer'}</div>
+                            <div className="text-sm text-gray-400">
+                              {customer.email || customer.id}
+                            </div>
                           </div>
                         ))
                       ) : (
@@ -531,15 +559,13 @@ export default function SubscriptionsPage() {
                       )}
                     </div>
                   )}
-                  <input
-                    type="hidden"
-                    name="customer_id"
-                    value={formData.customer_id}
-                  />
+                  <input type="hidden" name="customer_id" value={formData.customer_id} />
                 </div>
-                
+
                 <div className="relative">
-                  <label htmlFor="product_id" className="block text-sm font-medium text-gray-300 mb-1">
+                  <label
+                    htmlFor="product_id"
+                    className="block text-sm font-medium text-gray-300 mb-1">
                     Product
                   </label>
                   <div className="relative">
@@ -549,16 +575,24 @@ export default function SubscriptionsPage() {
                       value={productSearchTerm}
                       onChange={(e) => setProductSearchTerm(e.target.value)}
                       onFocus={() => setIsProductDropdownOpen(true)}
-                      placeholder={selectedProduct ? selectedProduct.name : "Search products..."}
+                      placeholder={selectedProduct ? selectedproduct?.name : 'Search products...'}
                       className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                     />
-                    <button 
+                    <button
                       type="button"
                       onClick={() => setIsProductDropdownOpen(!isProductDropdownOpen)}
-                      className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400"
-                    >
-                      <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400">
+                      <svg
+                        className="h-5 w-5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 9l-7 7-7-7"
+                        />
                       </svg>
                     </button>
                   </div>
@@ -566,12 +600,11 @@ export default function SubscriptionsPage() {
                     <div className="absolute z-10 mt-1 w-full bg-gray-700 border border-gray-600 rounded-md shadow-lg max-h-60 overflow-auto">
                       {filteredProducts.length > 0 ? (
                         filteredProducts.map((product) => (
-                          <div 
+                          <div
                             key={product.id}
                             onClick={() => handleSelectProduct(product)}
-                            className="px-4 py-2 hover:bg-gray-600 cursor-pointer"
-                          >
-                            <div className="font-medium">{product.name}</div>
+                            className="px-4 py-2 hover:bg-gray-600 cursor-pointer">
+                            <div className="font-medium">{product?.name}</div>
                             {product.description && (
                               <div className="text-sm text-gray-400">{product.description}</div>
                             )}
@@ -582,16 +615,14 @@ export default function SubscriptionsPage() {
                       )}
                     </div>
                   )}
-                  <input
-                    type="hidden"
-                    name="product_id"
-                    value={formData.product_id}
-                  />
+                  <input type="hidden" name="product_id" value={formData.product_id} />
                 </div>
               </div>
-              
+
               <div>
-                <label htmlFor="billing_start_date" className="block text-sm font-medium text-gray-300 mb-1">
+                <label
+                  htmlFor="billing_start_date"
+                  className="block text-sm font-medium text-gray-300 mb-1">
                   Billing Start Date
                 </label>
                 <input
@@ -603,9 +634,11 @@ export default function SubscriptionsPage() {
                   className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 />
               </div>
-              
+
               <div>
-                <label htmlFor="active_on_date" className="block text-sm font-medium text-gray-300 mb-1">
+                <label
+                  htmlFor="active_on_date"
+                  className="block text-sm font-medium text-gray-300 mb-1">
                   Active On Date
                 </label>
                 <input
@@ -619,7 +652,9 @@ export default function SubscriptionsPage() {
               </div>
 
               <div>
-                <label htmlFor="nostr_relay" className="block text-sm font-medium text-gray-300 mb-1">
+                <label
+                  htmlFor="nostr_relay"
+                  className="block text-sm font-medium text-gray-300 mb-1">
                   Nostr Relay
                 </label>
                 <input
@@ -633,7 +668,9 @@ export default function SubscriptionsPage() {
               </div>
 
               <div>
-                <label htmlFor="nostr_pubkey" className="block text-sm font-medium text-gray-300 mb-1">
+                <label
+                  htmlFor="nostr_pubkey"
+                  className="block text-sm font-medium text-gray-300 mb-1">
                   Nostr Public Key
                 </label>
                 <input
@@ -647,7 +684,9 @@ export default function SubscriptionsPage() {
               </div>
 
               <div>
-                <label htmlFor="nostr_secret" className="block text-sm font-medium text-gray-300 mb-1">
+                <label
+                  htmlFor="nostr_secret"
+                  className="block text-sm font-medium text-gray-300 mb-1">
                   Nostr Secret
                 </label>
                 <input
@@ -665,15 +704,13 @@ export default function SubscriptionsPage() {
                 <button
                   type="button"
                   onClick={closeModal}
-                  className="px-4 py-2 bg-gray-700 text-white rounded-md hover:bg-gray-600 transition-colors"
-                >
+                  className="px-4 py-2 bg-gray-700 text-white rounded-md hover:bg-gray-600 transition-colors">
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors"
-                >
-                  {currentSubscription ? "Update Subscription" : "Create Subscription"}
+                  className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors">
+                  {currentSubscription ? 'Update Subscription' : 'Create Subscription'}
                 </button>
               </div>
             </form>
@@ -682,4 +719,4 @@ export default function SubscriptionsPage() {
       )}
     </div>
   );
-} 
+}

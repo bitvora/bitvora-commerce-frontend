@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import PaymentLinksContextProvider from './context';
+import CustomersContextProvider from '@/app/(dashboard)/customers/context';
+import ProductsContextProvider from '@/app/(dashboard)/products/context';
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 import { getPaymentLinks } from './actions';
 import { getSessionFromServer } from '@/lib/session';
@@ -19,7 +21,11 @@ export default async function Layout({ children }: { children: React.ReactNode }
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <PaymentLinksContextProvider>{children}</PaymentLinksContextProvider>
+      <CustomersContextProvider>
+        <ProductsContextProvider>
+          <PaymentLinksContextProvider>{children}</PaymentLinksContextProvider>
+        </ProductsContextProvider>
+      </CustomersContextProvider>
     </HydrationBoundary>
   );
 }

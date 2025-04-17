@@ -135,7 +135,7 @@ export default function ProductsPage() {
     setCurrentProduct(product);
     setFormData({
       account_id: product.account_id,
-      name: product.name,
+      name: product?.name,
       description: product.description,
       image: product?.image || '',
       is_recurring: product.is_recurring,
@@ -304,7 +304,7 @@ export default function ProductsPage() {
   // Filter products based on search term
   const filteredProducts = products.filter(
     (product) =>
-      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product?.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       product.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -500,7 +500,7 @@ export default function ProductsPage() {
                                 <img
                                   className="h-10 w-10 rounded-md object-cover"
                                   src={product?.image}
-                                  alt={product.name}
+                                  alt={product?.name}
                                   onError={() =>
                                     setImageErrors((prev) => ({ ...prev, [product.id]: true }))
                                   }
@@ -508,7 +508,7 @@ export default function ProductsPage() {
                               )}
                             </div>
                             <div className="ml-4">
-                              <div className="text-sm font-medium text-white">{product.name}</div>
+                              <div className="text-sm font-medium text-white">{product?.name}</div>
                               <div className="text-sm text-gray-400 truncate max-w-xs">
                                 {product.description}
                               </div>

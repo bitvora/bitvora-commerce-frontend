@@ -19,7 +19,7 @@ interface LinkProps {
 export const Link = ({ href, children, referrerPolicy, target, className, replace }: LinkProps) => {
   return (
     <NextLink
-      href={href}
+      href={href || ''}
       replace={replace}
       referrerPolicy={referrerPolicy}
       target={target}

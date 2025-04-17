@@ -114,13 +114,13 @@ export default function Page({ params }: { params: { id: string } }) {
 
             <CheckoutStatus state={checkout?.state} />
 
-            <CheckoutDetailsItem label="Created On" value={formatDate(checkout?.created_at)} />
+            <CheckoutDetailsItem label="Created" value={formatDate(checkout?.created_at)} />
 
             <CheckoutDetailsItem label="Expires At" value={formatDate(checkout?.expires_at)} />
 
             {!isExpired && (
               <>
-                <hr className="border-[0.5px] border-light-500 h-[0.5px]" />
+                <hr className="border-[0.5px] border-light-300 h-[0.5px]" />
 
                 <div className="flex flex-col gap-2">
                   <MediumBody className="text-light-500">Checkout Link</MediumBody>
