@@ -104,15 +104,14 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-/* Hide number input arrows for Webkit browsers (Chrome, Safari, Edge) */
 input[type='number']::-webkit-inner-spin-button,
 input[type='number']::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
 
-/* Hide number input arrows for Firefox */
 input[type='number'] {
+  appearance: textfield;
   -moz-appearance: textfield;
 }
 
@@ -206,6 +205,13 @@ input[type='number'] {
   }
 }
 
+@media (max-width: 1023.98px) {
+  .payment-page {
+    height: calc(100vh - 50px) !important;
+    margin-top: 80px !important;
+  }
+}
+
 @media (min-width: 640px) and (max-width: 767.98px) {
 }
 
@@ -233,7 +239,7 @@ input[type='number'] {
   }
 
   .drawer {
-    width: 600px !important;
+    width: 625px !important;
     padding: 20px !important;
   }
 }
@@ -244,7 +250,7 @@ input[type='number'] {
   }
 
   .drawer {
-    width: 600px !important;
+    width: 750px !important;
     padding: 20px !important;
   }
 }
@@ -299,4 +305,9 @@ input[type='tel']:hover {
 
 .react-calendar__navigation__label__labelText.react-calendar__navigation__label__labelText--from {
   font-weight: 600;
+}
+
+.react-json-view {
+  background: transparent !important;
+  background-color: transparent !important;
 }

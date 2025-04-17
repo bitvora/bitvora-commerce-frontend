@@ -1,14 +1,15 @@
 'use client';
 
 import Table from '@/components/Table';
-import { SemiboldSmallerText, SemiboldSmallText } from '@/components/Text';
+import { SemiboldSmallerText } from '@/components/Text';
 import { formatDate, formatUUID, formatWebhookEvent } from '@/lib/helpers';
 import { useQuery } from '@tanstack/react-query';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { getWebhookDeliveries } from './actions';
 import { WebhookDelivery, WebhookDeliveryStatusType } from '@/types/webhooks';
 import { useEffect, useState } from 'react';
 import clsx from 'clsx';
+import { app_routes } from '@/lib/constants';
 
 export const Skeleton = () => {
   return (
@@ -45,19 +46,15 @@ export const WebhookDeliveryStatus = ({ state }: { state: WebhookDeliveryStatusT
   }
 
   return (
-    <>
-      <SemiboldSmallText className={clsx('truncate hidden md:flex capitalize', className)}>
-        {state}
-      </SemiboldSmallText>
-      <SemiboldSmallerText className={clsx('truncate md:hidden capitalize', className)}>
-        {state}
-      </SemiboldSmallerText>
-    </>
+    <SemiboldSmallerText className={clsx('truncate capitalize', className)}>
+      {state}
+    </SemiboldSmallerText>
   );
 };
 
 export const WebhookDeliveries = () => {
   const params = useParams<{ id: string }>();
+  const router = useRouter();
 
   const { id } = params;
   const [deliveries, setDeliveries] = useState<WebhookDelivery[]>([]);
@@ -80,37 +77,32 @@ export const WebhookDeliveries = () => {
       header: 'ID',
       accessor: 'id',
       render: (row) => (
-        <SemiboldSmallText className="truncate text-light-700 hover:text-light-900">
+        <SemiboldSmallerText className="truncate text-light-700 hover:text-light-900">
           {formatUUID(row.id)}
-        </SemiboldSmallText>
+        </SemiboldSmallerText>
       )
     },
     {
       header: 'Event',
       accessor: 'event_type',
       render: (row) => (
-        <SemiboldSmallText className="truncate text-light-700 hover:text-light-900">
+        <SemiboldSmallerText className="truncate text-light-700 hover:text-light-900">
           {formatWebhookEvent(row.event_type)}
-        </SemiboldSmallText>
+        </SemiboldSmallerText>
       )
     },
     {
       header: 'Status',
       accessor: 'status',
-      render: (row) => <WebhookDeliveryStatus state={row.state} />
+      render: (row) => <WebhookDeliveryStatus state={row.status} />
     },
     {
       header: 'Created At',
       accessor: 'created_at',
       render: (row) => (
-        <>
-          <SemiboldSmallText className="text-light-700 hover:text-light-900 hidden md:flex">
-            {formatDate(row.created_at)}
-          </SemiboldSmallText>
-          <SemiboldSmallerText className="truncate md:hidden text-light-700 hover:text-light-900">
-            {formatDate(row.created_at)}
-          </SemiboldSmallerText>
-        </>
+        <SemiboldSmallerText className="truncate text-light-700 hover:text-light-900">
+          {formatDate(row.created_at)}
+        </SemiboldSmallerText>
       )
     }
   ];
@@ -125,6 +117,9 @@ export const WebhookDeliveries = () => {
         tableHeader={<></>}
         isLoading={isWebhookDeliveriesLoading}
         emptyMessage={'No Webhook deliveries'}
+        rowOnClick={(row) => {
+          router.push(`${app_routes.webhooks}/${id}/attempts/${row.id}`);
+        }}
       />
     </div>
   );

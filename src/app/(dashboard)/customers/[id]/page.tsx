@@ -100,7 +100,7 @@ export default function Page({ params }: { params: { id: string } }) {
           <CustomerDetailsItem label="Description" value={customer?.description} />
           <CustomerDetailsItem label="Phone Number" value={customer?.phone_number} />
           <CustomerDetailsItem label="Currency" value={customer?.currency?.toUpperCase()} />
-          <CustomerDetailsItem label="Created On" value={formatDate(customer?.created_at)} />
+          <CustomerDetailsItem label="Created" value={formatDate(customer?.created_at)} />
         </div>
       )
     },

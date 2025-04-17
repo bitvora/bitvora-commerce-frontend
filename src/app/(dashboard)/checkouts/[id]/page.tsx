@@ -58,6 +58,15 @@ export default function Page({ params }: { params: { id: string } }) {
     [getCustomerById, checkout.customer_id]
   );
 
+  const isExpired = useMemo(() => {
+    if (!checkout?.expires_at) return false;
+
+    const expiresAt = new Date(checkout.expires_at);
+    const now = new Date();
+
+    return now > expiresAt && checkout.state === 'expired';
+  }, [checkout.expires_at, checkout.state]);
+
   return (
     <Drawer open onClose={handleClose} direction="right" className="drawer" overlayOpacity={0.9}>
       {loading ? (
@@ -105,39 +114,45 @@ export default function Page({ params }: { params: { id: string } }) {
 
             <CheckoutStatus state={checkout?.state} />
 
-            <CheckoutDetailsItem label="Created On" value={formatDate(checkout?.created_at)} />
+            <CheckoutDetailsItem label="Created" value={formatDate(checkout?.created_at)} />
 
             <CheckoutDetailsItem label="Expires At" value={formatDate(checkout?.expires_at)} />
 
-            <hr className="border-[0.5px] border-light-500 h-[0.5px]" />
+            {!isExpired && (
+              <>
+                <hr className="border-[0.5px] border-light-300 h-[0.5px]" />
 
-            <div className="flex flex-col gap-2">
-              <MediumBody className="text-light-500">Checkout Link</MediumBody>
+                <div className="flex flex-col gap-2">
+                  <MediumBody className="text-light-500">Checkout Link</MediumBody>
 
-              <div className="rounded-md px-4 py-3 flex border-[0.5px] border-light-600">
-                <Link href={generateCheckoutLink(checkout?.id)} className="w-full">
-                  <MediumBody className="text-light-900">
-                    {generateCheckoutLink(checkout?.id)}
-                  </MediumBody>
-                </Link>
-              </div>
+                  <div className="rounded-md px-4 py-3 flex border-[0.5px] border-light-600">
+                    <Link href={generateCheckoutLink(checkout?.id)} className="w-full">
+                      <MediumBody className="text-light-900">
+                        {generateCheckoutLink(checkout?.id)}
+                      </MediumBody>
+                    </Link>
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+
+          {!isExpired && (
+            <div className="flex gap-4 items-center border-none outline-none fixed bottom-4 md:bottom-10 left-4 md:left-10 right-4 md:right-10">
+              <Link href={generateCheckoutLink(checkout?.id)} className="w-full">
+                <SecondaryButton className="h-11 w-full">Go to Checkout Page</SecondaryButton>
+              </Link>
+
+              <PrimaryButton
+                className="h-11 w-full border-none outline-none"
+                onClick={(event) => {
+                  event.preventDefault();
+                  copyToClipboard({ text: generateCheckoutLink(checkout?.id) });
+                }}>
+                Copy Link
+              </PrimaryButton>
             </div>
-          </div>
-
-          <div className="flex gap-4 items-center border-none outline-none w-full">
-            <Link href={generateCheckoutLink(checkout?.id)} className="w-full">
-              <SecondaryButton className="h-11 w-full">Go to Checkout Page</SecondaryButton>
-            </Link>
-
-            <PrimaryButton
-              className="h-11 w-full border-none outline-none"
-              onClick={(event) => {
-                event.preventDefault();
-                copyToClipboard({ text: generateCheckoutLink(checkout?.id) });
-              }}>
-              Copy Link
-            </PrimaryButton>
-          </div>
+          )}
         </div>
       )}
     </Drawer>

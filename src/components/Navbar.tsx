@@ -139,7 +139,7 @@ export default function Navbar() {
             ))}
           </div>
 
-          <hr className="bg-light-400 w-full h-[1px] border-[0.5px] border-light-400 my-2" />
+          <hr className="bg-light-300 w-full h-[1px] border-[0.5px] border-light-400 my-2" />
 
           <div className="flex flex-col gap-1" onClick={toggleDrawer}>
             {developer_routes.map(({ active_icon, icon, route, text }) => (
@@ -147,7 +147,7 @@ export default function Navbar() {
             ))}
           </div>
 
-          <hr className="bg-light-400 w-full h-[1px] border-[0.5px] border-light-400 my-2" />
+          <hr className="bg-light-300 w-full h-[1px] border-[0.5px] border-light-400 my-2" />
 
           <div className="flex flex-col gap-1">
             <div className="flex gap-2 items-center w-full justify-between mb-1 pb-1">

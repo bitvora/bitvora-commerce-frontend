@@ -134,6 +134,8 @@ export function formatSnakeCaseToTitle(str: string): string {
 
 export const generateCheckoutLink = (id: string) => `${process.env.NEXT_PUBLIC_APP_URL}/c/${id}`;
 
+export const generatePaymentLink = (id: string) => `${process.env.NEXT_PUBLIC_APP_URL}/p/${id}`;
+
 export const generateProductLink = (id: string) =>
   `${process.env.NEXT_PUBLIC_APP_URL}/products/${id}`;
 
@@ -148,6 +150,8 @@ export const formatCurrency = (amount: number, currency: string) => {
 };
 
 export function formatWebhookEvent(event: string): string {
+  if(!event) return ''
+  
   const [first, ...rest] = event.split('.');
   return [capitalize(first), ...rest].join(' ');
 }

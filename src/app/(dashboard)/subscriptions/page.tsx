@@ -125,19 +125,23 @@ export default function Page() {
         return (
           <div className="flex items-center gap-3">
             <button className="cursor-pointer border-none outline-none hidden md:flex">
-              <img src={product.image} alt={product.name} className="w-10 h-10 rounded-md object-cover" />
+              <img
+                src={product?.image}
+                alt={product?.name}
+                className="w-10 h-10 rounded-md object-cover"
+              />
             </button>
 
             <Link
-              href={product.product_link}
+              href={product?.product_link}
               target="_blank"
               referrerPolicy="same-origin"
               className="text-inherit">
               <SemiboldSmallText className="text-light-700 hover:text-light-900 truncate hidden md:flex">
-                {product.name}
+                {product?.name}
               </SemiboldSmallText>
               <SemiboldSmallerText className="truncate md:hidden text-light-700 hover:text-light-900">
-                {product.name}
+                {product?.name}
               </SemiboldSmallerText>
             </Link>
           </div>

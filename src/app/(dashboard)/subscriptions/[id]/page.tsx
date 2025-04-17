@@ -115,7 +115,7 @@ export default function Page() {
               />
 
               <SubscriptionDetailsItem
-                label="Created On"
+                label="Created"
                 value={formatDate(subscription?.created_at)}
               />
             </div>

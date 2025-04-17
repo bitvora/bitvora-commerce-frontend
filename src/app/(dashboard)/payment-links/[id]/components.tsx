@@ -3,10 +3,8 @@
 import { Link } from '@/components/Links';
 import { MediumBody, SemiboldBody } from '@/components/Text';
 import { copyToClipboard, formatUUID } from '@/lib/helpers';
-import { CheckoutState } from '@/types/checkout';
 import { faCopy } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import clsx from 'clsx';
 
 export const Skeleton = () => {
   return (
@@ -22,7 +20,7 @@ export const Skeleton = () => {
   );
 };
 
-export const CheckoutDetailsItem = ({
+export const PaymentDetailsItem = ({
   label,
   value,
   url,
@@ -72,41 +70,6 @@ export const CheckoutDetailsItem = ({
           )}
         </div>
       )}
-    </div>
-  );
-};
-
-export const CheckoutStatus = ({ state }: { state: CheckoutState }) => {
-  let className = '';
-
-  switch (state) {
-    case 'expired':
-      className = 'text-red-700';
-      break;
-
-    case 'paid':
-      className = 'text-green-700';
-      break;
-
-    case 'pending_confirmation':
-      className = 'text-yellow-700';
-      break;
-
-    case 'overpaid':
-    case 'underpaid':
-    case 'open':
-    default:
-      className = 'text-light-900';
-      break;
-  }
-
-  return (
-    <div className="flex justify-between gap-2 sm:gap-6 w-full">
-      <div className="w-full">
-        <MediumBody className="text-light-500">State</MediumBody>
-      </div>
-
-      <SemiboldBody className={clsx('capitalize', className)}>{state}</SemiboldBody>
     </div>
   );
 };
