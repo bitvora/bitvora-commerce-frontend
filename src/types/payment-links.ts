@@ -12,7 +12,8 @@ export interface PaymentLink {
 
 export interface CreatePaymentLinkType {
   account_id: string;
-  product_id: string;
-  amount: number;
-  currency: string;
+  product_id?: string;
+  amount?: number;
+  currency?: string;
+  expiry_minutes?: number
 }

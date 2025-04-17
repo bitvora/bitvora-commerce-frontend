@@ -21,7 +21,7 @@ export async function getCheckout(id: string) {
 export async function pollCheckout(id: string) {
   try {
     const session = await getSessionFromServer();
-    const response = await api.fetch(`/checkout/${id}/poll`, {}, session);
+    const response = await api.fetch(`/c/${id}/poll`, {}, session);
     if (!response) return [];
 
     if (!response.ok) {

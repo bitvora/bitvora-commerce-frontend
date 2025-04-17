@@ -84,7 +84,8 @@ export const AddPaymentLink = () => {
               initialValues={{
                 product_id: '',
                 amount: 0,
-                currency: ''
+                currency: '',
+                expiry_minutes: ''
               }}
               enableReinitialize
               validationSchema={Yup.object({
@@ -96,11 +97,21 @@ export const AddPaymentLink = () => {
               })}
               onSubmit={async (values, { resetForm }) => {
                 const payload: CreatePaymentLinkType = {
-                  account_id: currentAccount?.id,
-                  product_id: values.product_id,
-                  amount: Number(values.amount),
-                  currency: values.currency
+                  account_id: currentAccount?.id
                 };
+
+                if (values.product_id) {
+                  payload.product_id = values.product_id;
+                }
+
+                if (values.amount) {
+                  payload.amount = Number(values.amount);
+                  payload.currency = values.currency;
+                }
+
+                if (values.expiry_minutes) {
+                  payload.expiry_minutes = Number(values.expiry_minutes);
+                }
 
                 try {
                   const result = await createPaymentLink(payload);
@@ -207,6 +218,20 @@ export const AddPaymentLink = () => {
                         />
                       </div>
                     </div>
+
+                    <div>
+                      <DarkInput
+                        label="Expires (in minutes)"
+                        handleChange={handleChange}
+                        name="expiry_minutes"
+                        errors={errors}
+                        touched={touched}
+                        placeholder="0 minutes"
+                        value={values.expiry_minutes}
+                        showLabel
+                        type="number"
+                      />
+                    </div>
                   </div>
 
                   <div className="flex flex-col gap-2 fixed bottom-4 md:bottom-10 left-4 md:left-10 right-4 md:right-10 mt-6">
@@ -271,7 +296,8 @@ export const EditPaymentLink = ({
             initialValues={{
               product_id: paymentLink?.product_id || '',
               amount: paymentLink?.amount || 0,
-              currency: paymentLink?.currency || ''
+              currency: paymentLink?.currency || '',
+              expiry_minutes: paymentLink?.expiry_minutes || ''
             }}
             enableReinitialize
             validationSchema={Yup.object({
@@ -283,11 +309,21 @@ export const EditPaymentLink = ({
             })}
             onSubmit={async (values, { resetForm }) => {
               const payload: CreatePaymentLinkType = {
-                account_id: currentAccount?.id,
-                product_id: values.product_id,
-                amount: Number(values.amount),
-                currency: values.currency
+                account_id: currentAccount?.id
               };
+
+              if (values.product_id) {
+                payload.product_id = values.product_id;
+              }
+
+              if (values.amount) {
+                payload.amount = Number(values.amount);
+                payload.currency = values.currency;
+              }
+
+              if (values.expiry_minutes) {
+                payload.expiry_minutes = Number(values.expiry_minutes);
+              }
 
               try {
                 const result = await updatePaymentLink(paymentLink.id, payload);
@@ -395,6 +431,20 @@ export const EditPaymentLink = ({
                           required
                         />
                       </div>
+                    </div>
+
+                    <div>
+                      <DarkInput
+                        label="Expires (in minutes)"
+                        handleChange={handleChange}
+                        name="expiry_minutes"
+                        errors={errors}
+                        touched={touched}
+                        placeholder="0 minutes"
+                        value={values.expiry_minutes}
+                        showLabel
+                        type="number"
+                      />
                     </div>
                   </div>
 

@@ -74,7 +74,7 @@ export const Checkbox = ({
         )}
       </div>
       <SemiboldBody
-        className={clsx('text-inherit capitalize', {
+        className={clsx('text-inherit', {
           'text-light-400': disabled
         })}>
         {label}

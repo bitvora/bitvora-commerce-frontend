@@ -142,7 +142,7 @@ export default function Page() {
           <div className="flex items-center gap-3">
             <button className="cursor-pointer border-none outline-none hidden md:flex">
               <img
-                src={product.image}
+                src={product?.image}
                 alt={product.name}
                 className="w-10 h-10 rounded-md object-cover"
               />

@@ -205,6 +205,13 @@ input[type='number'] {
   }
 }
 
+@media (max-width: 1023.98px) {
+  .payment-page {
+    height: calc(100vh - 50px) !important;
+    margin-top: 80px !important;
+  }
+}
+
 @media (min-width: 640px) and (max-width: 767.98px) {
 }
 

@@ -14,6 +14,10 @@ export const Skeleton = () => {
       <div className="w-full flex gap-8 items-start animate-pulse">
         <div className="w-full h-[300px] bg-light-300 rounded-md"></div>
       </div>
+
+      <div className="w-full flex gap-8 items-start animate-pulse">
+        <div className="w-full h-[300px] bg-light-300 rounded-md"></div>
+      </div>
     </div>
   );
 };

@@ -332,7 +332,7 @@ export const NewCheckout = () => {
   );
 };
 
-export const CheckoutStatus = ({ state, id }: { state: CheckoutState; id: string }) => {
+export const CheckoutStatus = ({ state, href }: { state: CheckoutState; href: string }) => {
   let className = '';
 
   switch (state) {
@@ -357,7 +357,7 @@ export const CheckoutStatus = ({ state, id }: { state: CheckoutState; id: string
   }
 
   return (
-    <Link href={`${app_routes.checkouts}/${id}`} className="text-inherit">
+    <Link href={href} className="text-inherit">
       <SemiboldSmallText className={clsx('truncate hidden md:flex capitalize', className)}>
         {state}
       </SemiboldSmallText>

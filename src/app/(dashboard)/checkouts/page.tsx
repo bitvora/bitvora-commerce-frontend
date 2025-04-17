@@ -70,12 +70,14 @@ export default function Page() {
     setCurrentPage(1);
   };
 
+  const generateLink = (id: string) => `${app_routes.checkouts}/${id}`;
+
   const columns = [
     {
       header: 'ID',
       accessor: 'id',
       render: (row) => (
-        <Link href={`${app_routes.checkouts}/${row.id}`} className="text-inherit">
+        <Link href={generateLink(row.id)} className="text-inherit">
           <SemiboldSmallText className="truncate text-light-700 hover:text-light-900">
             {formatUUID(row.id)}
           </SemiboldSmallText>
@@ -86,7 +88,7 @@ export default function Page() {
       header: 'Type',
       accessor: 'type',
       render: (row) => (
-        <Link href={`${app_routes.checkouts}/${row.id}`} className="text-inherit">
+        <Link href={generateLink(row.id)} className="text-inherit">
           <SemiboldSmallText className="text-light-700 capitalize hover:text-light-900 truncate hidden md:flex">
             {row.type}
           </SemiboldSmallText>
@@ -99,13 +101,13 @@ export default function Page() {
     {
       header: 'Status',
       accessor: 'state',
-      render: (row) => <CheckoutStatus id={row.id} state={row.state} />
+      render: (row) => <CheckoutStatus state={row.state} href={generateLink(row.id)} />
     },
     {
       header: 'Created At',
       accessor: 'created_at',
       render: (row) => (
-        <Link href={`${app_routes.checkouts}/${row.id}`} className="text-inherit">
+        <Link href={generateLink(row.id)} className="text-inherit">
           <SemiboldSmallText className="text-light-700 hover:text-light-900 truncate hidden md:flex">
             {formatDate(row.created_at)}
           </SemiboldSmallText>
@@ -119,7 +121,7 @@ export default function Page() {
       header: 'Expires At',
       accessor: 'expires_at',
       render: (row) => (
-        <Link href={`${app_routes.checkouts}/${row.id}`} className="text-inherit">
+        <Link href={generateLink(row.id)} className="text-inherit">
           <SemiboldSmallText className="text-light-700 hover:text-light-900 truncate hidden md:flex">
             {formatDate(row.expires_at)}
           </SemiboldSmallText>
