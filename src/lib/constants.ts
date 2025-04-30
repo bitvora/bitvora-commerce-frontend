@@ -70,6 +70,10 @@ export const graph_periods = [
 
 export const billing_period_hours = [
   {
+    label: 'Daily',
+    value: 24
+  },
+  {
     label: 'Weekly',
     value: 168
   },

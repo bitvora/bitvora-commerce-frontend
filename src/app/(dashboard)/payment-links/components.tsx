@@ -89,7 +89,6 @@ export const AddPaymentLink = () => {
               }}
               enableReinitialize
               validationSchema={Yup.object({
-                product_id: Yup.string().required('Product is required'),
                 amount: Yup.number()
                   .required('Amount is required')
                   .positive('Amount must be greater than zero'),
@@ -151,8 +150,8 @@ export const AddPaymentLink = () => {
                         label="Product"
                         name="product_id"
                         placeholder="Search Product"
-                        options={products.filter((product) => product.is_recurring)}
-                        required
+                        // options={products.filter((product) => product.is_recurring)}
+                        options={products}
                         onChange={(value) => setFieldValue('product_id', value.id)}
                         showLabel
                         getOptionLabel={(option) => option.name}
@@ -171,7 +170,7 @@ export const AddPaymentLink = () => {
                       />
 
                       <Link
-                        href={`${app_routes.payment_links}?action=new-product`}
+                        href={`${app_routes.products}?action=new-product`}
                         target="_blank"
                         referrerPolicy="same-origin">
                         <div className="text-secondary-700 hover:text-secondary-400 flex items-center gap-2">

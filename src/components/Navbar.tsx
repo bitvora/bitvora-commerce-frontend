@@ -16,6 +16,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { logout } from '@/lib/auth';
 import Currency from '@/components/Currency';
 import secureLocalStorage from 'react-secure-storage';
+import Account from '@/components/Account';
 
 const main_routes = [
   {
@@ -59,6 +60,12 @@ const main_routes = [
     route: app_routes.wallet,
     icon: '/icons/wallet.svg',
     active_icon: '/icons/active-wallet.svg'
+  },
+  {
+    text: 'Account Management',
+    route: app_routes.profile,
+    icon: '/icons/account-management.svg',
+    active_icon: '/icons/active-account-management.svg'
   }
 ];
 
@@ -133,6 +140,8 @@ export default function Navbar() {
 
       <Drawer open={isOpen} onClose={toggleDrawer} direction="left" className="mobile-drawer">
         <div className="w-full h-full overflow-x-hidden overflow-y-auto flex flex-col gap-2">
+          <Account />
+
           <div className="flex flex-col gap-1" onClick={toggleDrawer}>
             {main_routes.map(({ active_icon, icon, route, text }) => (
               <NavItem key={text} active_icon={active_icon} icon={icon} route={route} text={text} />
@@ -156,10 +165,15 @@ export default function Navbar() {
                   <img
                     src={currentAccount?.logo}
                     className="w-8 h-8 rounded-md"
-                    alt={currentAccount?.name}
+                    alt={currentAccount?.name || 'user'}
                   />
                 ) : (
-                  <Image src="/img/user.svg" alt={currentAccount?.name} height={36} width={36} />
+                  <Image
+                    src="/img/user.svg"
+                    alt={currentAccount?.name || 'user'}
+                    height={36}
+                    width={36}
+                  />
                 )}
 
                 <SemiboldSmallText className="text-light-900 truncate overflow-hidden text-ellipsis whitespace-nowrap flex-1">
