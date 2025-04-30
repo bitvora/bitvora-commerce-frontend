@@ -136,6 +136,18 @@ export default function Page() {
       header: 'Product',
       accessor: 'product_id',
       render: (row) => {
+        if (!row?.product_id?.trim()) {
+          return (
+            <div className="flex items-center gap-3">
+              <SemiboldSmallText className="text-light-700 hover:text-light-900 truncate hidden md:flex">
+                -
+              </SemiboldSmallText>
+              <SemiboldSmallerText className="truncate md:hidden text-light-700 hover:text-light-900">
+                -
+              </SemiboldSmallerText>
+            </div>
+          );
+        }
         const product = getProductById(row.product_id);
 
         return (

@@ -11,7 +11,7 @@ import { createCheckout } from './actions';
 import { useCheckoutContext } from './context';
 import { useEffect, useRef, useState } from 'react';
 import { usePathname, useSearchParams, useRouter } from 'next/navigation';
-import { app_routes, checkout_types } from '@/lib/constants';
+import { app_routes, checkout_types, currencies } from '@/lib/constants';
 import { CloseIcon } from '@/components/Icons';
 import { useAppContext } from '@/app/contexts';
 import { CheckoutState, CreateCheckoutType } from '@/types/checkout';
@@ -94,12 +94,12 @@ export const NewCheckout = () => {
               }}
               enableReinitialize
               validationSchema={Yup.object({
-                // amount: Yup.number()
-                //   .required('Amount is required')
-                //   .positive('Amount must be greater than zero'),
-                // currency: Yup.string().required('Currency is required'),
                 type: Yup.string().required('Type is required'),
-                product_id: Yup.string().required('Product is required'),
+                product_id: Yup.string().when('type', {
+                  is: (val: string) => val === 'subscription',
+                  then: (schema) => schema.required('Product is required for subscriptions'),
+                  otherwise: (schema) => schema.notRequired()
+                }),
                 expiry_minutes: Yup.string().required('Expiry time is required')
               })}
               onSubmit={async (values, { resetForm }) => {
@@ -107,17 +107,20 @@ export const NewCheckout = () => {
                   account_id: currentAccount?.id || '',
                   //@ts-expect-error Too lazy to fix this
                   type: values.type,
-                  // amount: Number(values.amount),
-                  // currency: values.currency,
+                  amount: Number(values.amount),
+                  currency: values.currency,
                   redirect_url: values?.redirect_url,
-                  metadata: {},
-                  items: {},
-                  expiry_minutes: Number(values.expiry_minutes),
-                  product_id: values?.product_id
+                  // metadata: {},
+                  // items: {},
+                  expiry_minutes: Number(values.expiry_minutes)
                 };
 
                 if (values?.customer_id) {
                   payload.customer_id = values?.customer_id;
+                }
+
+                if (values?.product_id) {
+                  payload.product_id = values?.product_id;
                 }
 
                 try {
@@ -149,8 +152,6 @@ export const NewCheckout = () => {
                 isSubmitting,
                 touched,
                 values,
-                isValid,
-                dirty,
                 setFieldValue
               }) => {
                 return (
@@ -163,7 +164,6 @@ export const NewCheckout = () => {
                           name="product_id"
                           placeholder="Search Product"
                           options={products}
-                          required
                           onChange={(value) => {
                             setFieldValue('product_id', value.id);
                           }}
@@ -196,64 +196,58 @@ export const NewCheckout = () => {
                         </Link>
                       </div>
 
-                      {/* {!values?.product_id && (
-                        <div className="w-full flex justify-between gap-3">
-                          <div className="w-2/3">
-                            <DarkInput
-                              label="Amount"
-                              handleChange={handleChange}
-                              name="amount"
-                              errors={errors}
-                              touched={touched}
-                              placeholder="0.00"
-                              value={values.amount}
-                              showLabel
-                              required
-                              type="number"
-                            />
-                          </div>
-
-                          <div className="w-1/3">
-                            <SelectField
-                              label="Currency"
-                              name="currency"
-                              value={values.currency}
-                              onChange={(value) => setFieldValue('currency', value)}
-                              options={currencies.map(({ label, value }) => {
-                                return {
-                                  label,
-                                  value
-                                };
-                              })}
-                              placeholder="Currency"
-                              errors={errors}
-                              touched={touched}
-                              required
-                            />
-                          </div>
+                      <div className="w-full flex justify-between gap-3">
+                        <div className="w-2/3">
+                          <DarkInput
+                            label="Amount"
+                            handleChange={handleChange}
+                            name="amount"
+                            errors={errors}
+                            touched={touched}
+                            placeholder="0.00"
+                            value={values.amount}
+                            showLabel
+                            type="number"
+                          />
                         </div>
-                      )} */}
 
-                      {values?.product_id && (
-                        <div>
+                        <div className="w-1/3">
                           <SelectField
-                            label="Type"
-                            name="type"
-                            onChange={(value) => setFieldValue('type', value)}
-                            placeholder="Checkout Type"
-                            value={values.type}
-                            options={checkout_types.map(({ label, value }) => {
+                            label="Currency"
+                            name="currency"
+                            value={values.currency}
+                            onChange={(value) => setFieldValue('currency', value)}
+                            options={currencies.map(({ label, value }) => {
                               return {
                                 label,
                                 value
                               };
                             })}
-                            required
+                            placeholder="Currency"
                             errors={errors}
                             touched={touched}
                           />
                         </div>
-                      )}
+                      </div>
+
+                      <div>
+                        <SelectField
+                          label="Type"
+                          name="type"
+                          onChange={(value) => setFieldValue('type', value)}
+                          placeholder="Checkout Type"
+                          value={values.type}
+                          options={checkout_types.map(({ label, value }) => {
+                            return {
+                              label,
+                              value
+                            };
+                          })}
+                          required
+                          errors={errors}
+                          touched={touched}
+                        />
+                      </div>
 
                       <div className="flex flex-col w-full gap-2">
                         <DarkAutocomplete
@@ -316,7 +310,11 @@ export const NewCheckout = () => {
                           className="w-full h-12"
                           loading={isSubmitting}
                           type="submit"
-                          disabled={!isValid || !dirty}>
+                          disabled={
+                            !values.type.trim() ||
+                            !values.expiry_minutes.trim() ||
+                            (values.type === 'subscription' && !values.product_id.trim())
+                          }>
                           Create Checkout
                         </PrimaryButton>
                       </div>

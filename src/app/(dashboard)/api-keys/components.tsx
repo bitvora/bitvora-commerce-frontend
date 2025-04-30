@@ -11,16 +11,16 @@ import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import toast from 'react-hot-toast';
 import { MediumTitle, SemiboldBody, SemiboldSmallText, SemiboldTitle } from '@/components/Text';
-import { CloseIcon, CopyIcon, DeleteIcon, WarningIcon } from '@/components/Icons';
+import { CloseIcon, DeleteIcon, WarningIcon } from '@/components/Icons';
 import { APIKey, CreateAPIKeyType } from '@/types/api-keys';
 import Modal from '@/components/Modal';
 import { deleteAPIKey, createAPIKey, updateAPIKey } from './actions';
 import { useQueryClient } from '@tanstack/react-query';
-import { DarkInput } from '@/components/Inputs';
+import { DarkInput, DarkReadonlyInput } from '@/components/Inputs';
 import Tabs from '@/components/Tab';
 import Accordion from '@/components/Accordion';
 import { Checkbox } from '@/components/Checkbox';
-import { copyToClipboard, formatKeyName } from '@/lib/helpers';
+import { formatKeyName } from '@/lib/helpers';
 
 const initialPermissions = {
   read: false,
@@ -251,27 +251,7 @@ export const CreateAPIKey = () => {
                       />
                     </div>
 
-                    {tab === 2 && (
-                      <div className="w-full flex justify-between gap-3 items-center border-[1px] border-light-400 border-opacity-15 rounded-lg bg-dark h-14">
-                        <div className="flex items-center py-3 px-4 bg-transparent text-light-900 text-sm truncate w-full">
-                          <SemiboldSmallText className="text-light-700">
-                            {generatedKey}
-                          </SemiboldSmallText>
-                        </div>
-
-                        <button
-                          className="border-[1px] border-transparent text-light-400 bg-[#1e162c] px-2 py-2 h-10 w-10 mr-2 cursor-pointer"
-                          onClick={(event) => {
-                            event.preventDefault();
-                            copyToClipboard({
-                              text: generatedKey,
-                              alertMessage: 'API Key copied to clipboard'
-                            });
-                          }}>
-                          <CopyIcon />
-                        </button>
-                      </div>
-                    )}
+                    {tab === 2 && <DarkReadonlyInput value={generatedKey} hidden label='Generated Key' />}
                   </div>
 
                   <div className="w-full rounded-lg px-3 md:px-4 py-3 md:py-4">
