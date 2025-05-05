@@ -34,6 +34,7 @@ export default function ContextProvider({ children }: { children: React.ReactNod
   const [currentTab, setCurrentTab] = useState(graph_periods[0].value);
   const [wallets, setWallets] = useState<Wallet[]>([]);
 
+  console.log({ session });
   const updateCurrency = (currency: CurrencyType) => {
     setCurrency(currency);
     secureLocalStorage.setItem('currency', JSON.stringify(currency));
