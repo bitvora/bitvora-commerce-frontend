@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 'use client';
 
 import { MenuIcon, CloseIcon } from '@/components/Icons';
@@ -9,13 +8,8 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import Drawer from 'react-modern-drawer';
 import Image from 'next/image';
-import { useAppContext } from '@/app/contexts';
 import { useState } from 'react';
-import { faAngleDown } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { logout } from '@/lib/auth';
 import Currency from '@/components/Currency';
-import secureLocalStorage from 'react-secure-storage';
 import Account from '@/components/Account';
 
 const main_routes = [
@@ -63,7 +57,7 @@ const main_routes = [
   },
   {
     text: 'Account Management',
-    route: app_routes.profile,
+    route: app_routes.accounts,
     icon: '/icons/account-management.svg',
     active_icon: '/icons/active-account-management.svg'
   }
@@ -117,7 +111,6 @@ function NavItem({
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const { currentAccount } = useAppContext();
 
   const toggleDrawer = () => {
     setIsOpen((prevState) => !prevState);
@@ -154,59 +147,6 @@ export default function Navbar() {
             {developer_routes.map(({ active_icon, icon, route, text }) => (
               <NavItem key={text} active_icon={active_icon} icon={icon} route={route} text={text} />
             ))}
-          </div>
-
-          <hr className="bg-light-300 w-full h-[1px] border-[0.5px] border-light-400 my-2" />
-
-          <div className="flex flex-col gap-1">
-            <div className="flex gap-2 items-center w-full justify-between mb-1 pb-1">
-              <div className="flex gap-4 items-center flex-1 min-w-0">
-                {currentAccount?.logo ? (
-                  <img
-                    src={currentAccount?.logo}
-                    className="w-8 h-8 rounded-md"
-                    alt={currentAccount?.name || 'user'}
-                  />
-                ) : (
-                  <Image
-                    src="/img/user.svg"
-                    alt={currentAccount?.name || 'user'}
-                    height={36}
-                    width={36}
-                  />
-                )}
-
-                <SemiboldSmallText className="text-light-900 truncate overflow-hidden text-ellipsis whitespace-nowrap flex-1">
-                  {currentAccount?.name}
-                </SemiboldSmallText>
-              </div>
-
-              <button className="text-light-700 hover:text-light-500 cursor-pointer">
-                <FontAwesomeIcon icon={faAngleDown} />
-              </button>
-            </div>
-
-            <NavItem
-              active_icon="/icons/profile.svg"
-              icon="/icons/profile.svg"
-              route={app_routes.profile}
-              text="Manage Profile"
-            />
-
-            <form
-              onSubmit={async (e) => {
-                e.preventDefault();
-                secureLocalStorage.clear();
-                await logout();
-              }}
-              className="-mt-2 onClick={toggleDrawer}">
-              <button
-                className={`w-full h-[45px] rounded-md flex gap-4 justify-start items-center px-1 py-2`}
-                type="submit">
-                <Image width={16} height={16} src="/icons/logout.svg" alt="Logout" />
-                <SemiboldSmallText className="mt-[0.5px] text-red-700">Logout</SemiboldSmallText>
-              </button>
-            </form>
           </div>
         </div>
       </Drawer>

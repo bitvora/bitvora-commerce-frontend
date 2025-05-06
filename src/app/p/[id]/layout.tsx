@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 import { getPaymentLinkDetails } from './actions';
-import ContextProvider from '@/app/contexts';
+import ContextProvider from '@/contexts';
 
 export const metadata: Metadata = {
   title: 'Payment'

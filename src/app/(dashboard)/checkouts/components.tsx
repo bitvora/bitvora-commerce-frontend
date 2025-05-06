@@ -13,7 +13,7 @@ import { useEffect, useRef, useState } from 'react';
 import { usePathname, useSearchParams, useRouter } from 'next/navigation';
 import { app_routes, checkout_types, currencies } from '@/lib/constants';
 import { CloseIcon } from '@/components/Icons';
-import { useAppContext } from '@/app/contexts';
+import { useAppContext } from '@/contexts';
 import { CheckoutState, CreateCheckoutType } from '@/types/checkout';
 import { Link } from '@/components/Links';
 import clsx from 'clsx';

@@ -11,7 +11,7 @@ import {
   useState
 } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { useAppContext } from '@/app/contexts';
+import { useAppContext } from '@/contexts';
 import { Checkout } from '@/types/checkout';
 
 interface CheckoutContextType {

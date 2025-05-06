@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 import { getCheckout } from '@/app/(dashboard)/checkouts/[id]/actions';
-import ContextProvider from '@/app/contexts';
+import ContextProvider from '@/contexts';
 
 export const metadata: Metadata = {
   title: 'Checkout'

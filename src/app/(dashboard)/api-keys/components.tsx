@@ -1,7 +1,7 @@
 'use client';
 
 import { useAPIKeysContext } from './context';
-import { useAppContext } from '@/app/contexts';
+import { useAppContext } from '@/contexts';
 import { PrimaryButton, RedButton, SecondaryButton } from '@/components/Buttons';
 import { app_routes } from '@/lib/constants';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';

@@ -93,7 +93,7 @@ export default function Select({
           </motion.ul>
         </div>
       }
-      contentClass={clsx('mt-2 w-full', dropdownClass)}
+      contentClass={clsx('mt-2 w-full bg-primary-250', dropdownClass)}
       onSelectClose
     />
   );
@@ -287,7 +287,7 @@ export const CalendarInput = ({
               </motion.ul>
             </div>
           }
-          contentClass={clsx('mt-2 w-full sm:min-w-[300px] border-[0.5px] border-primary-600')}
+          contentClass={clsx('mt-2 bg-primary-250 w-full sm:min-w-[300px] border-[0.5px] border-primary-600')}
         />
       </div>
 

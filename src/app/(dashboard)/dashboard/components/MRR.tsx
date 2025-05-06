@@ -28,7 +28,7 @@ import {
 import { LoadingIcon } from '@/components/Icons';
 import { AreaChart } from '@/components/Graphs';
 import { formatDate } from '@/lib/helpers';
-import { useAppContext } from '@/app/contexts';
+import { useAppContext } from '@/contexts';
 import { graph_periods } from '@/lib/constants';
 import { MRRData, Breakpoint } from '@/lib/types';
 import numeral from 'numeral';

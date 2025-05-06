@@ -14,7 +14,7 @@ import { WalletConnectionDetails, Skeleton } from './components';
 import React from 'react';
 import { Link } from '@/components/Links';
 import { Wallet } from '@/types/wallets';
-import { useAppContext } from '@/app/contexts';
+import { useAppContext } from '@/contexts';
 
 export default function Page({ params }: { params: { id: string } }) {
   const { id } = params;

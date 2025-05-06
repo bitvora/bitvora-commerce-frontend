@@ -15,7 +15,7 @@ import { usePathname, useSearchParams, useRouter } from 'next/navigation';
 import { app_routes, currencies } from '@/lib/constants';
 import { CloseIcon, DeleteIcon } from '@/components/Icons';
 import { SelectField } from '@/components/Selects';
-import { useAppContext } from '@/app/contexts';
+import { useAppContext } from '@/contexts';
 import { CreatePaymentLinkType, PaymentLink } from '@/types/payment-links';
 import Modal from '@/components/Modal';
 import { useQueryClient } from '@tanstack/react-query';
@@ -85,7 +85,8 @@ export const AddPaymentLink = () => {
                 product_id: '',
                 amount: 0,
                 currency: '',
-                expiry_minutes: ''
+                expiry_minutes: '',
+                redirect_link: ''
               }}
               enableReinitialize
               validationSchema={Yup.object({
@@ -110,6 +111,10 @@ export const AddPaymentLink = () => {
 
                 if (values.expiry_minutes) {
                   payload.expiry_minutes = Number(values.expiry_minutes);
+                }
+
+                if (values.redirect_link) {
+                  payload.redirect_link = values.redirect_link;
                 }
 
                 try {
@@ -231,6 +236,20 @@ export const AddPaymentLink = () => {
                         type="number"
                       />
                     </div>
+
+                    <div>
+                      <DarkInput
+                        label="Redirect URL"
+                        handleChange={handleChange}
+                        name="redirect_link"
+                        errors={errors}
+                        touched={touched}
+                        placeholder="https://example.com/redirect"
+                        value={values.redirect_link}
+                        showLabel
+                        type="url"
+                      />
+                    </div>
                   </div>
 
                   <div className="flex flex-col gap-2 fixed bottom-4 md:bottom-10 left-4 md:left-10 right-4 md:right-10 mt-6">
@@ -296,7 +315,8 @@ export const EditPaymentLink = ({
               product_id: paymentLink?.product_id || '',
               amount: paymentLink?.amount || 0,
               currency: paymentLink?.currency || '',
-              expiry_minutes: paymentLink?.expiry_minutes || ''
+              expiry_minutes: paymentLink?.expiry_minutes || '',
+              redirect_link: paymentLink?.redirect_link || ''
             }}
             enableReinitialize
             validationSchema={Yup.object({
@@ -322,6 +342,10 @@ export const EditPaymentLink = ({
 
               if (values.expiry_minutes) {
                 payload.expiry_minutes = Number(values.expiry_minutes);
+              }
+
+              if (values.redirect_link) {
+                payload.redirect_link = values.redirect_link;
               }
 
               try {
@@ -443,6 +467,20 @@ export const EditPaymentLink = ({
                         value={values.expiry_minutes}
                         showLabel
                         type="number"
+                      />
+                    </div>
+
+                    <div>
+                      <DarkInput
+                        label="Redirect URL"
+                        handleChange={handleChange}
+                        name="redirect_link"
+                        errors={errors}
+                        touched={touched}
+                        placeholder="https://example.com/redirect"
+                        value={values.redirect_link}
+                        showLabel
+                        type="url"
                       />
                     </div>
                   </div>

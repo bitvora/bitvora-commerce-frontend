@@ -30,7 +30,9 @@ export const RenderQRCode = ({
 
       <div className="space-y-4">
         <div className="p-4 rounded-lg flex justify-center">
-          <QRCodeSVG value={value || ''} size={240} bgColor={disabled ? '#645c70' : '#FFFFFF'} />
+          <div className="border-10 border-white rounded-md">
+            <QRCodeSVG value={value || ''} size={240} bgColor={disabled ? '#645c70' : '#FFFFFF'} />
+          </div>
         </div>
 
         <div className="flex flex-col gap-2">

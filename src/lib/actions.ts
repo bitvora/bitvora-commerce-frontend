@@ -54,6 +54,41 @@ export async function createAccount(payload: CreateAccountType) {
   }
 }
 
+export async function updateAccount(payload: CreateAccountType) {
+  try {
+    const session = await getSessionFromServer();
+
+    const response = await api.fetch(
+      '/account',
+      {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      },
+      session
+    );
+
+    if (!response) {
+      return { success: false, error: 'Session expired or unauthorized' };
+    }
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      return { success: false, error: errorData.message || 'Failed to update account' };
+    }
+
+    const data = await response.json();
+    return { success: true, data };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Something went wrong'
+    };
+  }
+}
+
 export async function fetchSession() {
   const response = await fetch('/api/session', { credentials: 'include' });
   const data = await response.json();
@@ -74,6 +109,57 @@ export async function getWallets() {
     return await response.json();
   } catch (error) {
     console.error('Error fetching wallets:', error);
+    return [];
+  }
+}
+
+export async function deleteAccount(id: string) {
+  try {
+    const session = await getSessionFromServer();
+
+    const response = await api.fetch(
+      `/account/${id}`,
+      {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      },
+      session
+    );
+
+    if (!response) {
+      return { success: false, error: 'Session expired or unauthorized' };
+    }
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      return { success: false, error: errorData.message || 'Failed to delete account' };
+    }
+
+    const data = await response.json();
+    return { success: true, data };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Something went wrong'
+    };
+  }
+}
+
+export async function getAccount(id: string) {
+  try {
+    const session = await getSessionFromServer();
+    const response = await api.fetch(`/account/${id}`, {}, session);
+    if (!response) return [];
+
+    if (!response.ok) {
+      throw new Error('Failed to get account');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Error getting account:', error);
     return [];
   }
 }
