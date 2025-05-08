@@ -14,7 +14,7 @@ import { usePathname, useSearchParams, useRouter } from 'next/navigation';
 import { app_routes, currencies } from '@/lib/constants';
 import { CloseIcon, DeleteIcon } from '@/components/Icons';
 import Select, { CountrySelect } from '@/components/Selects';
-import { useAppContext } from '@/app/contexts';
+import { useAppContext } from '@/contexts';
 import Modal from '@/components/Modal';
 import Accordion from '@/components/Accordion';
 import { countNonEmptyFields } from '@/lib/helpers';

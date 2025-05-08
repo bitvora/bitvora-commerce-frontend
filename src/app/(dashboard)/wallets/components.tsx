@@ -1,6 +1,6 @@
 'use client';
 
-import { useAppContext } from '@/app/contexts';
+import { useAppContext } from '@/contexts';
 import { PrimaryButton } from '@/components/Buttons';
 import { SemiboldSmallerText, SemiboldSmallText, SemiboldTitle } from '@/components/Text';
 import { app_routes } from '@/lib/constants';

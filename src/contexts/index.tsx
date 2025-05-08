@@ -5,8 +5,9 @@ import { currencies, graph_periods } from '@/lib/constants';
 import { Account, CurrencyType, SessionPayload } from '@/lib/types';
 import { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
 import secureLocalStorage from 'react-secure-storage';
-import { useQuery } from '@tanstack/react-query';
+import { QueryClient, useQuery } from '@tanstack/react-query';
 import { Wallet } from '@/types/wallets';
+import { setActiveAccount } from '@/lib/auth';
 
 interface AppContextType {
   session: SessionPayload;
@@ -39,10 +40,14 @@ export default function ContextProvider({ children }: { children: React.ReactNod
     secureLocalStorage.setItem('currency', JSON.stringify(currency));
   };
 
-  const updateCurrentAccount = (account: Account) => {
+  const updateCurrentAccount = useCallback(async (account: Account) => {
+    const queryClient = new QueryClient();
+    await setActiveAccount(account.id);
     setCurrentAccount(account);
     secureLocalStorage.setItem('currentAccount', JSON.stringify(account));
-  };
+
+    queryClient.invalidateQueries();
+  }, []);
 
   const updateCurrentTab = (payload: string) => {
     setCurrentTab(payload);
@@ -125,30 +130,10 @@ export default function ContextProvider({ children }: { children: React.ReactNod
     if (accountsData?.data) {
       const fetchedAccounts: Account[] = accountsData.data;
       setAccounts(fetchedAccounts);
+
       secureLocalStorage.setItem('accounts', JSON.stringify(fetchedAccounts));
-
-      let selectedAccount = fetchedAccounts.find((acc) => acc.id === session?.activeAccount);
-
-      if (!selectedAccount) {
-        const storedAccount = secureLocalStorage.getItem('currentAccount');
-        if (storedAccount && typeof storedAccount === 'string') {
-          try {
-            const parsedStoredAccount = JSON.parse(storedAccount) as Account;
-            if (fetchedAccounts.some((acc) => acc.id === parsedStoredAccount.id)) {
-              selectedAccount = parsedStoredAccount;
-            }
-          } catch {
-            selectedAccount = fetchedAccounts[0];
-          }
-        } else {
-          selectedAccount = fetchedAccounts[0];
-        }
-      }
-
-      setCurrentAccount(selectedAccount);
-      secureLocalStorage.setItem('currentAccount', JSON.stringify(selectedAccount));
     }
-  }, [accountsData, isAccountLoading, session?.activeAccount]);
+  }, [accountsData, isAccountLoading, session, session?.activeAccount]);
 
   const refetchAccount = useCallback(() => {
     refetch();
@@ -180,7 +165,8 @@ export default function ContextProvider({ children }: { children: React.ReactNod
     currentTab,
     wallets,
     isWalletLoading,
-    refetchWallet
+    refetchWallet,
+    updateCurrentAccount
   ]);
 
   return <AppContext.Provider value={values}>{children}</AppContext.Provider>;

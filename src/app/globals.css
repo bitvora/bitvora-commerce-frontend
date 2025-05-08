@@ -94,6 +94,7 @@
   --color-dark: #090b0a;
   --color-light-overlay-50: #ffffff0d;
   --color-light-overlay-100: #ffffff1a;
+  --color-bg: #0c0911;
 }
 
 @media (prefers-color-scheme: dark) {

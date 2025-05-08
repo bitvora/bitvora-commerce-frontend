@@ -54,7 +54,7 @@ const main_routes = [
   },
   {
     text: 'Account Management',
-    route: app_routes.profile,
+    route: app_routes.accounts,
     icon: '/icons/account-management.svg',
     active_icon: '/icons/active-account-management.svg'
   }

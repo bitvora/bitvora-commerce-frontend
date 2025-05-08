@@ -1,7 +1,7 @@
 import { CreateAccount } from './client-components';
 import Navbar from '@/components/Navbar';
 import Sidebar from '@/components/Sidebar';
-import ContextProvider from '@/app/contexts';
+import ContextProvider from '@/contexts';
 import { ServerLayout } from '@/app/(dashboard)/server-components';
 import ProductContextProvider from '@/app/(dashboard)/products/context';
 import CustomerContextProvider from '@/app/(dashboard)/customers/context';

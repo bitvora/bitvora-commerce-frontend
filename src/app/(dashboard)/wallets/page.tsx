@@ -19,7 +19,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { app_routes } from '@/lib/constants';
 import { formatDate, formatUUID } from '@/lib/helpers';
 import { Link } from '@/components/Links';
-import { useAppContext } from '@/app/contexts';
+import { useAppContext } from '@/contexts';
 import clsx from 'clsx';
 import Image from 'next/image';
 

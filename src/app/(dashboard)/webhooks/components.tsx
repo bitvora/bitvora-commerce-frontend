@@ -14,7 +14,7 @@ import { usePathname, useSearchParams, useRouter } from 'next/navigation';
 import { app_routes, webhook_events } from '@/lib/constants';
 import { CloseIcon, DeleteIcon } from '@/components/Icons';
 import { Checkbox } from '@/components/Checkbox';
-import { useAppContext } from '@/app/contexts';
+import { useAppContext } from '@/contexts';
 import Modal from '@/components/Modal';
 import { useQueryClient } from '@tanstack/react-query';
 import { Webhook, CreateWebhookType, NewWebhook } from '@/types/webhooks';

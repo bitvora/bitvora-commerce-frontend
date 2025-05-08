@@ -15,7 +15,7 @@ import { usePathname, useSearchParams, useRouter } from 'next/navigation';
 import { app_routes, currencies } from '@/lib/constants';
 import { CloseIcon, DeleteIcon } from '@/components/Icons';
 import { SelectField } from '@/components/Selects';
-import { useAppContext } from '@/app/contexts';
+import { useAppContext } from '@/contexts';
 import { CreatePaymentLinkType, PaymentLink } from '@/types/payment-links';
 import Modal from '@/components/Modal';
 import { useQueryClient } from '@tanstack/react-query';

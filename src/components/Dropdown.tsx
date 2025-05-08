@@ -88,7 +88,7 @@ export default function Dropdown({
               contentClass,
               'absolute left-0',
               position === 'bottom' ? 'top-full mt-2' : 'bottom-full mb-2',
-              'bg-primary-250 shadow-lg rounded-md z-10'
+              'shadow-lg rounded-md z-10'
             )}
             onClick={onSelectClose ? closeDropdown : undefined}>
             {content}

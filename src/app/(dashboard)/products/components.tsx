@@ -16,7 +16,7 @@ import { app_routes, billing_period_hours, currencies } from '@/lib/constants';
 import { CloseIcon, DeleteIcon } from '@/components/Icons';
 import { Checkbox } from '@/components/Checkbox';
 import Select from '@/components/Selects';
-import { useAppContext } from '@/app/contexts';
+import { useAppContext } from '@/contexts';
 import { CreateProductType, Product, UpdateProductType } from '@/lib/types';
 import Modal from '@/components/Modal';
 import { useQueryClient } from '@tanstack/react-query';

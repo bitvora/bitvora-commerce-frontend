@@ -15,7 +15,7 @@ import { PrimaryButton, RedButton, SecondaryButton } from '@/components/Buttons'
 import Drawer from 'react-modern-drawer';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
-import { useAppContext } from '@/app/contexts';
+import { useAppContext } from '@/contexts';
 import {
   DarkAutocomplete,
   DarkAutocompleteHandle,
