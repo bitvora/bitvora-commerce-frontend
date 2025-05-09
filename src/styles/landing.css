@@ -4,12 +4,6 @@
   background-position: center;
 }
 
-#hero {
-  background-image: url('/img/landing/bg.png');
-  background-size: cover;
-  background-position: center;
-}
-
 @media (max-width: 639.98px) {
 }
 
@@ -23,10 +17,25 @@
 }
 
 @media (min-width: 1024px) and (max-width: 1279.98px) {
+  #hero {
+    background-image: url('/img/landing/bg.png');
+    background-size: cover;
+    background-position: center;
+  }
 }
 
 @media (min-width: 1280px) and (max-width: 1535.98px) {
+  #hero {
+    background-image: url('/img/landing/bg.png');
+    background-size: cover;
+    background-position: center;
+  }
 }
 
 @media (min-width: 1536px) {
+  #hero {
+    background-image: url('/img/landing/bg.png');
+    background-size: cover;
+    background-position: center;
+  }
 }
