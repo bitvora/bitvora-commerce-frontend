@@ -14,6 +14,10 @@ export const MenuIcon = () => {
   return <Image src="/img/menu.svg" alt="menu" width={25} height={25} />;
 };
 
+export const MobileMenuIcon = () => {
+  return <Image src="/img/mobile-menu.svg" alt="menu" width={25} height={25} />;
+};
+
 export const CloseIcon = ({ height = 15, width = 15 }: { width?: number; height?: number }) => {
   return <Image src="/icons/close.svg" alt="close" width={width} height={height} />;
 };
