@@ -1,33 +1,58 @@
 import { Logo } from '@/components/Logo';
-import { MediumSmallerText, SemiboldHeader2 } from '@/components/Text';
+import { MediumSmallerText, RegularHeader3, SemiboldBody } from '@/components/Text';
 import { app_routes } from '@/lib/constants';
 import Link from 'next/link';
 import { Buttons } from './server-components';
-import { NavLinks } from './client-components';
+import { NavLinks, Menu } from './client-components';
+import { PrimaryButton, SecondaryButton } from '@/components/Buttons';
 
 export default function Home() {
   return (
-    <div className="w-screen h-screen bg-bg py-6 px-8 flex flex-col gap-10">
-      <div className="w-full sticky top-0 left-0 right-0">
-        <div className="rounded-4xl xl:rounded-[4000px] h-20 md:h-[64px] lg:h-[80px] w-full md:max-w-[600px] z-[1000] bg-bg lg:max-w-[900px] xl:max-w-[1050px] 2xl:max-w-[1256px] mx-auto border-[0.5px] border-primary-500 px-[20px] xl:px-[32px] py-[px] flex items-center justify-between">
+    <div className="w-screen h-screen bg-bg flex flex-col">
+      <header className="w-full fixed top-6 md:top-4 left-0 right-0 px-5 md:px-0">
+        <div
+          className="rounded-4xl xl:rounded-[4000px] h-16 md:h-[64px] lg:h-[80px] w-full md:max-w-[600px] z-[1000] bg-bg lg:max-w-[900px] xl:max-w-[1050px] 2xl:max-w-[1256px] mx-auto border-[0.5px] border-primary-500 px-[20px] xl:px-[32px] py-[px] flex items-center justify-between"
+          id="navbar">
           <div className="flex items-center gap-2 text-light-700 hover:text-light-800">
             <Logo url={app_routes.home} />
             <Link href={app_routes.home}>
-              <MediumSmallerText className="text-inherit mt-2">Commerce</MediumSmallerText>
+              <MediumSmallerText className="text-inherit mt-2 hidden md:flex">
+                Commerce
+              </MediumSmallerText>
             </Link>
           </div>
 
           <NavLinks />
 
-          <Buttons />
-        </div>
-      </div>
+          <div className="flex items-center gap-3">
+            <Buttons />
 
-      <div className="flex items-center gap-8 w-full px-6 sm:px-8 md:px-[50px] lg:px-[75px] xl:px-[100px] 2xl:px-[160px] py-[20px] sm:py-[20px] lg:py-[50px] mt-8 lg:mt-[50px] pt-[20px] lg:pt-[50px] container mx-auto">
-        <div className="w-full flex flex-col gap-4">
-          <SemiboldHeader2>Open Source Bitcoin Payments For Everyone</SemiboldHeader2>
+            <Menu />
+          </div>
         </div>
-        <div className="w-full">2</div>
+      </header>
+
+      <div
+        id="hero"
+        className="flex items-center gap-8 w-full py-[20px] sm:py-[20px] lg:py-[300px] pl-6 sm:pl-8 md:pl-[50px] lg:pl-[75px] xl:pl-[100px] 2xl:pl-[160px]">
+        <div className="w-full flex flex-col gap-4 max-w-[500px]">
+          <RegularHeader3>
+            Open Source <span className="text-secondary-700">Bitcoin Payments</span> For Everyone
+          </RegularHeader3>
+
+          <SemiboldBody className="text-light-700">
+            The 100% open source Bitcoin payment platform for merchants, online stores, and
+            businesses. Accept Lightning and on-chain payments without giving up control.
+          </SemiboldBody>
+
+          <div className="flex items-center gap-4 mt-4">
+            <Link href={app_routes.signup}>
+              <PrimaryButton className="h-14 min-w-[240px]">Get Started for Free</PrimaryButton>
+            </Link>
+
+            <SecondaryButton className="h-14 min-w-[172px]">Self-Host It</SecondaryButton>
+          </div>
+        </div>
       </div>
     </div>
   );

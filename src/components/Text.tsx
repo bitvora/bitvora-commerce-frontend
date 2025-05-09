@@ -34,10 +34,30 @@ export const SemiboldHeader2 = ({ children, className, ...props }: HeaderProps) 
   );
 };
 
+export const RegularHeader2 = ({ children, className, ...props }: HeaderProps) => {
+  return (
+    <h2
+      className={`${className ?? ''} font-normal text-[40px] md:text-[56px] 2xl:text-[60px] tracking-[0%]`}
+      {...props}>
+      {children}
+    </h2>
+  );
+};
+
 export const SemiboldHeader3 = ({ children, className, ...props }: HeaderProps) => {
   return (
     <h3
       className={`${className ?? ''} font-semibold text-[30px] md:text-[40px] 2xl:text-[50px] tracking-[0%]`}
+      {...props}>
+      {children}
+    </h3>
+  );
+};
+
+export const RegularHeader3 = ({ children, className, ...props }: HeaderProps) => {
+  return (
+    <h3
+      className={`${className ?? ''} font-normal text-[30px] md:text-[40px] 2xl:text-[50px] tracking-[0%]`}
       {...props}>
       {children}
     </h3>
