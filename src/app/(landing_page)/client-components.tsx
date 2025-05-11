@@ -1,7 +1,9 @@
 'use client';
 
 import { MobileMenuIcon } from '@/components/Icons';
-import { SemiboldSmallText } from '@/components/Text';
+import { Logo } from '@/components/Logo';
+import { MediumSmallerText, SemiboldSmallText } from '@/components/Text';
+import { app_routes } from '@/lib/constants';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import clsx from 'clsx';
@@ -9,25 +11,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Drawer from 'react-modern-drawer';
-
-const links = [
-  {
-    label: 'features',
-    href: '/#features'
-  },
-  {
-    label: 'pricing',
-    href: '/#pricing'
-  },
-  {
-    label: 'self-hosting',
-    href: '/#self-hosting'
-  },
-  {
-    label: 'faq',
-    href: '/#faq'
-  }
-];
+import {links} from './constants';
 
 export const NavLinks = () => {
   const pathname = usePathname();
@@ -135,3 +119,12 @@ export const Menu = () => {
     </div>
   );
 };
+
+export const AppLogo = () => (
+  <div className="flex items-center gap-2 text-light-700 hover:text-light-800">
+    <Logo url={app_routes.home} />
+    <Link href={app_routes.home}>
+      <MediumSmallerText className="text-inherit mt-2 hidden md:flex">Commerce</MediumSmallerText>
+    </Link>
+  </div>
+);

@@ -104,6 +104,16 @@ export const MediumHeader5 = ({ children, className, ...props }: HeaderProps) =>
   );
 };
 
+export const RegularHeader6 = ({ children, className, ...props }: HeaderProps) => {
+  return (
+    <h5
+      className={`${className ?? ''} font-normal text-[18px] md:text-[24px] 2xl:text-[28px] tracking-[0%]`}
+      {...props}>
+      {children}
+    </h5>
+  );
+};
+
 export const SemiboldTitle = ({ children, className, ...props }: HeaderProps) => {
   return (
     <h6 className={`${className ?? ''} font-semibold text-[20px] 2xl:text-[24px] tracking-[0%]`} {...props}>
