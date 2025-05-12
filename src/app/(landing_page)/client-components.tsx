@@ -298,7 +298,7 @@ export const Footer = () => {
 
 export const ContactSales = () => {
   return (
-    <div className="flex flex-col md:flex-row items-end justify-between px-6 sm:px-8 md:px-6 lg:px-[100px] py-[20px] sm:py-[20px] lg:py-[50px] mt-[100px] lg:mt-[50px] mb-6 lg:mb-12 pb-6 lg:pb-12 mx-auto bg-light-900 w-full gap-10">
+    <div className="flex flex-col md:flex-row items-end justify-between px-6 sm:px-8 md:px-6 lg:px-[100px] py-[20px] sm:py-[20px] lg:py-[50px] md:mt-[100px] lg:mt-[50px] mb-6 lg:mb-12 pb-6 lg:pb-12 mx-auto bg-light-900 w-full gap-10">
       <div className="flex flex-col justify-center md:justify-start text-center md:text-start gap-4 w-full md:w-1/2">
         <div className="max-w-[400px]">
           <RegularHeader4 className="text-light-50">

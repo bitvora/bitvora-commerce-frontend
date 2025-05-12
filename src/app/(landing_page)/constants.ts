@@ -61,3 +61,13 @@ export const social_links = [
     image: '/img/landing/social-media/nostr.svg'
   }
 ];
+
+export const self_hosting_features = [
+  'No monthly fees or transaction limits.',
+  'Complete data privacy and control.',
+  'Customize to fit your specific needs.'
+];
+
+export const bitvora_github_link = 'https://github.com/bitvora/';
+
+export const bitvora_developer_portal_link = 'https://developers.bitvora.com/';
