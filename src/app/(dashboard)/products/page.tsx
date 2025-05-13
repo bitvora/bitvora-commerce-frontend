@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 'use client';
 
 import Currency from '@/components/Currency';
@@ -21,6 +20,7 @@ import { app_routes } from '@/lib/constants';
 import { Product } from '@/lib/types';
 import { formatUUID, renderPrice } from '@/lib/helpers';
 import { Link } from '@/components/Links';
+import ImageComponent from '@/components/Image';
 
 export default function Page() {
   const { products, isProductsLoading } = useProductContext();
@@ -133,7 +133,11 @@ export default function Page() {
               setCurrentProduct(row);
               setIsImageOpen(true);
             }}>
-            <img src={row.image} alt={row.name} className="w-10 h-10 rounded-md object-cover" />
+            <ImageComponent
+              src={row.image}
+              alt={row.name}
+              className="w-10 h-10 rounded-md object-cover"
+            />
           </button>
 
           <Link href={row?.product_link} className="text-inherit">

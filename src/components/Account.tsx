@@ -1,9 +1,8 @@
-/* eslint-disable @next/next/no-img-element */
 'use client';
 
 import { useAppContext } from '@/contexts';
 import { MediumSmallText, SemiboldSmallText } from '@/components/Text';
-import { logout,  } from '@/lib/auth';
+import { logout } from '@/lib/auth';
 import { faAngleDown, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Image from 'next/image';
@@ -12,6 +11,7 @@ import Dropdown from '@/components/Dropdown';
 import { app_routes } from '@/lib/constants';
 import { Link } from '@/components/Links';
 import { Account } from '@/lib/types';
+import ImageComponent from '@/components/Image';
 
 const AccountMenu = () => {
   const { currentAccount, accounts, updateCurrentAccount } = useAppContext();
@@ -27,7 +27,7 @@ const AccountMenu = () => {
         <div className="flex gap-2 items-center w-full justify-between">
           <div className="flex items-center flex-1 min-w-0 gap-6 lg:gap-4">
             {currentAccount?.logo ? (
-              <img
+              <ImageComponent
                 src={currentAccount?.logo}
                 className="w-8 h-8 rounded-md"
                 alt={currentAccount?.name || 'user'}
@@ -63,7 +63,7 @@ const AccountMenu = () => {
                   onClick={() => switchAccounts(account)}
                   className="flex items-center flex-1 min-w-0 gap-6 lg:gap-4 cursor-pointer text-light-900 hover:text-light-700">
                   {account?.logo ? (
-                    <img
+                    <ImageComponent
                       src={account?.logo}
                       className="w-8 h-8 rounded-md"
                       alt={account?.name || 'user'}

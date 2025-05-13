@@ -54,12 +54,12 @@ export async function createAccount(payload: CreateAccountType) {
   }
 }
 
-export async function updateAccount(payload: CreateAccountType) {
+export async function updateAccount(id: string, payload: CreateAccountType) {
   try {
     const session = await getSessionFromServer();
 
     const response = await api.fetch(
-      '/account',
+      `/account/${id}`,
       {
         method: 'PUT',
         headers: {

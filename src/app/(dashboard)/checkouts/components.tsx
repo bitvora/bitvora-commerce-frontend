@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 'use client';
 
 import Drawer from 'react-modern-drawer';
@@ -23,6 +22,7 @@ import { useCustomerContext } from '@/app/(dashboard)/customers/context';
 import { useProductContext } from '@/app/(dashboard)/products/context';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import ImageComponent from '@/components/Image';
 
 export const NewCheckout = () => {
   const { currentAccount } = useAppContext();
@@ -171,7 +171,7 @@ export const NewCheckout = () => {
                           getOptionLabel={(option) => option.name}
                           renderOption={(option) => (
                             <div className="flex items-center gap-4">
-                              <img
+                              <ImageComponent
                                 src={option.image}
                                 className="w-7 h-7 rounded-sm"
                                 alt={option?.name}

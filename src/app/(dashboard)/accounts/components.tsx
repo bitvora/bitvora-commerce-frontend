@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 'use client';
 
 import { PrimaryButton, RedButton, SecondaryButton } from '@/components/Buttons';
@@ -19,6 +18,7 @@ import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { DarkInput } from '@/components/Inputs';
 import { CountrySelect } from '@/components/Selects';
+import ImageComponent from '@/components/Image';
 
 export const AddNewStore = () => {
   const [open, setOpen] = useState(false);
@@ -157,7 +157,7 @@ export const AccountImageModal = ({
       className="max-w-[300px] max-h-[300px] sm:max-w-[450px] sm:max-h-[450px] md:max-w-[500px] md:max-h-[500px] w-full h-full px-0 py-0 flex flex-col gap-6"
       open={isImageOpen}
       onClose={closeImageModal}>
-      <img
+      <ImageComponent
         src={account?.logo}
         alt={account?.name}
         className="w-full h-full rounded-md object-cover"
@@ -217,7 +217,7 @@ export const EditAccount = ({
             })}
             onSubmit={async (values, { resetForm }) => {
               try {
-                const result = await updateAccount(values);
+                const result = await updateAccount(account.id, values);
 
                 if (!result.success) {
                   toast.error(result.error || 'Error updating account');
