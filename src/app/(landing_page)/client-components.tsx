@@ -5,24 +5,29 @@ import { Logo } from '@/components/Logo';
 import {
   MediumBody,
   MediumSmallerText,
+  MediumSmallText,
   RegularBody,
+  RegularHeader3,
   RegularHeader4,
   RegularHeader6,
   RegularTitle,
+  SemiboldBody,
   SemiboldSmallText
 } from '@/components/Text';
-import { app_routes, bitvora_support_email } from '@/lib/constants';
+import { app_routes } from '@/lib/constants';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import clsx from 'clsx';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import Drawer from 'react-modern-drawer';
-import { links } from './constants';
-import { footer_links, social_links } from './constants';
+import { links, PricingPlan } from './constants';
+import { footer_links, social_links, pricing_plans } from './constants';
 import Image from 'next/image';
 import { PrimaryButton, SecondaryButton } from '@/components/Buttons';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Autoplay, Pagination, A11y } from 'swiper/modules';
 
 export const NavLinks = () => {
   const pathname = usePathname();
@@ -144,7 +149,7 @@ export const Footer = () => {
   return (
     <footer
       id="footer"
-      className="flex flex-col w-full px-6 sm:px-8 md:px-6 lg:px-[100px] py-[20px] sm:py-[20px] lg:py-[50px] mt-[100px] lg:mt-[50px] pt-[20px] lg:pt-[50px] mb-6 lg:mb-12 pb-6 lg:pb-12  mx-auto">
+      className="flex flex-col w-full px-6 sm:px-8 md:px-6 lg:px-[100px] py-[20px] sm:py-[20px] lg:py-[50px] mt-[100px] lg:mt-[50px] pt-[20px] lg:pt-[50px] mb-6 lg:mb-12 pb-6 lg:pb-12 mx-auto">
       <div className="w-full pb-10 mb-10 border-b-[0.5px] border-light-border">
         <RegularHeader6 className="justify-center">
           <span className="sm:inline justify-center flex tracking-widest font-normal capitalize leading-[130%]">
@@ -314,17 +319,294 @@ export const ContactSales = () => {
       </div>
 
       <div className="flex flex-col sm:flex-row items-center gap-4 mt-4 md:mt-0 lg:ml-auto text-right w-full lg:w-auto">
-        <Link href={`mailto:${bitvora_support_email}`} target="_blank" rel="noopener noreferrer" className='w-full'>
-          <SecondaryButton className="h-14 min-w-[172px] w-full sm:w-auto !text-light-50 !border-light-50">
-            Contact Sales
-          </SecondaryButton>
-        </Link>
-
         <Link href={app_routes.signup} className="w-full sm:w-auto">
           <PrimaryButton className="h-14 min-w-[240px] w-full sm:w-auto md:w-[200px]">
             Sign Up for Free
           </PrimaryButton>
         </Link>
+      </div>
+    </div>
+  );
+};
+
+export const Pricing = () => {
+  const [isActive, setIsActive] = useState(pricing_plans[1]);
+
+  return (
+    <div
+      id="pricing"
+      className="flex flex-col md:mt-[100px] xl:mt-[200px] w-full gap-10 px-6 sm:px-8 md:px-6 lg:px-[100px] py-[20px] sm:py-[20px] lg:py-[50px] mt-[100px] lg:mt-[50px] pt-[20px] lg:pt-[50px] mb-6 lg:mb-12 pb-6 lg:pb-12  mx-auto">
+      <div className="mx-auto w-full flex flex-col gap-3 mb-4 pb-4">
+        <RegularHeader3 className="text-light-900 text-center">
+          <span className="block md:inline md:pr-2">Simple, </span>
+          <span className="block md:inline">
+            <span className="text-secondary-700">Transparent</span> Pricing
+          </span>
+        </RegularHeader3>
+
+        <SemiboldBody className="text-light-700 justify-center text-center">
+          Choose the plan that fits your project&apos;s scale and needs
+        </SemiboldBody>
+      </div>
+
+      <div className="flex lg:hidden">
+        <Swiper
+          spaceBetween={10}
+          loop
+          slidesPerView={1.2}
+          modules={[Autoplay, Pagination, A11y]}
+          autoplay={{
+            delay: 5000,
+            disableOnInteraction: false
+          }}
+          pagination={{
+            clickable: true
+          }}
+          onSlideChange={(swiper) => {
+            console.log({ index: swiper });
+            setIsActive(pricing_plans[swiper.activeIndex]);
+          }}>
+          {pricing_plans.map((plan, index) => (
+            <SwiperSlide key={index}>
+              <PricingItem
+                isActive={isActive}
+                index={index}
+                setIsActive={setIsActive}
+                plan={plan}
+              />
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </div>
+
+      <div className="hidden lg:flex items-stretch gap-10 mx-auto overflow-x-auto">
+        {pricing_plans.map((plan, index) => (
+          <PricingItem
+            key={index}
+            isActive={isActive}
+            index={index}
+            setIsActive={setIsActive}
+            plan={plan}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export const PricingItem = ({
+  plan,
+  index,
+  isActive,
+  setIsActive
+}: {
+  plan: PricingPlan;
+  index: number;
+  isActive: PricingPlan;
+  setIsActive: Dispatch<SetStateAction<PricingPlan>>;
+}) => {
+  return (
+    <div
+      className={clsx(
+        'w-full max-w-[350px] md:min-w-[350px] h-full rounded-xl border-[0.5px] border-primary-500 flex flex-col gap-4 px-8 py-8 cursor-pointer transition-[background] duration-[400ms] ease-in-out bg-[radial-gradient(89.47%_54.51%_at_2.06%_2.04%,_#5c487f_17.99%,_rgba(20,_18,_25,_0)_69.93%,_rgba(16,_12,_21,_0)_88.3%)] bg-[#0c0911] hover:bg-[#35284a] isolate box-border',
+        { 'bg-[#35284a]': isActive?.title === plan?.title }
+      )}
+      onMouseEnter={() => setIsActive(plan)}>
+      <div className="w-full flex justify-between gap-4 items-start">
+        <Image src={plan?.image} width={72} height={72} alt={plan?.title} />
+
+        {plan?.isMostPopular && (
+          <div className="px-5 py-1.5 bg-primary-100 rounded-full">
+            <MediumSmallText className="text-light-900">Most Popular</MediumSmallText>
+          </div>
+        )}
+      </div>
+
+      <div className="flex flex-col gap-2 w-full">
+        <RegularHeader4 className="text-light-900">{plan?.title}</RegularHeader4>
+
+        <div className="flex flex-col gap-2">
+          <MediumSmallText className="text-light-900">{plan?.text}</MediumSmallText>
+        </div>
+      </div>
+
+      <div className="flex justify-start items-center gap-1 mt-4">
+        <RegularHeader3 className="text-light-900">{plan?.price.value}</RegularHeader3>
+        <MediumBody className="text-light-900 pt-3">{plan?.price.label}</MediumBody>
+      </div>
+
+      <div className="w-full mt-4">
+        <Link
+          href={plan?.cta?.href}
+          target={plan?.cta?.isExternal ? '_blank' : '_self'}
+          rel={plan?.cta?.isExternal ? 'noopener noreferrer' : undefined}
+          className="w-full">
+          <SecondaryButton
+            className={clsx('h-14 w-full', {
+              '!bg-light-900 !text-light-50': isActive?.title === plan?.title
+            })}>
+            {plan?.cta?.label}
+          </SecondaryButton>
+        </Link>
+      </div>
+
+      <ul className="mt-8 w-full">
+        {index === 0 && (
+          <>
+            <li className="flex items-center gap-3 mb-2">
+              <div className="w-1 h-1 bg-light-900 rounded-full" />
+              <SemiboldSmallText className="text-light-900">
+                Lightning Network <span className="text-light-600">payment</span>
+              </SemiboldSmallText>
+            </li>
+
+            <li className="flex items-center gap-3 mb-2">
+              <div className="w-1 h-1 bg-light-900 rounded-full" />
+              <SemiboldSmallText className="text-light-900">
+                1 Merchant <span className="text-light-600">account</span>
+              </SemiboldSmallText>
+            </li>
+
+            <li className="flex items-center gap-3 mb-2">
+              <div className="w-1 h-1 bg-light-900 rounded-full" />
+              <SemiboldSmallText className="text-light-600">
+                Up to <span className="text-light-900"> $5,000</span> USD/month
+              </SemiboldSmallText>
+            </li>
+
+            <li className="flex items-center gap-3 mb-2">
+              <div className="w-1 h-1 bg-light-900 rounded-full" />
+              <SemiboldSmallText className="text-light-900">
+                No On-chain <span className="text-light-600">payment</span>
+              </SemiboldSmallText>
+            </li>
+          </>
+        )}
+
+        {index === 1 && (
+          <>
+            <li className="flex items-center gap-3 mb-2">
+              <div className="w-1 h-1 bg-light-900 rounded-full" />
+              <SemiboldSmallText className="text-light-900">
+                Lightning Network <span className="text-light-600">payment</span>
+              </SemiboldSmallText>
+            </li>
+
+            <li className="flex items-center gap-3 mb-2">
+              <div className="w-1 h-1 bg-light-900 rounded-full" />
+              <SemiboldSmallText className="text-light-900">
+                On-chain Bitcoin <span className="text-light-600">Payment</span>
+              </SemiboldSmallText>
+            </li>
+
+            <li className="flex items-center gap-3 mb-2">
+              <div className="w-1 h-1 bg-light-900 rounded-full" />
+              <SemiboldSmallText className="text-light-900">
+                0.4% <span className="text-light-600">Transaction Fees</span>
+              </SemiboldSmallText>
+            </li>
+
+            <li className="flex items-center gap-3 mb-2">
+              <div className="w-1 h-1 bg-light-900 rounded-full" />
+              <SemiboldSmallText className="text-light-900">
+                Unlimited <span className="text-light-600">Monthly Volume</span>
+              </SemiboldSmallText>
+            </li>
+
+            <li className="flex items-center gap-3 mb-2">
+              <div className="w-1 h-1 bg-light-900 rounded-full" />
+              <SemiboldSmallText className="text-light-900">
+                Multiple Merchant <span className="text-light-600">Accounts</span>
+              </SemiboldSmallText>
+            </li>
+          </>
+        )}
+
+        {index === 2 && (
+          <>
+            <li className="flex items-center gap-3 mb-2">
+              <div className="w-1 h-1 bg-light-900 rounded-full" />
+              <SemiboldSmallText className="text-light-900">
+                Full Feature <span className="text-light-600">Access</span>
+              </SemiboldSmallText>
+            </li>
+
+            <li className="flex items-center gap-3 mb-2">
+              <div className="w-1 h-1 bg-light-900 rounded-full" />
+              <SemiboldSmallText className="text-light-900">
+                No <span className="text-light-600">Monthly Limit</span>
+              </SemiboldSmallText>
+            </li>
+
+            <li className="flex items-center gap-3 mb-2">
+              <div className="w-1 h-1 bg-light-900 rounded-full" />
+              <SemiboldSmallText className="text-light-900">
+                Complete <span className="text-light-600">Control</span>
+              </SemiboldSmallText>
+            </li>
+
+            <li className="flex items-center gap-3 mb-2">
+              <div className="w-1 h-1 bg-light-900 rounded-full" />
+              <SemiboldSmallText className="text-light-900">
+                Technical Setup <span className="text-light-600">Required</span>
+              </SemiboldSmallText>
+            </li>
+          </>
+        )}
+      </ul>
+    </div>
+  );
+};
+
+export const Features = () => {
+  return (
+    <div
+      id="features"
+      className="flex flex-col px-6 sm:px-8 md:px-6 lg:px-[100px] mt-4 md:mt-[100px] w-full gap-10">
+      <div className="mx-auto w-full flex flex-col gap-3 mb-4 pb-4">
+        <RegularHeader3 className="text-light-900 text-center">
+          <span className="block md:inline md:pr-2">Powerful</span>
+          <span className="block md:inline">
+            Bitcoin <span className="md:text-secondary-700">Payment</span>
+          </span>
+          <span className="block text-secondary-700 md:text-light-900">Features</span>
+        </RegularHeader3>
+
+        <SemiboldBody className="text-light-700 justify-center text-center">
+          Discover the unique advantages of building on Bitcoin
+        </SemiboldBody>
+      </div>
+
+      <div className="flex flex-col gap-8 w-full">
+        <div className="flex w-full gap-8">
+          <div>
+            <Image src="/img/landing/features/1.png" height={250} width={800} alt="" />
+          </div>
+
+          <div>
+            <Image src="/img/landing/features/2.png" height={250} width={420} alt="" />
+          </div>
+        </div>
+
+        <div className="flex w-full gap-4">
+          <div>
+            <Image src="/img/landing/features/3.png" height={250} width={600} alt="" />
+          </div>
+
+          <div>
+            <Image src="/img/landing/features/4.png" height={250} width={600} alt="" />
+          </div>
+        </div>
+
+        <div className="flex w-full gap-4">
+          <div>
+            <Image src="/img/landing/features/5.png" height={250} width={800} alt="" />
+          </div>
+
+          <div>
+            <Image src="/img/landing/features/6.png" height={250} width={420} alt="" />
+          </div>
+        </div>
       </div>
     </div>
   );

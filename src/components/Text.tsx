@@ -194,6 +194,14 @@ export const MediumSmallText = ({ children, className, ...props }: TextProps) =>
   );
 };
 
+export const RegularSmallText = ({ children, className, ...props }: TextProps) => {
+  return (
+    <p className={`font-normal text-[14px] 2xl:text-[16px] tracking-[2%] ${className ?? ''}`} {...props}>
+      {children}
+    </p>
+  );
+};
+
 export const BoldSmallerText = ({ children, className, ...props }: TextProps) => {
   return (
     <p className={`${className ?? ''} font-bold text-[12px] 2xl:text-[14px] tracking-[0%]`} {...props}>

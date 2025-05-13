@@ -325,5 +325,3 @@ export const webhook_events = [
   'checkout.overpaid',
   'checkout.expired'
 ];
-
-export const bitvora_support_email = 'support@bitvora.com'

@@ -2,16 +2,25 @@ import { MediumBody, RegularHeader3, RegularHeader4, SemiboldBody } from '@/comp
 import { app_routes } from '@/lib/constants';
 import Link from 'next/link';
 import { Buttons } from './server-components';
-import { NavLinks, Menu, AppLogo, Footer, ContactSales } from './client-components';
+import {
+  NavLinks,
+  Menu,
+  AppLogo,
+  Footer,
+  ContactSales,
+  Pricing,
+  Features
+} from './client-components';
 import { PrimaryButton, SecondaryButton } from '@/components/Buttons';
 import {
   bitvora_developer_portal_link,
   bitvora_github_link,
+  bitvora_self_host_link,
   self_hosting_features
 } from './constants';
 import Image from 'next/image';
 
-export default function Home() {
+export default function Page() {
   return (
     <div className="w-screen h-screen bg-bg flex flex-col overflow-y-auto overflow-x-hidden">
       <header className="w-screen z-[1000] fixed top-0 left-0 right-0 px-5 md:px-0 backdrop-blur-3xl">
@@ -50,28 +59,20 @@ export default function Home() {
               </PrimaryButton>
             </Link>
 
-            <SecondaryButton className="h-14 min-w-[172px] w-full">Self-Host It</SecondaryButton>
+            <Link
+              href={bitvora_self_host_link}
+              className="w-full"
+              target="_blank"
+              referrerPolicy="origin">
+              <SecondaryButton className="h-14 min-w-[172px] w-full">Self-Host It</SecondaryButton>
+            </Link>
           </div>
         </div>
       </div>
 
-      <div id="features" className="flex px-10 mt-4 md:mt-[100px] w-full gap-10">
-        <div className="mx-auto w-full flex flex-col gap-3 mb-4 pb-4">
-          <RegularHeader3 className="text-light-900 text-center">
-            <span className="block md:inline md:pr-2">Powerful</span>
-            <span className="block md:inline">
-              Bitcoin <span className="md:text-secondary-700">Payment</span>
-            </span>
-            <span className="block text-secondary-700 md:text-light-900">Features</span>
-          </RegularHeader3>
+      <Features />
 
-          <SemiboldBody className="text-light-700 justify-center text-center">
-            Discover the unique advantages of building on Bitcoin
-          </SemiboldBody>
-        </div>
-
-        <div className="flex flex-col md:flex-row"></div>
-      </div>
+      <Pricing />
 
       <div className="w-full px-0 xl:px-[100px] sm:py-[20px] lg:py-[50px] mt-[100px] lg:mt-[50px] pt-[20px] lg:pt-[50px] sm:mb-6 lg:mb-12 sm:pb-6 lg:pb-12  mx-auto ">
         <div

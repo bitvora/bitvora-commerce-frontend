@@ -1,3 +1,5 @@
+import { app_routes } from '@/lib/constants';
+
 export const links = [
   {
     label: 'features',
@@ -70,4 +72,74 @@ export const self_hosting_features = [
 
 export const bitvora_github_link = 'https://github.com/bitvora/';
 
+export const bitvora_self_host_link = 'https://github.com/bitvora/';
+
 export const bitvora_developer_portal_link = 'https://developers.bitvora.com/';
+
+export interface PricingPlan {
+  image: string;
+  title: string;
+  text: string;
+  price: {
+    value: string;
+    label: string;
+  };
+  cta: {
+    label: string;
+    href: string;
+    isExternal?: boolean;
+  };
+  isMostPopular?: boolean;
+}
+export const pricing_plans: PricingPlan[] = [
+  {
+    image: '/img/landing/pricing/free.svg',
+    title: 'Free',
+    text: 'Perfect for small businesses or individuals just getting started with Bitcoin payments.',
+    price: {
+      value: '$0',
+      label: 'Per Month'
+    },
+    cta: {
+      label: 'Get Started',
+      href: app_routes.signup
+    }
+  },
+  {
+    image: '/img/landing/pricing/premium.svg',
+    title: 'Pro',
+    text: 'For growing businesses that need more volume and advanced features.',
+    isMostPopular: true,
+    price: {
+      value: '$19',
+      label: 'Per Month'
+    },
+    cta: {
+      label: 'Go Pro',
+      href: `${app_routes.signup}?plan=pro`
+    }
+  },
+  {
+    image: '/img/landing/pricing/pro.svg',
+    title: 'Self-Hosted',
+    text: 'For technical users who want complete control over their payment infrastructure.',
+    price: {
+      value: 'Free',
+      label: 'Forever'
+    },
+    cta: {
+      label: 'View on Git Hub',
+      href: bitvora_self_host_link,
+      isExternal: true
+    }
+  }
+];
+
+export const features = [
+  { id: 'one', src: '/img/landing/features/1.svg', width: 'w-2/3', maxW: 'max-w-[800px]' },
+  { id: 'two', src: '/img/landing/features/2.svg', width: 'w-1/3', maxW: 'max-w-[400px]' },
+  { id: 'three', src: '/img/landing/features/3.svg', width: 'w-1/2', maxW: 'max-w-[500px]' },
+  { id: 'four', src: '/img/landing/features/4.svg', width: 'w-1/2', maxW: 'max-w-[500px]' },
+  { id: 'five', src: '/img/landing/features/5.svg', width: 'w-2/3', maxW: 'max-w-[800px]' },
+  { id: 'six', src: '/img/landing/features/6.svg', width: 'w-1/3', maxW: 'max-w-[400px]' }
+];
