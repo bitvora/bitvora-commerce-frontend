@@ -102,7 +102,6 @@ export const AddCustomer = () => {
                   .email('Must be a valid email address')
                   .max(255)
                   .required('Email address is required'),
-                phone_number: Yup.string().required('Phone Number is required'),
                 currency: Yup.string().required('Currency is required')
               })}
               onSubmit={async (values, { resetForm }) => {
@@ -263,7 +262,6 @@ export const AddCustomer = () => {
                                       touched={touched}
                                       value={values.phone_number}
                                       showLabel
-                                      required
                                       label="Phone Number"
                                     />
                                   </div>
@@ -735,7 +733,6 @@ export const EditCustomer = ({
                                   value={values.description}
                                   showLabel
                                   rows={3}
-                                  
                                 />
                               </div>
 
