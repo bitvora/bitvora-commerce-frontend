@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 'use client';
 
 import Drawer from 'react-modern-drawer';
@@ -20,6 +19,7 @@ import { useAppContext } from '@/contexts';
 import { CreateProductType, Product, UpdateProductType } from '@/lib/types';
 import Modal from '@/components/Modal';
 import { useQueryClient } from '@tanstack/react-query';
+import ImageComponent from '@/components/Image';
 
 export const AddProduct = () => {
   const { currentAccount } = useAppContext();
@@ -625,7 +625,7 @@ export const ProductImageModal = ({
       className="max-w-[300px] max-h-[300px] sm:max-w-[450px] sm:max-h-[450px] md:max-w-[500px] md:max-h-[500px] w-full h-full px-0 py-0 flex flex-col gap-6"
       open={isImageOpen}
       onClose={closeImageModal}>
-      <img
+      <ImageComponent
         src={product?.image}
         alt={product?.name}
         className="w-full h-full rounded-md object-cover"

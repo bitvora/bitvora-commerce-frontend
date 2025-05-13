@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 'use client';
 
 import { Account } from '@/lib/types';
@@ -21,6 +20,7 @@ import {
   DeleteAccount,
   EditAccount
 } from '@/app/(dashboard)/accounts/components';
+import ImageComponent from '@/components/Image';
 
 export default function Page({ params }: { params: { id: string } }) {
   const { id } = params;
@@ -84,7 +84,7 @@ export default function Page({ params }: { params: { id: string } }) {
               <div
                 className="w-[100px] h-[100px] max-w-[100px] max-h-[100px] cursor-pointer"
                 onClick={() => setIsImageOpen(true)}>
-                <img
+                <ImageComponent
                   src={account?.logo}
                   alt={account?.name}
                   className="w-full h-full rounded-md object-cover"

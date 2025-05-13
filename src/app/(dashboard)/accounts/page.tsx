@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 'use client';
 
 import Currency from '@/components/Currency';
@@ -21,6 +20,7 @@ import { useCallback, useState } from 'react';
 import { Account } from '@/lib/types';
 import { useRouter } from 'next/navigation';
 import { AccountImageModal, DeleteAccount, EditAccount } from './components';
+import ImageComponent from '@/components/Image';
 
 export default function Page() {
   const { currentAccount, accounts } = useAppContext();
@@ -175,7 +175,7 @@ export default function Page() {
                         setAccount(account);
                         setIsImageOpen(true);
                       }}>
-                      <img
+                      <ImageComponent
                         src={account.logo}
                         alt={account.name}
                         className="w-10 h-10 rounded-md object-cover"

@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 'use client';
 
 import { SemiboldSmallerText, SemiboldSmallText } from '@/components/Text';
@@ -9,6 +8,7 @@ import { useAppContext } from '@/contexts';
 import { CurrencyType } from '@/lib/types';
 import { currencies } from '@/lib/constants';
 import Dropdown from '@/components/Dropdown';
+import ImageComponent from '@/components/Image';
 
 export default function Currency() {
   const { currency, updateCurrency } = useAppContext();
@@ -27,7 +27,11 @@ export default function Currency() {
           </SemiboldSmallerText>
           {currency && (
             <div className="flex items-center gap-2">
-              <img src={currency.image} alt={currency.label} className="h-4 w-5 rounded-sm" />
+              <ImageComponent
+                src={currency.image}
+                alt={currency.label}
+                className="h-4 w-5 rounded-sm"
+              />
 
               <FontAwesomeIcon icon={faCaretDown} className="h-4 w-4" />
             </div>
@@ -48,7 +52,7 @@ export default function Currency() {
                   value: cur,
                   label: (
                     <div className="flex items-center gap-4">
-                      <img src={cur.image} alt={cur.label} className="h-4 w-5" />
+                      <ImageComponent src={cur.image} alt={cur.label} className="h-4 w-5" />
                       <SemiboldSmallerText className="text-inherit">
                         {cur.label}
                       </SemiboldSmallerText>

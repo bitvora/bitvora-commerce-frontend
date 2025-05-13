@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 'use client';
 
 import { useRouter } from 'next/navigation';
@@ -27,6 +26,7 @@ import {
 } from '@/app/(dashboard)/products/components';
 import React from 'react';
 import { Link } from '@/components/Links';
+import ImageComponent from '@/components/Image';
 
 export default function Page({ params }: { params: { id: string } }) {
   const { id } = params;
@@ -90,7 +90,7 @@ export default function Page({ params }: { params: { id: string } }) {
             <div
               className="w-[120px] h-[120px] max-w-[120px] max-h-[120px] sm:w-[180px]  sm:h-[180px] sm:max-w-[180px] sm:max-h-[180px] cursor-pointer"
               onClick={() => setIsImageOpen(true)}>
-              <img
+              <ImageComponent
                 src={product?.image}
                 alt={product?.name}
                 className="w-full h-full rounded-md object-cover"

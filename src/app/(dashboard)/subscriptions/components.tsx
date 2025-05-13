@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 'use client';
 
 import { CreateSubscriptionType, Subscription } from '@/types/subscriptions';
@@ -29,6 +28,7 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useProductContext } from '@/app/(dashboard)/products/context';
 import { CalendarInput } from '@/components/Selects';
 import { useQueryClient } from '@tanstack/react-query';
+import ImageComponent from '@/components/Image';
 
 export const DeleteSubscriptionModal = ({
   subscription,
@@ -284,7 +284,7 @@ export const AddSubscription = () => {
                             getOptionLabel={(option) => option.name}
                             renderOption={(option) => (
                               <div className="flex items-center gap-4">
-                                <img
+                                <ImageComponent
                                   src={option.image}
                                   className="w-7 h-7 rounded-sm"
                                   alt={option?.name}
@@ -623,7 +623,7 @@ export const EditSubscription = ({
                           getOptionLabel={(option) => option.name}
                           renderOption={(option) => (
                             <div className="flex items-center gap-4">
-                              <img
+                              <ImageComponent
                                 src={option.image}
                                 className="w-7 h-7 rounded-sm"
                                 alt={option?.name}

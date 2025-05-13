@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 'use client';
 
 import Currency from '@/components/Currency';
@@ -36,6 +35,7 @@ import { Link } from '@/components/Links';
 import { Subscription } from '@/types/subscriptions';
 import { useProductContext } from '@/app/(dashboard)/products/context';
 import { useCustomerContext } from '@/app/(dashboard)/customers/context';
+import ImageComponent from '@/components/Image';
 
 export default function Page() {
   const { subscriptions, isSubscriptionLoading } = useSubscriptionContext();
@@ -125,7 +125,7 @@ export default function Page() {
         return (
           <div className="flex items-center gap-3">
             <button className="cursor-pointer border-none outline-none hidden md:flex">
-              <img
+              <ImageComponent
                 src={product?.image}
                 alt={product?.name}
                 className="w-10 h-10 rounded-md object-cover"
