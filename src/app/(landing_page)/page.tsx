@@ -74,7 +74,7 @@ export default function Page() {
 
       <Pricing />
 
-      <div className="w-full px-0 xl:px-[100px] sm:py-[20px] lg:py-[50px] mt-[100px] lg:mt-[50px] pt-[20px] lg:pt-[50px] sm:mb-6 lg:mb-12 sm:pb-6 lg:pb-12  mx-auto ">
+      <div className="w-full px-0 xl:px-[100px] md:py-[20px] lg:py-0 xl:py-[50px] mt-[100px] lg:mt-[50px] pt-[20px] lg:pt-[50px] md:mb-6 lg:mb-0 xl:mb-12 md:pb-6 lg:pb-0 xl:pb-12 mx-auto ">
         <div
           id="self-hosting"
           className="flex flex-col md:flex-row justify-between gap-10 md:gap-4 lg:gap-10 bg-primary-100 py-4 pb-8 md:py-16 md:px-10 rounded-lg items-center">
@@ -100,7 +100,7 @@ export default function Page() {
             </div>
           </div>
 
-          <div className="w-full md:w-1/2 flex flex-col gap-6 px-6 md:px-0">
+          <div className="w-full md:w-1/2 flex flex-col gap-6 px-6 sm:px-14 md:px-0">
             <RegularHeader4 className="text-light-900">
               Self-Host Your Bitcoin Payment Infrastructure
             </RegularHeader4>
@@ -119,7 +119,7 @@ export default function Page() {
               ))}
             </ul>
 
-            <div className="flex flex-col xl:flex-row gap-4 mt-4 w-full">
+            <div className="flex flex-col sm:flex-row md:flex-col xl:flex-row gap-4 mt-4 w-full">
               <Link
                 href={bitvora_github_link}
                 target="_blank"
