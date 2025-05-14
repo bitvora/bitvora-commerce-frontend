@@ -12,6 +12,7 @@ import {
   RegularHeader6,
   RegularTitle,
   SemiboldBody,
+  SemiboldHeader4,
   SemiboldSmallText
 } from '@/components/Text';
 import { app_routes } from '@/lib/constants';
@@ -20,7 +21,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import clsx from 'clsx';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import Drawer from 'react-modern-drawer';
 import { links, PricingPlan } from './constants';
 import { footer_links, social_links, pricing_plans } from './constants';
@@ -28,6 +29,7 @@ import Image from 'next/image';
 import { PrimaryButton, SecondaryButton } from '@/components/Buttons';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination, A11y } from 'swiper/modules';
+import type { Swiper as SwiperType } from 'swiper';
 
 export const NavLinks = () => {
   const pathname = usePathname();
@@ -106,7 +108,7 @@ export const Menu = () => {
         )}
       </button>
 
-      <Drawer open={isOpen} onClose={toggleDrawer} direction="top" className="mt-28 drawer ">
+      <Drawer open={isOpen} onClose={toggleDrawer} direction="top" className="mt-20 drawer">
         <div className="w-full h-full flex flex-col bg-primary-50">
           {links.map((link, index) => {
             const url = `${pathname}${currentHash}`;
@@ -303,7 +305,7 @@ export const Footer = () => {
 
 export const ContactSales = () => {
   return (
-    <div className="flex flex-col md:flex-row items-end justify-between px-6 sm:px-8 md:px-6 lg:px-[100px] py-[20px] sm:py-[20px] lg:py-[50px] md:mt-[100px] lg:mt-[50px] mb-6 lg:mb-12 pb-6 lg:pb-12 mx-auto bg-light-900 w-full gap-10">
+    <div className="flex flex-col md:flex-row items-end justify-between px-6 sm:px-8 md:px-[65px] lg:px-[100px] py-[20px] sm:py-[50px] md:py-[50px] lg:py-[50px] md:mt-[100px] lg:mt-0 xl:mt-[50px] mb-6 lg:mb-12 pb-6 lg:pb-12 mx-auto bg-light-900 w-full gap-10">
       <div className="flex flex-col justify-center md:justify-start text-center md:text-start gap-4 w-full md:w-1/2">
         <div className="max-w-[400px]">
           <RegularHeader4 className="text-light-50">
@@ -318,7 +320,7 @@ export const ContactSales = () => {
         </div>
       </div>
 
-      <div className="flex flex-col sm:flex-row items-center gap-4 mt-4 md:mt-0 lg:ml-auto text-right w-full lg:w-auto">
+      <div className="flex flex-col sm:flex-row items-center gap-4 mt-4 md:mt-0 sm:ml-auto sm:justify-end lg:ml-auto text-right w-full lg:w-auto">
         <Link href={app_routes.signup} className="w-full sm:w-auto">
           <PrimaryButton className="h-14 min-w-[240px] w-full sm:w-auto md:w-[200px]">
             Sign Up for Free
@@ -331,11 +333,13 @@ export const ContactSales = () => {
 
 export const Pricing = () => {
   const [isActive, setIsActive] = useState(pricing_plans[1]);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const swiperRef = useRef<SwiperType | null>(null);
 
   return (
     <div
       id="pricing"
-      className="flex flex-col md:mt-[100px] xl:mt-[200px] w-full gap-10 px-6 sm:px-8 md:px-6 lg:px-[100px] py-[20px] sm:py-[20px] lg:py-[50px] mt-[100px] lg:mt-[50px] pt-[20px] lg:pt-[50px] mb-6 lg:mb-12 pb-6 lg:pb-12  mx-auto">
+      className="flex flex-col md:mt-[100px] xl:mt-[200px] w-full gap-10 px-6 sm:px-8 md:px-[75px] lg:px-[100px] py-[20px] sm:py-[20px] lg:py-[50px] mt-[100px] lg:mt-[50px] pt-[20px] lg:pt-[50px] mb-6 lg:mb-12 pb-6 lg:pb-12 mx-auto">
       <div className="mx-auto w-full flex flex-col gap-3 mb-4 pb-4">
         <RegularHeader3 className="text-light-900 text-center">
           <span className="block md:inline md:pr-2">Simple, </span>
@@ -349,37 +353,52 @@ export const Pricing = () => {
         </SemiboldBody>
       </div>
 
-      <div className="flex lg:hidden">
-        <Swiper
-          spaceBetween={10}
-          loop
-          slidesPerView={1.2}
-          modules={[Autoplay, Pagination, A11y]}
-          autoplay={{
-            delay: 5000,
-            disableOnInteraction: false
-          }}
-          pagination={{
-            clickable: true
-          }}
-          onSlideChange={(swiper) => {
-            console.log({ index: swiper });
-            setIsActive(pricing_plans[swiper.activeIndex]);
-          }}>
-          {pricing_plans.map((plan, index) => (
-            <SwiperSlide key={index}>
-              <PricingItem
-                isActive={isActive}
-                index={index}
-                setIsActive={setIsActive}
-                plan={plan}
-              />
-            </SwiperSlide>
+      <div className="flex lg:hidden flex-col gap-6 relative">
+        <div className="flex">
+          <Swiper
+            spaceBetween={10}
+            loop
+            slidesPerView={1.2}
+            modules={[Autoplay, Pagination, A11y]}
+            autoplay={{
+              delay: 5000,
+              disableOnInteraction: false
+            }}
+            onSlideChange={(swiper) => {
+              setActiveIndex(swiper.realIndex);
+              setIsActive(pricing_plans[swiper.realIndex]);
+            }}
+            onSwiper={(swiper) => {
+              swiperRef.current = swiper;
+            }}>
+            {pricing_plans.map((plan, index) => (
+              <SwiperSlide key={index}>
+                <PricingItem
+                  isActive={isActive}
+                  index={index}
+                  setIsActive={setIsActive}
+                  plan={plan}
+                />
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
+
+        <div className="absolute left-1/2 -bottom-8 transform -translate-x-1/2 flex gap-2 z-10">
+          {pricing_plans.map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => swiperRef.current?.slideToLoop(idx)}
+              className={clsx('rounded-sm', {
+                'bg-primary-700 w-6 h-2': idx === activeIndex,
+                'bg-light-300 w-2 h-2': idx !== activeIndex
+              })}
+            />
           ))}
-        </Swiper>
+        </div>
       </div>
 
-      <div className="hidden lg:flex items-stretch gap-10 mx-auto overflow-x-auto">
+      <div className="hidden lg:flex items-stretch gap-10 mx-auto overflow-x-auto max-w-full">
         {pricing_plans.map((plan, index) => (
           <PricingItem
             key={index}
@@ -408,7 +427,7 @@ export const PricingItem = ({
   return (
     <div
       className={clsx(
-        'w-full max-w-[350px] md:min-w-[350px] h-full rounded-xl border-[0.5px] border-primary-500 flex flex-col gap-4 px-8 py-8 cursor-pointer transition-[background] duration-[400ms] ease-in-out bg-[radial-gradient(89.47%_54.51%_at_2.06%_2.04%,_#5c487f_17.99%,_rgba(20,_18,_25,_0)_69.93%,_rgba(16,_12,_21,_0)_88.3%)] bg-[#0c0911] hover:bg-[#35284a] isolate box-border',
+        'w-full max-w-[350px] sm:max-w-[450px] md:min-w-[350px] h-full rounded-xl border-[0.5px] border-primary-500 flex flex-col gap-4 px-8 py-8 cursor-pointer transition-[background] duration-[400ms] ease-in-out bg-[radial-gradient(89.47%_54.51%_at_2.06%_2.04%,_#5c487f_17.99%,_rgba(20,_18,_25,_0)_69.93%,_rgba(16,_12,_21,_0)_88.3%)] bg-[#0c0911] hover:bg-[#35284a] isolate box-border',
         { 'bg-[#35284a]': isActive?.title === plan?.title }
       )}
       onMouseEnter={() => setIsActive(plan)}>
@@ -565,8 +584,8 @@ export const Features = () => {
       className="flex flex-col px-6 sm:px-8 md:px-6 lg:px-[100px] mt-4 md:mt-[100px] w-full gap-10">
       <div className="mx-auto w-full flex flex-col gap-3 mb-4 pb-4">
         <RegularHeader3 className="text-light-900 text-center">
-          <span className="block md:inline md:pr-2">Powerful</span>
-          <span className="block md:inline">
+          <span className="block sm:inline sm:pr-2">Powerful</span>
+          <span className="block sm:inline">
             Bitcoin <span className="md:text-secondary-700">Payment</span>
           </span>
           <span className="block text-secondary-700 md:text-light-900">Features</span>
@@ -578,33 +597,98 @@ export const Features = () => {
       </div>
 
       <div className="flex flex-col gap-8 w-full">
-        <div className="flex w-full gap-8">
-          <div>
-            <Image src="/img/landing/features/1.png" height={250} width={800} alt="" />
+        <div className="flex flex-col md:flex-row w-full gap-8">
+          <div className="rounded-xl border-[0.5px] border-primary-500 py-8 sm:py-10 md:py-12 lg:py-16 px-6 sm:px-12 md:px-8 lg:px-12 flex w-full md:max-w-1/2 lg:max-w-2/3 overflow-hidden relative h-[375px] md:h-[450px] feature-item">
+            <div className="flex flex-col max-w-[400px] gap-3">
+              <SemiboldHeader4>
+                <span className="text-secondary-700">Lightning</span> Fast Payments
+              </SemiboldHeader4>
+
+              <SemiboldSmallText className="text-light-700">
+                Accept instant Bitcoin payments through the Lightning Network with minimal fees.
+              </SemiboldSmallText>
+            </div>
+
+            <div className="absolute -bottom-18 md:right-[20%] md:-bottom-30 lg:right-0 lg:-bottom-24">
+              <Image
+                src="/img/landing/features/3.svg"
+                alt=""
+                width={250}
+                height={80}
+                className="w-[275px] h-auto md:w-[300px] md:h-auto lg:w-[400px] lg:h-auto"
+              />
+            </div>
           </div>
 
-          <div>
-            <Image src="/img/landing/features/2.png" height={250} width={420} alt="" />
+          <div className="rounded-lg border-[0.5px] border-primary-500 py-12 sm:py-10 sm:px-12 md:py-16 px-6 md:px-8 lg:px-12 flex flex-col w-full md:max-w-1/2 lg:max-w-1/3 h-auto md:h-[450px] feature-item justify-end">
+            <SemiboldHeader4>Self-Custodial</SemiboldHeader4>
+
+            <SemiboldSmallText className="text-light-700">
+              Powered by Nostr Wallet Connect - we never touch your money. Maintain full control.
+            </SemiboldSmallText>
           </div>
         </div>
 
-        <div className="flex w-full gap-4">
-          <div>
-            <Image src="/img/landing/features/3.png" height={250} width={600} alt="" />
+        <div className="flex flex-col md:flex-row w-full gap-8">
+          <div className="rounded-xl border-[0.5px] border-primary-500 py-8 sm:py-10 md:py-16 px-6 sm:px-12 md:px-8 lg:px-12 flex flex-col w-full md:max-w-1/2 overflow-hidden relative h-[500px] feature-item justify-end">
+            <div className="flex flex-col max-w-[300px] gap-3">
+              <SemiboldHeader4>
+                On-Chain <span className="text-secondary-700">Security</span>
+              </SemiboldHeader4>
+
+              <SemiboldSmallText className="text-light-700">
+                Support for both Lightning and traditional on-chain Bitcoin transactions.
+              </SemiboldSmallText>
+            </div>
+
+            <div className="absolute -right-40 -top-40">
+              <Image src="/img/landing/features/4.svg" width={400} height={120} alt="" />
+            </div>
           </div>
 
-          <div>
-            <Image src="/img/landing/features/4.png" height={250} width={600} alt="" />
+          <div className="rounded-xl border-[0.5px] border-primary-500 py-8 sm:py-10 md:py-16 px-6 sm:px-12 md:px-8 lg:px-12 flex w-full md:max-w-1/2  overflow-hidden relative h-[400px] md:h-[500px] feature-item">
+            <div className="flex flex-col max-w-[400px] gap-3">
+              <SemiboldHeader4>
+                <span className="text-secondary-700">Bitcoin </span> Subscriptions
+              </SemiboldHeader4>
+
+              <SemiboldSmallText className="text-light-700">
+                Set up recurring Bitcoin payments for your subscription-based business.
+              </SemiboldSmallText>
+            </div>
+
+            <div className="absolute right-0 -bottom-24">
+              <Image src="/img/landing/features/2.svg" width={400} height={120} alt="" />
+            </div>
           </div>
         </div>
 
-        <div className="flex w-full gap-4">
-          <div>
-            <Image src="/img/landing/features/5.png" height={250} width={800} alt="" />
+        <div className="flex flex-col-reverse md:flex-row w-full gap-8">
+          <div className="rounded-xl border-[0.5px] border-primary-500 py-8 sm:py-10 md:py-16 px-6 sm:px-12 md:px-8 lg:px-12 flex flex-col w-full md:max-w-1/2 lg:max-w-2/3 overflow-hidden relative h-[350px] md:h-[450px] lg:h-[400px] feature-item justify-end">
+            <div className="flex flex-col max-w-[350px] gap-3">
+              <SemiboldHeader4>
+                100% <span className="text-secondary-700">Open Source</span>
+              </SemiboldHeader4>
+
+              <SemiboldSmallText className="text-light-700">
+                Fully transparent code that&apos;s freely available for review, modification, and
+                self-hosting.
+              </SemiboldSmallText>
+            </div>
+
+            <div className="absolute -right-24 top-10 md:top-2 md:-right-34 lg:top-10 lg:-right-24">
+              <Image src="/img/landing/features/1.svg" width={400} height={120} alt="" />
+            </div>
           </div>
 
-          <div>
-            <Image src="/img/landing/features/6.png" height={250} width={420} alt="" />
+          <div className="rounded-lg border-[0.5px] border-primary-500 py-12 md:py-16 sm:py-10 sm:px-12 px-6 md:px-8 lg:px-12 flex flex-col w-full md:max-w-1/2 lg:max-w-1/3 h-auto md:h-[450px] lg:h-[400px] feature-item justify-end">
+            <SemiboldHeader4>
+              <span className="text-secondary-700">Payment</span> Links
+            </SemiboldHeader4>
+
+            <SemiboldSmallText className="text-light-700">
+              Create and share customized payment links for quick and easy checkout.
+            </SemiboldSmallText>
           </div>
         </div>
       </div>
