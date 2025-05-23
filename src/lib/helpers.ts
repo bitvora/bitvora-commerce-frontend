@@ -2,6 +2,8 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import numeral from 'numeral';
 import toast from 'react-hot-toast';
+import api from '@/lib/api';
+import { getSessionFromServer } from '@/lib/session';
 
 dayjs.extend(relativeTime);
 
@@ -27,7 +29,7 @@ export const formatWithCommas = (num: string) => {
   return num.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 };
 
-export const renderPrice = ({ amount, currency }: { amount: number; currency: string }) => {
+export const renderPrice = ({ amount, currency }: { amount: number; currency?: string }) => {
   let price;
 
   switch (currency) {
@@ -150,8 +152,8 @@ export const formatCurrency = (amount: number, currency: string) => {
 };
 
 export function formatWebhookEvent(event: string): string {
-  if(!event) return ''
-  
+  if (!event) return '';
+
   const [first, ...rest] = event.split('.');
   return [capitalize(first), ...rest].join(' ');
 }
@@ -163,3 +165,21 @@ function capitalize(word: string): string {
 export function maskString(input: string): string {
   return '*'.repeat(input.length);
 }
+
+export const convertSatsToFiat = async ({ fiat, sats }: { sats: number; fiat: string }) => {
+  try {
+    const session = await getSessionFromServer();
+    const response = await api.fetch(`/fiat/convert/to-fiat/${fiat}?satoshis=${sats}`, {}, session);
+    if (!response) return [];
+
+    if (!response.ok) {
+      throw new Error('Failed to convert sats to fiat');
+    }
+
+    const res = await response.json();
+    return res?.data;
+  } catch (error) {
+    console.error('Failed to convert sats to fiat:', error);
+    return {};
+  }
+};
