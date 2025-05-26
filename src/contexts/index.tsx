@@ -59,7 +59,8 @@ export default function ContextProvider({ children }: { children: React.ReactNod
     refetch
   } = useQuery({
     queryKey: ['accounts'],
-    queryFn: () => getAccounts()
+    queryFn: () => getAccounts(),
+    refetchOnWindowFocus: true
   });
 
   const {
