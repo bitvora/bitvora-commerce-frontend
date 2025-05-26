@@ -154,34 +154,36 @@ export default function Page() {
                 <Image src="/img/shopping-cart.svg" alt="checkout" width={64} height={64} />
               </div>
 
-              <div className="flex lg:flex-col gap-1 w-full lg:w-[unset] justify-between items-center lg:items-start">
+              <div className="flex lg:flex-col gap-1 w-full lg:w-[unset] justify-between md:items-center lg:items-start">
                 <MediumBody className="text-secondary-700 hidden lg:flex">Checkout</MediumBody>
                 <SemiboldSmallText className="lg:hidden text-secondary-700">
                   Checkout
                 </SemiboldSmallText>
 
-                <SemiboldHeader3 className="text-light-900 hidden lg:flex">
-                  $ {numeral(usdAmount).format('0,0.00')}
-                </SemiboldHeader3>
+                <div className="flex flex-col gap-1 lg:gap-2 lg:w-[unset]">
+                  <SemiboldHeader3 className="text-light-900 hidden lg:flex">
+                    $ {numeral(usdAmount).format('0,0.00')}
+                  </SemiboldHeader3>
 
-                <SemiboldBody className="text-light-900 lg:hidden">
-                  $ {numeral(usdAmount).format('0,0.00')}
-                </SemiboldBody>
+                  <SemiboldBody className="text-light-900 lg:hidden">
+                    $ {numeral(usdAmount).format('0,0.00')}
+                  </SemiboldBody>
 
-                <div className="flex gap-2 px-4 py-2 bg-light-overlay-100 rounded-3xl">
-                  <Image
-                    src="/img/btc.svg"
-                    width={20}
-                    height={20}
-                    alt="sats"
-                    className="rounded-full"
-                  />
+                  <div className="flex gap-2 md:px-4 py-2 md:bg-light-overlay-100 rounded-3xl">
+                    <Image
+                      src="/img/btc.svg"
+                      width={20}
+                      height={20}
+                      alt="sats"
+                      className="rounded-full hidden md:flex"
+                    />
 
-                  <MediumBody className="text-light-900">
-                    {numeral(checkout?.amount).format('0,0')}
-                  </MediumBody>
+                    <MediumBody className="text-light-900">
+                      {numeral(checkout?.amount).format('0,0')}
+                    </MediumBody>
 
-                  <RegularBody className="text-light-700">SATS</RegularBody>
+                    <RegularBody className="text-light-700">SATS</RegularBody>
+                  </div>
                 </div>
               </div>
             </div>

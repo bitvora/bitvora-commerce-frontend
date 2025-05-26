@@ -36,13 +36,13 @@ export const CheckoutDetailsItem = ({
   const formattedValue = id ? formatUUID(value) : value;
 
   return (
-    <div className="flex flex-col sm:flex-row justify-between gap-2 sm:gap-6 w-full">
+    <div className="flex flex-row justify-between gap-2 sm:gap-6 w-full">
       <div className="w-full sm:max-w-1/3">
         <MediumBody className="text-light-500">{label}</MediumBody>
       </div>
 
       {id ? (
-        <div className="w-full sm:max-w-2/3 text-start sm:text-end justify-start sm:justify-end flex items-center gap-2">
+        <div className="w-full max-w-1/2 sm:max-w-2/3 text-end justify-end flex items-center gap-2">
           {url ? (
             <Link href={url} target="_blank" referrerPolicy="same-origin">
               <SemiboldBody className="underline">{formattedValue}</SemiboldBody>
@@ -60,7 +60,7 @@ export const CheckoutDetailsItem = ({
           )}
         </div>
       ) : (
-        <div className="w-full sm:max-w-2/3 text-start sm:text-end flex flex-wrap items-center gap-2 break-words overflow-visible md:justify-end">
+        <div className="w-full max-w-1/2 sm:max-w-2/3 text-end flex flex-wrap items-center gap-2 break-words overflow-visible justify-end">
           {url ? (
             <Link href={url} target="_blank" referrerPolicy="same-origin">
               <SemiboldBody className="underline">{formattedValue}</SemiboldBody>
