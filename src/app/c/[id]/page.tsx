@@ -7,6 +7,7 @@ import {
   MediumBody,
   MediumHeader4,
   MediumSmallerText,
+  RegularBody,
   SemiboldBody,
   SemiboldCaption,
   SemiboldHeader3,
@@ -27,17 +28,20 @@ import { Logo } from '@/components/Logo';
 import Image from 'next/image';
 import clsx from 'clsx';
 import toast from 'react-hot-toast';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useCountdown } from '@/hooks/useCountDown';
+import { convertSatsToFiat } from '@/lib/helpers';
 
-export default function Page({ params }: { params: { id: string } }) {
-  const { id } = params;
+export default function Page() {
+  const params = useParams();
+  const id = params?.id.toString();
 
   const router = useRouter();
 
   const [checkout, setCheckout] = useState<Checkout>({} as Checkout);
   const [loading, setLoading] = useState(true);
   const [paymentConfirmed, setPaymentConfirmed] = useState(false);
+  const [usdAmount, setUsdAmount] = useState(0);
 
   const { data } = useQuery({
     queryKey: ['checkout', id],
@@ -104,6 +108,21 @@ export default function Page({ params }: { params: { id: string } }) {
 
   const countdown = useCountdown(checkout.expires_at);
 
+  useEffect(() => {
+    const fetchFiatAmount = async () => {
+      if (!checkout?.amount) return;
+
+      const response = await convertSatsToFiat({
+        sats: checkout.amount,
+        fiat: 'usd'
+      });
+
+      setUsdAmount(response?.fiat_amount || 0);
+    };
+
+    fetchFiatAmount();
+  }, [checkout?.amount]);
+
   return (
     <div className="w-screen h-screen bg-primary-150 relative overflow-hidden">
       <div className="fixed top-5 left-7">
@@ -135,19 +154,37 @@ export default function Page({ params }: { params: { id: string } }) {
                 <Image src="/img/shopping-cart.svg" alt="checkout" width={64} height={64} />
               </div>
 
-              <div className="flex lg:flex-col gap-1 w-full lg:w-[unset] justify-between items-center lg:items-start">
+              <div className="flex lg:flex-col gap-1 w-full lg:w-[unset] justify-between md:items-center lg:items-start">
                 <MediumBody className="text-secondary-700 hidden lg:flex">Checkout</MediumBody>
                 <SemiboldSmallText className="lg:hidden text-secondary-700">
                   Checkout
                 </SemiboldSmallText>
 
-                <SemiboldHeader3 className="text-light-900 hidden lg:flex">
-                  {numeral(checkout?.amount).format('0,0')} SATS
-                </SemiboldHeader3>
+                <div className="flex flex-col gap-1 lg:gap-2 lg:w-[unset]">
+                  <SemiboldHeader3 className="text-light-900 hidden lg:flex">
+                    $ {numeral(usdAmount).format('0,0.00')}
+                  </SemiboldHeader3>
 
-                <SemiboldBody className="text-light-900 lg:hidden">
-                  {numeral(checkout?.amount).format('0,0')} SATS
-                </SemiboldBody>
+                  <SemiboldBody className="text-light-900 lg:hidden">
+                    $ {numeral(usdAmount).format('0,0.00')}
+                  </SemiboldBody>
+
+                  <div className="flex gap-2 md:px-4 py-2 md:bg-light-overlay-100 rounded-3xl">
+                    <Image
+                      src="/img/btc.svg"
+                      width={20}
+                      height={20}
+                      alt="sats"
+                      className="rounded-full hidden md:flex"
+                    />
+
+                    <MediumBody className="text-light-900">
+                      {numeral(checkout?.amount).format('0,0')}
+                    </MediumBody>
+
+                    <RegularBody className="text-light-700">SATS</RegularBody>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

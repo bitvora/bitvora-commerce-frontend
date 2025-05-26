@@ -83,8 +83,8 @@ export default function Page({ params }: { params: { id: string } }) {
             </Link>
           </div>
 
-          <div className="rounded-lg px-5 lg:px-5 py-5 lg:py-6 bg-primary-150 w-full overflow-auto flex flex-col gap-6">
-            <SemiboldBody className="text-light-900">Basic Information</SemiboldBody>
+          <div className="rounded-lg px-2 md:px-5 lg:px-5 py-5 lg:py-6 md:bg-primary-150 w-full overflow-auto flex flex-col gap-6">
+            <SemiboldBody className="text-light-900 hidden md:flex">Basic Information</SemiboldBody>
 
             <CheckoutDetailsItem
               label="ID"
