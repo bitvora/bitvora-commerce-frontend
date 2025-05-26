@@ -580,7 +580,6 @@ export const EditCustomer = ({
         <div className="overflow-auto h-full w-full">
           <Formik
             initialValues={{
-              account_id: customer?.account_id || '',
               name: customer?.name || '',
               email: customer?.email || '',
               description: customer?.description || '',
@@ -605,23 +604,14 @@ export const EditCustomer = ({
               email: Yup.string()
                 .email('Must be a valid email address')
                 .max(255)
-                .required('Email address is required'),
-              phone_number: Yup.string().required('Phone Number is required'),
-              currency: Yup.string().required('Currency is required'),
-              billing_address_line1: Yup.string().required('Billing Address is required'),
-              billing_city: Yup.string().required('City is required'),
-              billing_state: Yup.string().required('State is required'),
-              billing_postal_code: Yup.string().required('Postal Code is required'),
-              billing_country: Yup.string().required('Country is required'),
-              shipping_address_line1: Yup.string().required('Shipping Address is required'),
-              shipping_city: Yup.string().required('City is required'),
-              shipping_state: Yup.string().required('State is required'),
-              shipping_postal_code: Yup.string().required('Postal Code is required'),
-              shipping_country: Yup.string().required('COuntry is required')
+                .required('Email address is required')
             })}
             onSubmit={async (values, { resetForm }) => {
               try {
-                const result = await updateCustomer(customer.id, values);
+                const result = await updateCustomer(customer.id, {
+                  ...values,
+                  account_id: customer?.account_id
+                });
 
                 if (!result.success) {
                   toast.error(result.error || 'Error creating customer');
@@ -747,7 +737,6 @@ export const EditCustomer = ({
                                     touched={touched}
                                     value={values.phone_number}
                                     showLabel
-                                    required
                                     label="Phone Number"
                                   />
                                 </div>
@@ -810,7 +799,6 @@ export const EditCustomer = ({
                                   placeholder="Enter Address"
                                   value={values.billing_address_line1}
                                   showLabel
-                                  required
                                 />
                               </div>
                               <div>
@@ -837,7 +825,6 @@ export const EditCustomer = ({
                                     placeholder="Enter City"
                                     value={values.billing_city}
                                     showLabel
-                                    required
                                   />
                                 </div>
 
@@ -851,7 +838,6 @@ export const EditCustomer = ({
                                     placeholder="Enter State"
                                     value={values.billing_state}
                                     showLabel
-                                    required
                                   />
                                 </div>
                               </div>
@@ -867,7 +853,6 @@ export const EditCustomer = ({
                                     placeholder="Enter Postal Code"
                                     value={values.billing_postal_code}
                                     showLabel
-                                    required
                                   />
                                 </div>
 
@@ -914,7 +899,6 @@ export const EditCustomer = ({
                                   placeholder="Enter Address"
                                   value={values.shipping_address_line1}
                                   showLabel
-                                  required
                                 />
                               </div>
                               <div>
@@ -941,7 +925,6 @@ export const EditCustomer = ({
                                     placeholder="Enter City"
                                     value={values.shipping_city}
                                     showLabel
-                                    required
                                   />
                                 </div>
 
@@ -955,7 +938,6 @@ export const EditCustomer = ({
                                     placeholder="Enter State"
                                     value={values.shipping_state}
                                     showLabel
-                                    required
                                   />
                                 </div>
                               </div>
@@ -971,7 +953,6 @@ export const EditCustomer = ({
                                     placeholder="Enter Postal Code"
                                     value={values.shipping_postal_code}
                                     showLabel
-                                    required
                                   />
                                 </div>
 
