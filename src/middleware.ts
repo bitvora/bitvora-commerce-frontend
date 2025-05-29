@@ -13,7 +13,7 @@ export async function middleware(request: Request) {
   const isAuthenticated = !!session?.id;
 
   // Define public routes
-  const publicRoutes = ['/', '/auth'];
+  const publicRoutes = ['/', '/auth', app_routes.tos, app_routes.privacy_policy];
 
   const isPublicRoute = publicRoutes.some(
     (route) => pathname === route || pathname.startsWith(`${route}/`)

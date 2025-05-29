@@ -148,6 +148,8 @@ export const AppLogo = () => (
 );
 
 export const Footer = () => {
+  const path = usePathname();
+
   return (
     <footer
       id="footer"
@@ -195,16 +197,24 @@ export const Footer = () => {
 
       <div className="flex w-full mt-2 pt-[20px] pb-[20px] px-6 justify-center gap-8 sm:hidden border-b-[0.5px] border-light-border">
         <div>
-          <Link href="/">
-            <SemiboldSmallText className="text-left capitalize text-light-900 hover:text-light-700">
+          <Link href={app_routes.tos}>
+            <SemiboldSmallText
+              className={clsx('text-left capitalize', {
+                'text-secondary-700 hover:text-secondary-500': path === app_routes.tos,
+                'text-light-900 hover:text-secondary-700': path !== app_routes.tos
+              })}>
               Terms of Service
             </SemiboldSmallText>
           </Link>
         </div>
 
         <div>
-          <Link href="/">
-            <SemiboldSmallText className="text-left capitalize text-light-900 hover:text-light-700">
+          <Link href={app_routes.privacy_policy}>
+            <SemiboldSmallText
+              className={clsx('text-left capitalize', {
+                'text-secondary-700 hover:text-secondary-500': path === app_routes.privacy_policy,
+                'text-light-900 hover:text-secondary-700': path !== app_routes.privacy_policy
+              })}>
               Privacy Policy
             </SemiboldSmallText>
           </Link>
@@ -263,16 +273,24 @@ export const Footer = () => {
           </RegularTitle>
 
           <div className="mb-2">
-            <Link href="/">
-              <SemiboldSmallText className="text-left capitalize text-light-900 hover:text-light-700">
+            <Link href={app_routes.tos}>
+              <SemiboldSmallText
+                className={clsx('text-left capitalize', {
+                  'text-secondary-700 hover:text-secondary-500': path === app_routes.tos,
+                  'text-light-900 hover:text-secondary-700': path !== app_routes.tos
+                })}>
                 Terms of Service
               </SemiboldSmallText>
             </Link>
           </div>
 
           <div className="mb-2">
-            <Link href="/">
-              <SemiboldSmallText className="text-left capitalize text-light-900 hover:text-light-700">
+            <Link href={app_routes.privacy_policy}>
+              <SemiboldSmallText
+                className={clsx('text-left capitalize', {
+                  'text-secondary-700 hover:text-secondary-500': path === app_routes.privacy_policy,
+                  'text-light-900 hover:text-secondary-700': path !== app_routes.privacy_policy
+                })}>
                 Privacy Policy
               </SemiboldSmallText>
             </Link>
