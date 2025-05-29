@@ -4,9 +4,9 @@ import { MediumBody, MediumSmallText, SemiboldHeader3 } from '@/components/Text'
 
 export default function Page() {
   return (
-    <div className="w-full flex flex-col items-center gap-8 py-[150px] container mx-auto">
+    <div className="w-full flex flex-col items-center gap-8 pt-[150px] container mx-auto px-3">
       <SemiboldHeader3>Terms of Service</SemiboldHeader3>
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-8">
         <MediumBody className="text-light-800">
           <span className="font-bold text-light-900">Acceptance of Terms</span> By accessing or
           using the services provided by Bitvora Inc. (&quot;Company,&quot; &quot;we,&quot;
