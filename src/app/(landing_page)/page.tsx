@@ -1,16 +1,7 @@
 import { MediumBody, RegularHeader3, RegularHeader4, SemiboldBody } from '@/components/Text';
 import { app_routes } from '@/lib/constants';
 import Link from 'next/link';
-import { Buttons } from './server-components';
-import {
-  NavLinks,
-  Menu,
-  AppLogo,
-  Footer,
-  ContactSales,
-  Pricing,
-  Features
-} from './client-components';
+import { ContactSales, Pricing, Features } from './client-components';
 import { PrimaryButton, SecondaryButton } from '@/components/Buttons';
 import {
   bitvora_developer_portal_link,
@@ -22,23 +13,7 @@ import Image from 'next/image';
 
 export default function Page() {
   return (
-    <div className="w-screen h-screen bg-bg flex flex-col overflow-y-auto overflow-x-hidden">
-      <header className="w-screen z-[1000] fixed top-0 left-0 right-0 px-5 md:px-0 backdrop-blur-3xl">
-        <div
-          className="rounded-4xl xl:rounded-[4000px] mt-4 h-16 md:h-[64px] lg:h-[80px] w-full md:max-w-[600px] z-[1000] bg-bg lg:max-w-[900px] xl:max-w-[1050px] 2xl:max-w-[1256px] mx-auto border-[0.5px] border-primary-500 px-[20px] xl:px-[32px] py-[px] flex items-center justify-between"
-          id="navbar">
-          <AppLogo />
-
-          <NavLinks />
-
-          <div className="flex items-center gap-3">
-            <Buttons />
-
-            <Menu />
-          </div>
-        </div>
-      </header>
-
+    <>
       <div
         id="hero"
         className="flex items-center gap-8 w-full py-[200px] sm:py-[250px] lg:py-[300px] pl-10 sm:pl-8 md:pl-[50px] lg:pl-[75px] xl:pl-[100px] 2xl:pl-[160px] pr-10 lg:pr-0">
@@ -151,8 +126,6 @@ export default function Page() {
       </div>
 
       <ContactSales />
-
-      <Footer />
-    </div>
+    </>
   );
 }
