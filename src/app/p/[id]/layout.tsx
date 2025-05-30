@@ -3,6 +3,8 @@ import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query
 import { getPaymentLinkDetails } from './actions';
 import ContextProvider from '@/contexts';
 
+type Params = Promise<{ id: string }>;
+
 export const metadata: Metadata = {
   title: 'Payment'
 };
@@ -12,13 +14,14 @@ export default async function Layout({
   params
 }: {
   children: React.ReactNode;
-  params: { id: string };
+  params: Params;
 }) {
   const queryClient = new QueryClient();
+  const { id } = await params;
 
   await queryClient.prefetchQuery({
-    queryKey: ['payment-link-details', params.id],
-    queryFn: () => getPaymentLinkDetails(params.id)
+    queryKey: ['payment-link-details', id],
+    queryFn: () => getPaymentLinkDetails(id)
   });
 
   return (

@@ -2,7 +2,7 @@
 
 import { app_routes } from '@/lib/constants';
 import { getAPIKey } from './actions';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, use } from 'react';
 import { useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import Drawer from 'react-modern-drawer';
@@ -18,8 +18,12 @@ import { Link } from '@/components/Links';
 import { APIKey } from '@/types/api-keys';
 import clsx from 'clsx';
 
-export default function Page({ params }: { params: { id: string } }) {
-  const { id } = params;
+type Params = Promise<{ id: string }>;
+
+export default function Page(props: { params: Params }) {
+  const params = use(props.params);
+  const id = params.id;
+
   const router = useRouter();
 
   const [apiKey, setAPIKey] = useState<APIKey>({} as APIKey);

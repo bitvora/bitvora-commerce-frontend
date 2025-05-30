@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import Drawer from 'react-modern-drawer';
 import { app_routes } from '@/lib/constants';
 import { SemiboldSmallText, SemiboldTitle } from '@/components/Text';
@@ -16,8 +16,12 @@ import { Link } from '@/components/Links';
 import { Wallet } from '@/types/wallets';
 import { useAppContext } from '@/contexts';
 
-export default function Page({ params }: { params: { id: string } }) {
-  const { id } = params;
+type Params = Promise<{ id: string }>;
+
+export default function Page(props: { params: Params }) {
+  const params = use(props.params);
+  const id = params.id;
+
   const { wallets, isWalletLoading } = useAppContext();
 
   const router = useRouter();

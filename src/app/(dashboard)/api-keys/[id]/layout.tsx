@@ -3,7 +3,9 @@ import { getAPIKey } from './actions';
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 import APIKeysContextProvider from '../context';
 
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+type Params = Promise<{ id: string }>;
+
+export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { id } = await params;
 
   const apiKey = await getAPIKey(id);
@@ -18,13 +20,14 @@ export default async function Layout({
   params
 }: {
   children: React.ReactNode;
-  params: { id: string };
+  params: Params;
 }) {
   const queryClient = new QueryClient();
+  const { id } = await params;
 
   await queryClient.prefetchQuery({
-    queryKey: ['api-key', params.id],
-    queryFn: () => getAPIKey(params.id)
+    queryKey: ['api-key', id],
+    queryFn: () => getAPIKey(id)
   });
 
   return (

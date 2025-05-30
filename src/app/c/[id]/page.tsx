@@ -1,7 +1,7 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { useEffect, useMemo, useState } from 'react';
+import { use, useEffect, useMemo, useState } from 'react';
 import { app_routes } from '@/lib/constants';
 import {
   MediumBody,
@@ -28,13 +28,15 @@ import { Logo } from '@/components/Logo';
 import Image from 'next/image';
 import clsx from 'clsx';
 import toast from 'react-hot-toast';
-import { useParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useCountdown } from '@/hooks/useCountDown';
 import { convertSatsToFiat } from '@/lib/helpers';
 
-export default function Page() {
-  const params = useParams();
-  const id = params?.id.toString();
+type Params = Promise<{ id: string }>;
+
+export default function Page(props: { params: Params }) {
+  const params = use(props.params);
+  const id = params.id;
 
   const router = useRouter();
 

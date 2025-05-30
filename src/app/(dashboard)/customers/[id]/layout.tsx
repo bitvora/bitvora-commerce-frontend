@@ -3,7 +3,9 @@ import { getCustomer } from './actions';
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 import CustomerContextProvider from '../context';
 
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+type Params = Promise<{ id: string }>;
+
+export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { id } = await params;
 
   const customer = await getCustomer(id);
@@ -37,13 +39,14 @@ export default async function Layout({
   params
 }: {
   children: React.ReactNode;
-  params: { id: string };
+  params: Params;
 }) {
   const queryClient = new QueryClient();
+  const { id } = await params;
 
   await queryClient.prefetchQuery({
-    queryKey: ['customer', params.id],
-    queryFn: () => getCustomer(params.id)
+    queryKey: ['customer', id],
+    queryFn: () => getCustomer(id)
   });
 
   return (

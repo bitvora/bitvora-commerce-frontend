@@ -3,7 +3,7 @@
 import { app_routes } from '@/lib/constants';
 import { getSubscription } from './actions';
 import { Subscription } from '@/types/subscriptions';
-import { useEffect, useMemo, useState } from 'react';
+import { use, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import Drawer from 'react-modern-drawer';
@@ -14,14 +14,14 @@ import { SubscriptionDetailsItem, Skeleton } from './components';
 import { RedButton } from '@/components/Buttons';
 import { formatDate } from '@/lib/helpers';
 import { DeleteSubscriptionModal } from '@/app/(dashboard)/subscriptions/components';
-import { useParams } from 'next/navigation';
 import { useProductContext } from '@/app/(dashboard)/products/context';
 import { useCustomerContext } from '@/app/(dashboard)/customers/context';
 
-export default function Page() {
-  const params = useParams<{ id: string }>();
+type Params = Promise<{ id: string }>;
 
-  const { id } = params;
+export default function Page(props: { params: Params }) {
+  const params = use(props.params);
+  const id = params.id;
 
   const router = useRouter();
 

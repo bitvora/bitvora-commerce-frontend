@@ -3,7 +3,9 @@ import { getAccount } from '@/lib/actions';
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 import { Account } from '@/lib/types';
 
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+type Params = Promise<{ id: string }>;
+
+export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { id } = await params;
 
   const response = await getAccount(id);
@@ -36,13 +38,14 @@ export default async function Layout({
   params
 }: {
   children: React.ReactNode;
-  params: { id: string };
+  params: Params;
 }) {
   const queryClient = new QueryClient();
+  const { id } = await params;
 
   await queryClient.prefetchQuery({
-    queryKey: ['accounts', params.id],
-    queryFn: () => getAccount(params.id)
+    queryKey: ['accounts', id],
+    queryFn: () => getAccount(id)
   });
 
   return <HydrationBoundary state={dehydrate(queryClient)}>{children}</HydrationBoundary>;
