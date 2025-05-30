@@ -3,7 +3,7 @@
 import { app_routes } from '@/lib/constants';
 import { getCustomer } from './actions';
 import { Customer } from '@/types/customers';
-import { useCallback, useEffect, useState } from 'react';
+import { use, useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import Drawer from 'react-modern-drawer';
@@ -17,8 +17,11 @@ import { RedButton, SecondaryButton } from '@/components/Buttons';
 import { DeleteCustomerModal, EditCustomer } from '@/app/(dashboard)/customers/components';
 import { Link } from '@/components/Links';
 
-export default function Page({ params }: { params: { id: string } }) {
-  const { id } = params;
+type Params = Promise<{ id: string }>;
+
+export default function Page(props: { params: Params }) {
+  const params = use(props.params);
+  const id = params.id;
 
   const router = useRouter();
 

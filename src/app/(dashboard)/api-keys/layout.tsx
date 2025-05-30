@@ -3,6 +3,7 @@ import APIKeysContextProvider from './context';
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 import { getAPIKeys } from './actions';
 import { getSessionFromServer } from '@/lib/session';
+import { Suspense } from 'react';
 
 export const metadata: Metadata = {
   title: 'API Keys'
@@ -19,7 +20,9 @@ export default async function Layout({ children }: { children: React.ReactNode }
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <APIKeysContextProvider>{children}</APIKeysContextProvider>
+      <APIKeysContextProvider>
+        <Suspense>{children} </Suspense>
+      </APIKeysContextProvider>
     </HydrationBoundary>
   );
 }

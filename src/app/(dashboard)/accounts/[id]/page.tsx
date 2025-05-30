@@ -1,7 +1,7 @@
 'use client';
 
 import { Account } from '@/lib/types';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, use } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getAccount } from '@/lib/actions';
 import { useRouter } from 'next/navigation';
@@ -22,8 +22,12 @@ import {
 } from '@/app/(dashboard)/accounts/components';
 import ImageComponent from '@/components/Image';
 
-export default function Page({ params }: { params: { id: string } }) {
-  const { id } = params;
+type Params = Promise<{ id: string }>;
+
+export default function Page(props: { params: Params }) {
+  const params = use(props.params);
+  const id = params.id;
+
   const router = useRouter();
 
   const [account, setAccount] = useState<Account>({} as Account);

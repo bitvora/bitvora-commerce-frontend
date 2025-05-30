@@ -6,6 +6,8 @@ import { ServerLayout } from '@/app/(dashboard)/server-components';
 import ProductContextProvider from '@/app/(dashboard)/products/context';
 import CustomerContextProvider from '@/app/(dashboard)/customers/context';
 
+export const dynamic = 'force-dynamic';
+
 export default async function Layout({ children }: { children: React.ReactNode }) {
   return (
     <ContextProvider>

@@ -1,9 +1,11 @@
 'use client';
 
+type Params = Promise<{ id: string }>;
+
 import { useRouter } from 'next/navigation';
 import { getPaymentLink } from './actions';
 import { useQuery } from '@tanstack/react-query';
-import { useEffect, useMemo, useState } from 'react';
+import { use, useEffect, useMemo, useState } from 'react';
 import Drawer from 'react-modern-drawer';
 import { app_routes } from '@/lib/constants';
 import { MediumBody, SemiboldBody, SemiboldTitle } from '@/components/Text';
@@ -18,8 +20,9 @@ import { PaymentLink } from '@/types/payment-links';
 import { useProductContext } from '@/app/(dashboard)/products/context';
 import numeral from 'numeral';
 
-export default function Page({ params }: { params: { id: string } }) {
-  const { id } = params;
+export default function Page(props: { params: Params }) {
+  const params = use(props.params);
+  const id = params.id;
 
   const router = useRouter();
 

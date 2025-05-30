@@ -3,6 +3,8 @@ import { getWebhook, getWebhookDeliveries } from '../../actions';
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 import WebhookContextProvider from '../../../context';
 
+type Params = Promise<{ id: string }>;
+
 export async function generateMetadata(): Promise<Metadata> {
   return {
     title: `Webhook Attempt`
@@ -14,18 +16,19 @@ export default async function Layout({
   params
 }: {
   children: React.ReactNode;
-  params: { id: string };
+  params: Params;
 }) {
   const queryClient = new QueryClient();
+  const { id } = await params;
 
   await queryClient.prefetchQuery({
-    queryKey: ['webhook', params.id],
-    queryFn: () => getWebhook(params.id)
+    queryKey: ['webhook', id],
+    queryFn: () => getWebhook(id)
   });
 
   await queryClient.prefetchQuery({
-    queryKey: ['webhook-deliveries', params.id],
-    queryFn: () => getWebhookDeliveries(params.id)
+    queryKey: ['webhook-deliveries', id],
+    queryFn: () => getWebhookDeliveries(id)
   });
 
   return (

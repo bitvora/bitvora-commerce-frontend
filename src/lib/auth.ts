@@ -1,7 +1,7 @@
 'use server';
 
 import { cookies } from 'next/headers';
-import { Account, SessionPayload } from '@/lib/types';
+import { SessionPayload } from '@/lib/types';
 import { redirect } from 'next/navigation';
 import { app_routes } from '@/lib/constants';
 

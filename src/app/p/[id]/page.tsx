@@ -1,7 +1,7 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { useEffect } from 'react';
+import { use, useEffect } from 'react';
 import { app_routes } from '@/lib/constants';
 import { MediumSmallerText, SemiboldSmallText, SemiboldTitle } from '@/components/Text';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -14,8 +14,11 @@ import { Logo } from '@/components/Logo';
 import { useRouter } from 'next/navigation';
 import { PrimaryButton, SecondaryButton } from '@/components/Buttons';
 
-export default function Page({ params }: { params: { id: string } }) {
-  const { id } = params;
+type Params = Promise<{ id: string }>;
+
+export default function Page(props: { params: Params }) {
+  const params = use(props.params);
+  const id = params.id;
 
   const router = useRouter();
 

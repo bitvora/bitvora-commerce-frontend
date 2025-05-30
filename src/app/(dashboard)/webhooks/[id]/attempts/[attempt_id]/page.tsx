@@ -3,7 +3,7 @@
 import { app_routes } from '@/lib/constants';
 import { getWebhookDeliveries } from '../../actions';
 import { WebhookDelivery } from '@/types/webhooks';
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import Drawer from 'react-modern-drawer';
@@ -12,16 +12,19 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { Skeleton, WebhookAttemptDetails, WebhookDeliveryStatus } from './components';
 
-import { useParams } from 'next/navigation';
 import { PrettyJson } from '@/components/PrettyJSON';
 import Tabs from '@/components/Tab';
 import { formatDate, formatWebhookEvent } from '@/lib/helpers';
 
-export default function Page() {
-  const params = useParams<{ id: string; attempt_id: string }>();
+type Params = Promise<{ id: string; attempt_id: string }>;
+
+export default function Page(props: { params: Params }) {
+  const params = use(props.params);
+  const id = params.id;
+  const attempt_id = params.attempt_id;
+
   const router = useRouter();
 
-  const { id, attempt_id } = params;
   const [attempt, setAttempt] = useState<WebhookDelivery>({} as WebhookDelivery);
 
   const { data, isLoading: isWebhookDeliveriesLoading } = useQuery({
@@ -80,7 +83,11 @@ export default function Page() {
 
                 <WebhookDeliveryStatus state={attempt?.status} />
                 {attempt?.error_message && (
-                  <WebhookAttemptDetails label="Error Message" value={attempt?.error_message} error />
+                  <WebhookAttemptDetails
+                    label="Error Message"
+                    value={attempt?.error_message}
+                    error
+                  />
                 )}
 
                 <WebhookAttemptDetails label="Date" value={formatDate(attempt?.created_at)} />

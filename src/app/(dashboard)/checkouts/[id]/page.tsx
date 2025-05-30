@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { getCheckout } from './actions';
 import { useQuery } from '@tanstack/react-query';
-import { useEffect, useMemo, useState } from 'react';
+import { use, useEffect, useMemo, useState } from 'react';
 import Drawer from 'react-modern-drawer';
 import { app_routes } from '@/lib/constants';
 import { MediumBody, SemiboldBody, SemiboldTitle } from '@/components/Text';
@@ -18,8 +18,11 @@ import { Checkout } from '@/types/checkout';
 import { useProductContext } from '@/app/(dashboard)/products/context';
 import { useCustomerContext } from '@/app/(dashboard)/customers/context';
 
-export default function Page({ params }: { params: { id: string } }) {
-  const { id } = params;
+type Params = Promise<{ id: string }>;
+
+export default function Page(props: { params: Params }) {
+  const params = use(props.params);
+  const id = params.id;
 
   const router = useRouter();
 

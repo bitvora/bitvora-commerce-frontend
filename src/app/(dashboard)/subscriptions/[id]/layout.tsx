@@ -3,7 +3,9 @@ import { getSubscription } from './actions';
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 import SubscriptionContextProvider from '../context';
 
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+type Params = Promise<{ id: string }>;
+
+export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { id } = await params;
 
   const subscription = await getSubscription(id);
@@ -18,13 +20,14 @@ export default async function Layout({
   params
 }: {
   children: React.ReactNode;
-  params: { id: string };
+  params: Params;
 }) {
   const queryClient = new QueryClient();
+  const { id } = await params;
 
   await queryClient.prefetchQuery({
-    queryKey: ['subscription', params.id],
-    queryFn: () => getSubscription(params.id)
+    queryKey: ['subscription', id],
+    queryFn: () => getSubscription(id)
   });
 
   return (
