@@ -37,7 +37,7 @@ export default function Page(props: { params: Params }) {
   useEffect(() => {
     if (data?.data) {
       const attempt = data?.data.find((attempt) => attempt.id === attempt_id);
-      console.log(JSON.stringify(attempt));
+      
       setAttempt(attempt);
     }
   }, [attempt_id, data]);

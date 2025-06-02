@@ -50,8 +50,6 @@ export default function Page() {
     toggleEditModal(true);
   };
 
-  console.log({ account });
-
   const handleDelete = (account) => {
     setAccount(account);
     setIsDeleteOpen(true);

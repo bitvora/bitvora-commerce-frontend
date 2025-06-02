@@ -35,3 +35,42 @@ export async function connectWallet(payload: { account_id: string; wallet_connec
     };
   }
 }
+
+export async function withdrawCrypto(payload: {
+  account_id: string;
+  recipient: string;
+  amount: number;
+}) {
+  try {
+    const session = await getSessionFromServer();
+
+    const response = await api.fetch(
+      '/wallet/withdraw',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      },
+      session
+    );
+
+    if (!response) {
+      return { success: false, error: 'Session expired or unauthorized' };
+    }
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      return { success: false, error: errorData.message || 'Failed to withdraw' };
+    }
+
+    const data = await response.json();
+    return { success: true, data };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Something went wrong'
+    };
+  }
+}

@@ -183,3 +183,30 @@ export const convertSatsToFiat = async ({ fiat, sats }: { sats: number; fiat: st
     return {};
   }
 };
+
+export const satsToBTC = (sats: number): string => {
+  return sats < 100 ? '0.00000000' : (sats / 100000000).toFixed(8);
+};
+
+export const btcToSats = (btc: number): number => {
+  return Math.round(btc * 100000000);
+};
+
+export const isLightningInvoice = (input: string): boolean => {
+  if (!input || input.trim() === '' || input.length < 1) {
+    return false;
+  }
+
+  const lightningInvoicePattern = /^(lnbc|lntbs)[0-9a-zA-Z]+$/;
+  return lightningInvoicePattern.test(input);
+};
+
+export const getAmountFromString = (str: string): number => {
+  const splitString = str.split('amount=');
+
+  if (!splitString[1] || splitString[1] === '') {
+    return 0;
+  }
+
+  return Number(splitString[1]);
+};

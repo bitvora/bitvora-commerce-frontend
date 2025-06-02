@@ -1,6 +1,6 @@
 'use client';
 
-import { fetchSession, getAccounts, getWallets } from '@/lib/actions';
+import { fetchSession, getAccounts, getWallets, getBalance } from '@/lib/actions';
 import { currencies, graph_periods } from '@/lib/constants';
 import { Account, CurrencyType, SessionPayload } from '@/lib/types';
 import { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
@@ -23,6 +23,9 @@ interface AppContextType {
   wallets: Wallet[];
   isWalletLoading: boolean;
   refetchWallet: () => void;
+  balance: number;
+  isBalanceLoading: boolean;
+  refetchBalance: () => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -34,6 +37,7 @@ export default function ContextProvider({ children }: { children: React.ReactNod
   const [currentAccount, setCurrentAccount] = useState<Account>({} as Account);
   const [currentTab, setCurrentTab] = useState(graph_periods[0].value);
   const [wallets, setWallets] = useState<Wallet[]>([]);
+  const [balance, setBalance] = useState(0);
 
   const updateCurrency = (currency: CurrencyType) => {
     setCurrency(currency);
@@ -73,9 +77,24 @@ export default function ContextProvider({ children }: { children: React.ReactNod
     enabled: !!currentAccount?.id
   });
 
+  const {
+    data: balanceData,
+    isLoading: isBalanceLoading,
+    refetch: refetchBalanceQuery
+  } = useQuery({
+    queryKey: ['balance', currentAccount?.id],
+    queryFn: () => getBalance(currentAccount?.id),
+    refetchOnWindowFocus: true,
+    enabled: !!currentAccount?.id
+  });
+
   const refetchWallet = useCallback(() => {
     refetchWalletsQuery();
   }, [refetchWalletsQuery]);
+
+  const refetchBalance = useCallback(() => {
+    refetchBalanceQuery();
+  }, [refetchBalanceQuery]);
 
   useEffect(() => {
     const storedCurrency = secureLocalStorage.getItem('currency');
@@ -128,6 +147,12 @@ export default function ContextProvider({ children }: { children: React.ReactNod
   }, [walletsData]);
 
   useEffect(() => {
+    if (balanceData?.data) {
+      setBalance(balanceData?.data?.balance_sats);
+    }
+  }, [balanceData]);
+
+  useEffect(() => {
     if (accountsData?.data) {
       const fetchedAccounts: Account[] = accountsData.data;
       setAccounts(fetchedAccounts);
@@ -154,7 +179,10 @@ export default function ContextProvider({ children }: { children: React.ReactNod
       updateCurrentTab,
       wallets,
       isWalletLoading,
-      refetchWallet
+      refetchWallet,
+      isBalanceLoading,
+      balance,
+      refetchBalance
     };
   }, [
     currency,
@@ -167,7 +195,10 @@ export default function ContextProvider({ children }: { children: React.ReactNod
     wallets,
     isWalletLoading,
     refetchWallet,
-    updateCurrentAccount
+    updateCurrentAccount,
+    isBalanceLoading,
+    balance,
+    refetchBalance
   ]);
 
   return <AppContext.Provider value={values}>{children}</AppContext.Provider>;

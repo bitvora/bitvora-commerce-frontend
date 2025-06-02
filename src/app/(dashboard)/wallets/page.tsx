@@ -9,7 +9,7 @@ import {
   SemiboldSmallerText,
   SemiboldSmallText
 } from '@/components/Text';
-import { ConnectWallet } from './components';
+import { ConnectWallet, WithdrawCrypto } from './components';
 import Table from '@/components/Table';
 import { ChangeEvent, useEffect, useMemo, useState } from 'react';
 import { DarkInput } from '@/components/Inputs';
@@ -22,9 +22,10 @@ import { Link } from '@/components/Links';
 import { useAppContext } from '@/contexts';
 import clsx from 'clsx';
 import Image from 'next/image';
+import numeral from 'numeral';
 
 export default function Page() {
-  const { wallets, isWalletLoading } = useAppContext();
+  const { wallets, isWalletLoading, balance } = useAppContext();
 
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -156,9 +157,9 @@ export default function Page() {
     return wallets.length > 0 && wallets.some((wallet) => wallet.active);
   }, [wallets]);
 
-  const connected_wallet = useMemo(() => {
-    return !isWalletLoading ? wallets.find((wallet) => wallet.active) : null;
-  }, [wallets, isWalletLoading]);
+  // const connected_wallet = useMemo(() => {
+  //   return !isWalletLoading ? wallets.find((wallet) => wallet.active) : null;
+  // }, [wallets, isWalletLoading]);
 
   return (
     <div className="flex flex-col gap-3 md:gap-8 bg-primary-50 md:bg-primary-150 px-0 sm:px-3 pt-6 lg:pt-0 pb-8 w-full">
@@ -204,33 +205,11 @@ export default function Page() {
         </div>
 
         <div
+          id="wallet-header"
           className={clsx(
-            'flex w-full items-center justify-between px-6 sm:px-8 py-6 gap-2 md:gap-8 rounded-lg h-[180px] sm:h-[200px] lg:h-[220px] xl:h-[200px]',
-            {
-              'cursor-pointer': is_wallet_connected
-            }
-          )}
-          onClick={() => {
-            if (is_wallet_connected) {
-              router.push(`${app_routes.wallet}/${connected_wallet?.id}`);
-            }
-          }}
-          style={{
-            background: `
-      linear-gradient(
-        to right,
-        #100c17 0%,
-        #100c17 33%,
-        rgba(16, 12, 23, 0.95) 40%,
-        rgba(16, 12, 23, 0.6) 50%,
-        rgba(16, 12, 23, 0.2) 60%,
-        transparent 66.01%
-      ),
-      radial-gradient(83.34% 204.56% at 96.26% 110.11%, #2F2244 0%, #15101E 61.03%)
-    `,
-            backgroundBlendMode: 'normal'
-          }}>
-          <div className="flex flex-col justify-between h-full">
+            'flex w-full items-center justify-between px-6 sm:px-8 py-6 gap-2 md:gap-8 rounded-lg h-[220px] sm:h-[200px] lg:h-[250px] xl:h-[250px]'
+          )}>
+          <div className="flex flex-col justify-between h-full gap-2">
             <div
               className={clsx(
                 'flex text-center justify-center items-center px-4 py-0.5 rounded-2xl w-fit',
@@ -277,21 +256,26 @@ export default function Page() {
                 </>
               )}
 
+              <SemiboldSmallText className="text-light-700">
+                Balance:
+                <span className="text-secondary-700 ml-1 font-bold">
+                  {numeral(balance).format('0,0')} SATS
+                </span>
+              </SemiboldSmallText>
+
               <div>
-                {is_wallet_connected ? (
-                  <SemiboldSmallerText className="text-light-700">
-                    Permissions: <span>{connected_wallet?.methods?.length}</span>
-                  </SemiboldSmallerText>
-                ) : (
+                {!is_wallet_connected && (
                   <SemiboldSmallerText className="text-light-700">
                     Set up a wallet connection by clicking the connect wallet
                   </SemiboldSmallerText>
                 )}
               </div>
             </div>
+
+            <WithdrawCrypto />
           </div>
 
-          <div className="max-w-1/3 md:min-w-1/3 flex justify-end float-right">
+          <div className="max-w-1/3 md:min-w-1/3 justify-end float-right hidden sm:flex">
             <Image
               src="/img/wallet-connect.svg"
               alt="wallet-connect"

@@ -205,6 +205,10 @@ input[type='number'] {
   outline: none;
 }
 
+#wallet-header {
+  background: var(--color-primary-150);
+}
+
 @media (max-width: 639.98px) {
   .products-table {
     padding: 0 !important;
@@ -219,12 +223,37 @@ input[type='number'] {
 }
 
 @media (min-width: 640px) and (max-width: 767.98px) {
+  #wallet-header {
+    background: linear-gradient(
+        to right,
+        #100c17 0%,
+        #100c17 33%,
+        rgba(16, 12, 23, 0.95) 40%,
+        rgba(16, 12, 23, 0.6) 50%,
+        rgba(16, 12, 23, 0.2) 60%,
+        transparent 66.01%
+      ),
+      radial-gradient(83.34% 204.56% at 96.26% 110.11%, #2f2244 0%, #15101e 61.03%);
+  }
 }
 
 @media (min-width: 768px) and (max-width: 1023.98px) {
   .drawer {
     width: 70vw !important;
     padding: 20px !important;
+  }
+
+  #wallet-header {
+    background: linear-gradient(
+        to right,
+        #100c17 0%,
+        #100c17 33%,
+        rgba(16, 12, 23, 0.95) 40%,
+        rgba(16, 12, 23, 0.6) 50%,
+        rgba(16, 12, 23, 0.2) 60%,
+        transparent 66.01%
+      ),
+      radial-gradient(83.34% 204.56% at 96.26% 110.11%, #2f2244 0%, #15101e 61.03%);
   }
 }
 
@@ -237,6 +266,19 @@ input[type='number'] {
     width: 600px !important;
     padding: 20px !important;
   }
+
+  #wallet-header {
+    background: linear-gradient(
+        to right,
+        #100c17 0%,
+        #100c17 33%,
+        rgba(16, 12, 23, 0.95) 40%,
+        rgba(16, 12, 23, 0.6) 50%,
+        rgba(16, 12, 23, 0.2) 60%,
+        transparent 66.01%
+      ),
+      radial-gradient(83.34% 204.56% at 96.26% 110.11%, #2f2244 0%, #15101e 61.03%);
+  }
 }
 
 @media (min-width: 1280px) and (max-width: 1535.98px) {
@@ -248,6 +290,19 @@ input[type='number'] {
     width: 625px !important;
     padding: 20px !important;
   }
+
+  #wallet-header {
+    background: linear-gradient(
+        to right,
+        #100c17 0%,
+        #100c17 33%,
+        rgba(16, 12, 23, 0.95) 40%,
+        rgba(16, 12, 23, 0.6) 50%,
+        rgba(16, 12, 23, 0.2) 60%,
+        transparent 66.01%
+      ),
+      radial-gradient(83.34% 204.56% at 96.26% 110.11%, #2f2244 0%, #15101e 61.03%);
+  }
 }
 
 @media (min-width: 1536px) {
@@ -258,6 +313,19 @@ input[type='number'] {
   .drawer {
     width: 750px !important;
     padding: 20px !important;
+  }
+
+  #wallet-header {
+    background: linear-gradient(
+        to right,
+        #100c17 0%,
+        #100c17 33%,
+        rgba(16, 12, 23, 0.95) 40%,
+        rgba(16, 12, 23, 0.6) 50%,
+        rgba(16, 12, 23, 0.2) 60%,
+        transparent 66.01%
+      ),
+      radial-gradient(83.34% 204.56% at 96.26% 110.11%, #2f2244 0%, #15101e 61.03%);
   }
 }
 

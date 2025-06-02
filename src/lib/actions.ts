@@ -163,3 +163,20 @@ export async function getAccount(id: string) {
     return [];
   }
 }
+
+export async function getBalance(id: string) {
+  try {
+    const session = await getSessionFromServer();
+    const response = await api.fetch(`/wallet/balance?account_id=${id}`, {}, session);
+    if (!response) return [];
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch wallet balance');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching wallet balance:', error);
+    return [];
+  }
+}
