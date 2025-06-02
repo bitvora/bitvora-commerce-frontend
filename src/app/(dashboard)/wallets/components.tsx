@@ -3,9 +3,11 @@
 import { useAppContext } from '@/contexts';
 import { PrimaryButton } from '@/components/Buttons';
 import {
+  MediumBody,
   MediumHeader5,
   RegularSmallerText,
   SemiboldBody,
+  SemiboldHeader3,
   SemiboldSmallerText,
   SemiboldSmallText,
   SemiboldTitle
@@ -32,15 +34,19 @@ import { DarkInput } from '@/components/Inputs';
 import { connectWallet, withdrawCrypto } from './actions';
 import {
   btcToSats,
+  convertSatsToFiat,
+  formatDate,
   getAmountFromString,
   isLightningInvoice,
   pasteToClipboard,
+  renderPrice,
   satsToBTC
 } from '@/lib/helpers';
 import clsx from 'clsx';
 import numeral from 'numeral';
 import Image from 'next/image';
 import lightBolt11Decoder from 'light-bolt11-decoder';
+import Tabs from '@/components/Tab';
 
 export const ConnectWallet = () => {
   const { currentAccount, refetchWallet } = useAppContext();
@@ -182,6 +188,15 @@ const initialValues = {
   amount: ''
 };
 
+interface IWithdrawal {
+  fees_paid: number;
+  invoice: string;
+  preimage: string;
+  wallet_id: string;
+  recipient: string;
+  amount: number;
+}
+
 export const WithdrawCrypto = () => {
   const pathname = usePathname();
   const router = useRouter();
@@ -190,8 +205,12 @@ export const WithdrawCrypto = () => {
   const inputRef = useRef<WithdrawalAmountHandle>(null);
   const [paymentType, setPaymentType] = useState(null);
   const [isInputDisabled, setIsInputDisabled] = useState(false);
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const [currency, setCurrency] = useState<CurrencyType>('sats');
+  const [tab, setTab] = useState(1);
+  const [withdrawalDetails, setWithdrawalDetails] = useState<IWithdrawal>({} as IWithdrawal);
+  const { currency: userCurrency, refetchBalance } = useAppContext();
+  const [fiatAmount, setFiatAmount] = useState(0);
 
   useEffect(() => {
     if (pathname === app_routes.wallet && searchParams.get('action') === 'withdraw-crypto') {
@@ -200,6 +219,7 @@ export const WithdrawCrypto = () => {
   }, [pathname, searchParams]);
 
   const handleClose = () => {
+    setTab(1);
     setOpen(false);
     router.replace(app_routes.wallet);
   };
@@ -229,13 +249,19 @@ export const WithdrawCrypto = () => {
           toast.error(result.error || 'Error making withdrawal');
           return;
         }
-        toast.success('Wallet connected successfully');
-        handleClose();
+        toast.success(result?.data?.message || 'Payment sent successfully');
+        setWithdrawalDetails({
+          ...withdrawalDetails,
+          ...result?.data?.data,
+          ...payload
+        });
+
+        setTab(2);
         resetForm();
-        router.push(`${app_routes.wallet}/${result?.data?.data?.id}`);
+        refetchBalance();
       } catch (err) {
         console.error(err);
-        toast.error('Error connecting wallet');
+        toast.error('Error making withdrawal');
       }
     },
     validationSchema: Yup.object({
@@ -262,7 +288,12 @@ export const WithdrawCrypto = () => {
   };
 
   const handleDestinationChange = (value: string): void => {
-    const trimmedValue = value.trim();
+    let trimmedValue = value.trim();
+
+    if (trimmedValue.toLowerCase().startsWith('bitcoin:')) {
+      trimmedValue = trimmedValue.replace(/^bitcoin:/i, '');
+    }
+
     setIsInputDisabled(false);
     setPaymentType('');
     formik.setFieldValue('recipient', trimmedValue);
@@ -294,10 +325,25 @@ export const WithdrawCrypto = () => {
     setIsInputDisabled(amount > 0);
   };
 
+  useEffect(() => {
+    const fetchFiatAmount = async () => {
+      if (!withdrawalDetails?.amount) return;
+
+      const response = await convertSatsToFiat({
+        sats: withdrawalDetails.amount,
+        fiat: userCurrency.value === 'sats' ? 'usd' : userCurrency.value
+      });
+
+      setFiatAmount(response?.fiat_amount || 0);
+    };
+
+    fetchFiatAmount();
+  }, [userCurrency.value, withdrawalDetails.amount]);
+
   return (
-    <div>
+    <>
       <PrimaryButton
-        className="h-10 md:h-12 w-[140px] min-w-[140px] lg:w-[auto]"
+        className="h-10 md:h-14! lg:h-14! xl:h-14! 2xl:h-14! w-full min-w-[140px]"
         onClick={handleOpen}>
         Withdraw Crypto
       </PrimaryButton>
@@ -310,149 +356,216 @@ export const WithdrawCrypto = () => {
         overlayOpacity={0.9}>
         <div className="h-full w-full relative px-4 lg:px-6 py-4 lg:py-6 rounded-lg flex flex-col bg-primary-40 gap-6 lg:gap-10">
           <div className="flex w-full justify-between items-center">
-            <SemiboldTitle className="text-light-900">Withdraw</SemiboldTitle>
+            <SemiboldTitle className="text-light-900">
+              {tab === 1 ? 'Withdraw' : 'Transaction Details'}
+            </SemiboldTitle>
 
             <button className="border-none outline-none cursor-pointer" onClick={handleClose}>
               <CloseIcon />
             </button>
           </div>
 
-          <div className="overflow-auto h-full w-full">
-            <form noValidate onSubmit={formik.handleSubmit}>
-              <div className="rounded-lg px-5 lg:px-6 py-5 lg:py-6 bg-primary-150 w-full h-full">
-                <div className="mb-2 pb-2 flex flex-col gap-2">
-                  <DarkInput
-                    label="Destination Address or Invoice"
-                    handleChange={(event) => handleDestinationChange(event.target.value)}
-                    name="recipient"
-                    errors={formik.errors}
-                    touched={formik.touched}
-                    placeholder="Bitcoin, Lightning address, or Invoice"
-                    value={formik.values.recipient}
-                    showLabel
-                    required
-                    endIcon={
-                      <button
-                        className="h-10 w-10 rounded-lg cursor-pointer bg-primary-200 hover:bg-primary-100 flex items-center justify-center"
-                        onClick={async (event) => {
-                          event.preventDefault();
-                          await pasteToClipboard({
-                            callback: (text: string) => {
-                              handleDestinationChange(text);
-                            }
-                          });
-                        }}>
-                        <PasteIcon />
-                      </button>
-                    }
-                  />
-
-                  {paymentType !== '' && (
-                    <div className="w-full flex items-center gap-4 justify-center text-center mt-1 pt-1">
-                      <SemiboldBody className="text-secondary-700 capitalize">
-                        {paymentType}
-                      </SemiboldBody>
-
-                      <Image
-                        width={20}
-                        height={20}
-                        src={
-                          paymentType === 'lightning'
-                            ? '/currencies/sats.svg'
-                            : '/currencies/btc.svg'
-                        }
-                        alt={paymentType}
-                      />
-                    </div>
-                  )}
+          {tab === 2 && (
+            <div className="overflow-auto h-full w-full">
+              <div className="rounded-lg px-5 lg:px-6 py-5 lg:py-6 bg-primary-150 w-full flex flex-col gap-4">
+                <div className="rounded-lg px-5 py-5 bg-primary-40 w-full flex flex-col gap-4">
+                  <SemiboldTitle className="text-light-900">Withdrawal</SemiboldTitle>
                 </div>
 
-                <div className="my-8 h-[0.5px] w-full bg-light-400" />
+                <div className="w-full text-center justify-center flex flex-col items-center">
+                  <SemiboldHeader3 className="text-light-700 border-b-[0.5px] border-light-400">
+                    {numeral(withdrawalDetails?.amount).format('0,0')} SATS
+                  </SemiboldHeader3>
 
-                <div className="mb-2 pb-2 flex flex-col gap-2">
-                  <WithdrawalAmount
-                    label="Enter Amount"
-                    handleChange={formik.handleChange}
-                    ref={inputRef}
-                    name="amount"
-                    errors={formik.errors}
-                    touched={formik.touched}
-                    value={formik.values.amount}
-                    placeholder="0"
-                    disabled={isInputDisabled}
-                    showLabel
-                    required
-                    currency={currency}
-                    suffix={
-                      <div>
-                        <MediumHeader5 className="text-light-500 uppercase">
-                          {currency}
-                        </MediumHeader5>
+                  <SemiboldBody className="text-secondary-700 mt-2 uppercase">
+                    {renderPrice({
+                      amount: fiatAmount,
+                      currency: userCurrency.value === 'sats' ? 'usd' : userCurrency.value
+                    })}
+                  </SemiboldBody>
+                </div>
+              </div>
+
+              <div className="w-full rounded-lg px-3 md:px-4 py-3 md:py-4">
+                <Tabs
+                  tabs={[
+                    {
+                      label: 'Details',
+                      content: (
+                        <div className="w-full mt-3 pt-3 flex flex-col gap-5">
+                          <WithdrawalDetailsItem
+                            label="Wallet ID"
+                            value={withdrawalDetails?.wallet_id}
+                          />
+
+                          <WithdrawalDetailsItem
+                            label="Amount"
+                            value={`${numeral(withdrawalDetails?.amount).format('0,0')} SATS`}
+                          />
+
+                          <WithdrawalDetailsItem
+                            label="Recipient"
+                            value={withdrawalDetails?.invoice}
+                          />
+
+                          <WithdrawalDetailsItem
+                            label="Transaction Fee"
+                            value={`${numeral(withdrawalDetails?.fees_paid / 1000).format(
+                              '0,0'
+                            )} SATS`}
+                          />
+
+                          <WithdrawalDetailsItem
+                            label="Date"
+                            value={formatDate(new Date().toISOString())}
+                          />
+                        </div>
+                      )
+                    }
+                  ]}
+                />
+              </div>
+            </div>
+          )}
+
+          {tab === 1 && (
+            <div className="overflow-auto h-full w-full">
+              <form noValidate onSubmit={formik.handleSubmit}>
+                <div className="rounded-lg px-5 lg:px-6 py-5 lg:py-6 bg-primary-150 w-full h-full">
+                  <div className="mb-2 pb-2 flex flex-col gap-2">
+                    <DarkInput
+                      label="Destination Address or Invoice"
+                      handleChange={(event) => handleDestinationChange(event.target.value)}
+                      name="recipient"
+                      errors={formik.errors}
+                      touched={formik.touched}
+                      placeholder="Bitcoin, Lightning address, or Invoice"
+                      value={formik.values.recipient}
+                      showLabel
+                      required
+                      endIcon={
+                        <button
+                          className="h-10 w-10 rounded-lg cursor-pointer bg-primary-200 hover:bg-primary-100 flex items-center justify-center"
+                          onClick={async (event) => {
+                            event.preventDefault();
+                            await pasteToClipboard({
+                              callback: (text: string) => {
+                                handleDestinationChange(text);
+                              }
+                            });
+                          }}>
+                          <PasteIcon />
+                        </button>
+                      }
+                    />
+
+                    {paymentType && (
+                      <div className="w-full flex items-center gap-4 justify-center text-center mt-1 pt-1">
+                        <SemiboldBody className="text-secondary-700 capitalize">
+                          {paymentType}
+                        </SemiboldBody>
+
+                        <Image
+                          width={20}
+                          height={20}
+                          src={
+                            paymentType === 'lightning'
+                              ? '/currencies/sats.svg'
+                              : '/currencies/btc.svg'
+                          }
+                          alt={paymentType}
+                        />
                       </div>
-                    }
-                  />
+                    )}
+                  </div>
 
-                  <div className="w-full justify-between items-center flex mt-1 pt-1">
-                    <SemiboldSmallText className="text-light-700">
-                      Bal: {numeral(balance).format('0,0')} SATS
-                    </SemiboldSmallText>
+                  <div className="my-8 h-[0.5px] w-full bg-light-400" />
 
-                    <div className="items-center gap-3 flex">
-                      {currency === 'btc' ? (
-                        <SemiboldTitle className="text-secondary-700 uppercase">
-                          <span className="mr-2">
-                            {numeral(btcToSats(Number(formik.values.amount))).format('0')}
-                          </span>
-                          SATS
-                        </SemiboldTitle>
-                      ) : (
-                        <SemiboldTitle className="text-secondary-700 uppercase">
-                          <span className="mr-2">
-                            {numeral(satsToBTC(Number(formik.values.amount))).format(
-                              '0,0.00000000'
-                            )}
-                          </span>
-                          BTC
-                        </SemiboldTitle>
-                      )}
+                  <div className="mb-2 pb-2 flex flex-col gap-2">
+                    <WithdrawalAmount
+                      label="Enter Amount"
+                      handleChange={formik.handleChange}
+                      ref={inputRef}
+                      name="amount"
+                      errors={formik.errors}
+                      touched={formik.touched}
+                      value={formik.values.amount}
+                      placeholder="0"
+                      disabled={isInputDisabled}
+                      showLabel
+                      required
+                      currency={currency}
+                      suffix={
+                        <div>
+                          <MediumHeader5 className="text-light-500 uppercase">
+                            {currency}
+                          </MediumHeader5>
+                        </div>
+                      }
+                    />
 
-                      <button
-                        className="cursor-pointer border-[0.5px] border-light-300 hover:border-light-400 p-1 rounded-md"
-                        onClick={toggleCurrency}>
-                        <RefreshIcon />
-                      </button>
+                    <div className="w-full justify-between items-center flex mt-1 pt-1">
+                      <SemiboldSmallText className="text-light-700">
+                        Bal: {numeral(balance).format('0,0')} SATS
+                      </SemiboldSmallText>
+
+                      <div className="items-center gap-3 flex">
+                        {currency === 'btc' ? (
+                          <SemiboldTitle className="text-secondary-700 uppercase">
+                            <span className="mr-2">
+                              {numeral(btcToSats(Number(formik.values.amount))).format('0')}
+                            </span>
+                            SATS
+                          </SemiboldTitle>
+                        ) : (
+                          <SemiboldTitle className="text-secondary-700 uppercase">
+                            <span className="mr-2">
+                              {numeral(satsToBTC(Number(formik.values.amount))).format(
+                                '0,0.00000000'
+                              )}
+                            </span>
+                            BTC
+                          </SemiboldTitle>
+                        )}
+
+                        <button
+                          className="cursor-pointer border-[0.5px] border-light-300 hover:border-light-400 p-1 rounded-md"
+                          onClick={toggleCurrency}>
+                          <RefreshIcon />
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="flex flex-col gap-2 mt-6 fixed bottom-4 md:bottom-10 left-2 md:left-6 right-2 md:right-6 px-6">
-                <div className="mt-6 flex px-3 py-3 rounded-lg bg-[#363121] gap-3 lg:gap-6 w-full">
-                  <Image src="/icons/info.svg" alt="bitcoin" width={22} height={22} />
+                <div className="flex flex-col gap-2 mt-6 fixed bottom-4 md:bottom-10 left-2 md:left-6 right-2 md:right-6 px-6">
+                  <div className="mt-6 flex px-3 py-3 rounded-lg bg-[#363121] gap-3 lg:gap-6 w-full">
+                    <Image src="/icons/info.svg" alt="bitcoin" width={22} height={22} />
 
-                  <div className="block">
-                    <SemiboldBody className="text-[#f2dc9f] font-medium">
-                      Ensure that the address is correct to avoid loss of funds. Transactions cannot
-                      be cancelled after they are confirmed.
-                    </SemiboldBody>
+                    <div className="block">
+                      <SemiboldBody className="text-[#f2dc9f] font-medium">
+                        Ensure that the address is correct to avoid loss of funds. Transactions
+                        cannot be cancelled after they are confirmed.
+                      </SemiboldBody>
+                    </div>
+                  </div>
+
+                  <div className="mt-4 pt-4 w-full rounded-lg px-2 lg:px-0">
+                    <PrimaryButton
+                      className="w-full h-12"
+                      loading={formik.isSubmitting}
+                      type="submit"
+                      disabled={!formik.values.amount || !formik.values.recipient}>
+                      Generate Invoice
+                    </PrimaryButton>
                   </div>
                 </div>
-
-                <div className="mt-4 pt-4 w-full rounded-lg px-2 lg:px-0">
-                  <PrimaryButton
-                    className="w-full h-12"
-                    loading={formik.isSubmitting}
-                    type="submit"
-                    disabled={!formik.isValid || !formik.dirty}>
-                    Generate Invoice
-                  </PrimaryButton>
-                </div>
-              </div>
-            </form>
-          </div>
+              </form>
+            </div>
+          )}
         </div>
       </Drawer>
-    </div>
+    </>
   );
 };
 
@@ -626,3 +739,17 @@ const WithdrawalAmount = forwardRef<WithdrawalAmountHandle, WithdrawalAmountProp
 );
 
 WithdrawalAmount.displayName = 'WithdrawalAmount';
+
+export const WithdrawalDetailsItem = ({ label, value }: { label: string; value: string }) => {
+  return (
+    <div className="flex flex-col sm:flex-row justify-between gap-2 sm:gap-6 w-full">
+      <div className="w-full sm:max-w-1/3">
+        <MediumBody className="text-light-500">{label}</MediumBody>
+      </div>
+
+      <div className="w-full sm:max-w-2/3 text-start sm:text-end flex flex-wrap items-center gap-2 break-words overflow-visible md:justify-end">
+        <SemiboldBody className="break-words overflow-visible w-full">{value}</SemiboldBody>
+      </div>
+    </div>
+  );
+};
