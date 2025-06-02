@@ -41,3 +41,11 @@ export const WarningIcon = () => {
 export const ViewIcon = () => {
   return <Image src="/icons/view.svg" alt="view" width={22} height={22} />;
 };
+
+export const PasteIcon = ({ height = 22, width = 22 }: { width?: number; height?: number }) => {
+  return <Image src="/icons/paste.svg" alt="paste" width={width} height={height} />;
+};
+
+export const RefreshIcon = ({ height = 22, width = 22 }: { width?: number; height?: number }) => {
+  return <Image src="/icons/refresh.svg" alt="refresh" width={width} height={height} />;
+};

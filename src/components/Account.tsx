@@ -12,6 +12,7 @@ import { app_routes } from '@/lib/constants';
 import { Link } from '@/components/Links';
 import { Account } from '@/lib/types';
 import ImageComponent from '@/components/Image';
+import clsx from 'clsx';
 
 const AccountMenu = () => {
   const { currentAccount, accounts, updateCurrentAccount } = useAppContext();
@@ -61,7 +62,9 @@ const AccountMenu = () => {
                 <button
                   key={account.id}
                   onClick={() => switchAccounts(account)}
-                  className="flex items-center flex-1 min-w-0 gap-6 lg:gap-4 cursor-pointer text-light-900 hover:text-light-700">
+                  className={clsx(
+                    'flex items-center flex-1 min-w-0 gap-6 lg:gap-4 cursor-pointer'
+                  )}>
                   {account?.logo ? (
                     <ImageComponent
                       src={account?.logo}
@@ -78,7 +81,14 @@ const AccountMenu = () => {
                   )}
 
                   <div>
-                    <SemiboldSmallText className="text-inherit truncate overflow-hidden text-ellipsis whitespace-nowrap flex-1">
+                    <SemiboldSmallText
+                      className={clsx(
+                        'truncate overflow-hidden text-ellipsis whitespace-nowrap flex-1',
+                        {
+                          'text-secondary-700': currentAccount.id === account.id,
+                          'text-light-900 hover:text-light-700': currentAccount.id !== account.id
+                        }
+                      )}>
                       {account?.name}
                     </SemiboldSmallText>
                   </div>

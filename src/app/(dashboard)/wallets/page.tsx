@@ -9,7 +9,7 @@ import {
   SemiboldSmallerText,
   SemiboldSmallText
 } from '@/components/Text';
-import { ConnectWallet } from './components';
+import { ConnectWallet, WithdrawCrypto } from './components';
 import Table from '@/components/Table';
 import { ChangeEvent, useEffect, useMemo, useState } from 'react';
 import { DarkInput } from '@/components/Inputs';
@@ -205,16 +205,8 @@ export default function Page() {
 
         <div
           className={clsx(
-            'flex w-full items-center justify-between px-6 sm:px-8 py-6 gap-2 md:gap-8 rounded-lg h-[180px] sm:h-[200px] lg:h-[220px] xl:h-[200px]',
-            {
-              'cursor-pointer': is_wallet_connected
-            }
+            'flex w-full items-center justify-between px-6 sm:px-8 py-6 gap-2 md:gap-8 rounded-lg h-[180px] sm:h-[200px] lg:h-[220px] xl:h-[200px]'
           )}
-          onClick={() => {
-            if (is_wallet_connected) {
-              router.push(`${app_routes.wallet}/${connected_wallet?.id}`);
-            }
-          }}
           style={{
             background: `
       linear-gradient(
@@ -230,7 +222,7 @@ export default function Page() {
     `,
             backgroundBlendMode: 'normal'
           }}>
-          <div className="flex flex-col justify-between h-full">
+          <div className="flex flex-col justify-between h-full gap-2">
             <div
               className={clsx(
                 'flex text-center justify-center items-center px-4 py-0.5 rounded-2xl w-fit',
@@ -289,6 +281,8 @@ export default function Page() {
                 )}
               </div>
             </div>
+
+            <WithdrawCrypto />
           </div>
 
           <div className="max-w-1/3 md:min-w-1/3 flex justify-end float-right">
