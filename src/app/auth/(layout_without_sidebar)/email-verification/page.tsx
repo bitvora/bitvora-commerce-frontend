@@ -74,6 +74,7 @@ export default function Page() {
 
         secureLocalStorage.setItem('accounts', JSON.stringify(accounts));
         const currentAccount = accounts.find((acc) => acc.id === activeAccount);
+        
         if (currentAccount) {
           secureLocalStorage.setItem('currentAccount', JSON.stringify(currentAccount));
         }
