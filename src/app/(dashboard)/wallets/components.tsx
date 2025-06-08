@@ -343,9 +343,9 @@ export const WithdrawCrypto = () => {
   return (
     <>
       <PrimaryButton
-        className="h-10 md:h-14! lg:h-14! xl:h-14! 2xl:h-14! w-full min-w-[140px]"
+        className="h-10 md:h-12! lg:h-12! xl:h-12! 2xl:h-12! w-full min-w-[140px]"
         onClick={handleOpen}>
-        Withdraw Crypto
+        Withdraw Bitcoin
       </PrimaryButton>
 
       <Drawer

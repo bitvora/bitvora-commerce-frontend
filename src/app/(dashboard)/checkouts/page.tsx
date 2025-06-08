@@ -11,7 +11,7 @@ import {
 } from '@/components/Text';
 import { NewCheckout, CheckoutStatus } from './components';
 import { useCheckoutContext } from './context';
-import Table from '@/components/Table';
+import Table from '@/components/tables';
 import { ViewIcon } from '@/components/Icons';
 import { ChangeEvent, useEffect, useMemo, useState } from 'react';
 import { DarkInput } from '@/components/Inputs';

@@ -1,0 +1,460 @@
+[
+    {
+        "amount": 3000000,
+        "created_at": 1748866603,
+        "description": "",
+        "description_hash": "",
+        "expires_at": 0,
+        "fees_paid": 15000,
+        "invoice": "lntbs30u1p5rm9sspp5jj7dgnc3fc0zra98vyuql8ssl46p3q25p5uprpp4sz2x33r9lr7qdqqcqzzsxqrrsssp592xnhfcudprkn3dftmfeccs9cuxhxvsruxwpz8626al558d0fu6q9qxpqysgqu5u2u4qp3f6xcsmku7vl9cthyxt4tf0er9jtxf2watx7x0wvtth5e3ja5r9hg54qnehcnyf9e8n5anw9h4xdr8q88udrwhlequ9sjtgqsct34n",
+        "metadata": {
+            "creation_date": "1748866604",
+            "creation_time_ns": "1748866604607200119",
+            "failure_reason": "FAILURE_REASON_NONE",
+            "fee": "0",
+            "fee_msat": "0",
+            "fee_sat": "0",
+            "htlcs": [
+                {
+                    "attempt_id": "4107",
+                    "attempt_time_ns": "1748866604629967691",
+                    "failure": {
+                        "channel_update": {
+                            "base_fee": 0,
+                            "chain_hash": "",
+                            "chan_id": "",
+                            "channel_flags": 0,
+                            "extra_opaque_data": "",
+                            "fee_rate": 0,
+                            "htlc_maximum_msat": "",
+                            "htlc_minimum_msat": "",
+                            "message_flags": 0,
+                            "signature": "",
+                            "time_lock_delta": 0,
+                            "timestamp": 0
+                        },
+                        "cltv_expiry": 0,
+                        "code": "",
+                        "failure_source_index": 0,
+                        "flags": 0,
+                        "height": 0,
+                        "htlc_msat": "",
+                        "onion_sha_256": ""
+                    },
+                    "preimage": "v0zqvf0au3dK/vEzykRkiQSWOEU7c+bA3KG1UZ0Ow4Q=",
+                    "resolve_time_ns": "1748866604773242378",
+                    "route": {
+                        "hops": [
+                            {
+                                "amt_to": "",
+                                "amt_to_forward": "3000",
+                                "chan_capacity": "9000000",
+                                "chan_id": "227994731135959042",
+                                "expiry": 254645
+                            }
+                        ],
+                        "total_amt": "3000",
+                        "total_fees": "0",
+                        "total_fees_msat": "0",
+                        "total_time_lock": 254645
+                    },
+                    "status": "SUCCEEDED"
+                }
+            ],
+            "payment_hash": "94bcd44f114e1e21f4a761380f9e10fd741881540d38118435809468c465f8fc",
+            "payment_index": "4018",
+            "payment_preimage": "6dfe1c79a6dd7ddd5a6dbefbe1a7de7f5df771ae38eb8f3dd38f7adfce39ddbef77ba73475c6b56f9e75f5dd1e737f38",
+            "payment_request": "lntbs30u1p5rm9sspp5jj7dgnc3fc0zra98vyuql8ssl46p3q25p5uprpp4sz2x33r9lr7qdqqcqzzsxqrrsssp592xnhfcudprkn3dftmfeccs9cuxhxvsruxwpz8626al558d0fu6q9qxpqysgqu5u2u4qp3f6xcsmku7vl9cthyxt4tf0er9jtxf2watx7x0wvtth5e3ja5r9hg54qnehcnyf9e8n5anw9h4xdr8q88udrwhlequ9sjtgqsct34n",
+            "status": "SUCCEEDED",
+            "value": "3000",
+            "value_msat": "3000000",
+            "value_sat": "3000"
+        },
+        "payment_hash": "94bcd44f114e1e21f4a761380f9e10fd741881540d38118435809468c465f8fc",
+        "preimage": "",
+        "settled_at": 0,
+        "type": "outgoing"
+    },
+    {
+        "amount": 5000000,
+        "created_at": 1748866478,
+        "description": "",
+        "description_hash": "",
+        "expires_at": 0,
+        "fees_paid": 25000,
+        "invoice": "lntbs50u1p5rm9txpp5yznw8fpvu2fadfm6t6da94klpyrh7t7qhp4h7774hlpuw27e438qdqqcqzzsxqrrsssp5t9mldjzc6f5upj0tet7d6q4rejysw2yzqm0ehxu8ecmedyc4htkq9qxpqysgqsvpma0g5nnumedc2ln2mfux3hsg37v9uyp9uufecp3yxmxm2afx5n9cyvp66v8qam5t2xq7a9neqc7qhvdct56fj3n3lk4pdhl7hwgcq5qqhy6",
+        "metadata": {
+            "creation_date": "1748866479",
+            "creation_time_ns": "1748866479079710235",
+            "failure_reason": "FAILURE_REASON_NONE",
+            "fee": "0",
+            "fee_msat": "0",
+            "fee_sat": "0",
+            "htlcs": [
+                {
+                    "attempt_id": "7092",
+                    "attempt_time_ns": "1748866479096070972",
+                    "failure": {
+                        "channel_update": {
+                            "base_fee": 0,
+                            "chain_hash": "",
+                            "chan_id": "",
+                            "channel_flags": 0,
+                            "extra_opaque_data": "",
+                            "fee_rate": 0,
+                            "htlc_maximum_msat": "",
+                            "htlc_minimum_msat": "",
+                            "message_flags": 0,
+                            "signature": "",
+                            "time_lock_delta": 0,
+                            "timestamp": 0
+                        },
+                        "cltv_expiry": 0,
+                        "code": "",
+                        "failure_source_index": 0,
+                        "flags": 0,
+                        "height": 0,
+                        "htlc_msat": "",
+                        "onion_sha_256": ""
+                    },
+                    "preimage": "16tpstQWj5JYVXucnR5tHJJd3c/XSYjjdPHzjK/j69Y=",
+                    "resolve_time_ns": "1748866479245365997",
+                    "route": {
+                        "hops": [
+                            {
+                                "amt_to": "",
+                                "amt_to_forward": "5000",
+                                "chan_capacity": "9000000",
+                                "chan_id": "227994731135959041",
+                                "expiry": 254644
+                            }
+                        ],
+                        "total_amt": "5000",
+                        "total_fees": "0",
+                        "total_fees_msat": "0",
+                        "total_time_lock": 254644
+                    },
+                    "status": "SUCCEEDED"
+                }
+            ],
+            "payment_hash": "20a6e3a42ce293d6a77a5e9bd2d6df09077f2fc0b86b7f7bd5bfc3c72bd9ac4e",
+            "payment_index": "8021",
+            "payment_preimage": "77b69bebd6f6778d7af1ff76e7ce79edbf5cf5dd5ee9dd5cf76e5d75d71f77be3df3c7b7ef87f57f7f1c69f7b779b77a",
+            "payment_request": "lntbs50u1p5rm9txpp5yznw8fpvu2fadfm6t6da94klpyrh7t7qhp4h7774hlpuw27e438qdqqcqzzsxqrrsssp5t9mldjzc6f5upj0tet7d6q4rejysw2yzqm0ehxu8ecmedyc4htkq9qxpqysgqsvpma0g5nnumedc2ln2mfux3hsg37v9uyp9uufecp3yxmxm2afx5n9cyvp66v8qam5t2xq7a9neqc7qhvdct56fj3n3lk4pdhl7hwgcq5qqhy6",
+            "status": "SUCCEEDED",
+            "value": "5000",
+            "value_msat": "5000000",
+            "value_sat": "5000"
+        },
+        "payment_hash": "20a6e3a42ce293d6a77a5e9bd2d6df09077f2fc0b86b7f7bd5bfc3c72bd9ac4e",
+        "preimage": "",
+        "settled_at": 0,
+        "type": "outgoing"
+    },
+    {
+        "amount": 2500000,
+        "created_at": 1748864323,
+        "description": "",
+        "description_hash": "",
+        "expires_at": 0,
+        "fees_paid": 12500,
+        "invoice": "lntbs25u1p5rmrfrpp5qfww5q5w0nrlsqcuxkygcclxgtwntcvqmmwygcvhxhprg49c3susdqqcqzzsxqrrsssp5yhfp8vtlsk0s7hr53s2960hzwv6gz7z9rt44r9ta2ggl2hlr3hsq9qxpqysgq8aa2d3mkh8g8h3x7m7ss0c43hxfgnl45jn9kyjehznd82jd4gma3rneq2npyrpxvq8m0mkdhq0uyc97p2n7tl9ymru36nzh8nlnnx0qqy0d5yx",
+        "metadata": {
+            "creation_date": "1748864324",
+            "creation_time_ns": "1748864324276381422",
+            "failure_reason": "FAILURE_REASON_NONE",
+            "fee": "0",
+            "fee_msat": "0",
+            "fee_sat": "0",
+            "htlcs": [
+                {
+                    "attempt_id": "7091",
+                    "attempt_time_ns": "1748864324314890816",
+                    "failure": {
+                        "channel_update": {
+                            "base_fee": 0,
+                            "chain_hash": "",
+                            "chan_id": "",
+                            "channel_flags": 0,
+                            "extra_opaque_data": "",
+                            "fee_rate": 0,
+                            "htlc_maximum_msat": "",
+                            "htlc_minimum_msat": "",
+                            "message_flags": 0,
+                            "signature": "",
+                            "time_lock_delta": 0,
+                            "timestamp": 0
+                        },
+                        "cltv_expiry": 0,
+                        "code": "",
+                        "failure_source_index": 0,
+                        "flags": 0,
+                        "height": 0,
+                        "htlc_msat": "",
+                        "onion_sha_256": ""
+                    },
+                    "preimage": "ub5XhnZRmtt2fwG8uChUPS1b+JTcVe8ac9DaB1LkUOk=",
+                    "resolve_time_ns": "1748864324466404860",
+                    "route": {
+                        "hops": [
+                            {
+                                "amt_to": "",
+                                "amt_to_forward": "2500",
+                                "chan_capacity": "9000000",
+                                "chan_id": "227994731135959041",
+                                "expiry": 254640
+                            }
+                        ],
+                        "total_amt": "2500",
+                        "total_fees": "0",
+                        "total_fees_msat": "0",
+                        "total_time_lock": 254640
+                    },
+                    "status": "SUCCEEDED"
+                }
+            ],
+            "payment_hash": "025cea028e7cc7f8031c35888c63e642dd35e180dedc44619735c23454b88c39",
+            "payment_index": "8020",
+            "payment_preimage": "6fd6dee7bf3aefae75f5a75befaedfd356dc6fcdbce78dddd9de5b7fcf7875ce7979fd5aef777475ad3be767b8e747bd",
+            "payment_request": "lntbs25u1p5rmrfrpp5qfww5q5w0nrlsqcuxkygcclxgtwntcvqmmwygcvhxhprg49c3susdqqcqzzsxqrrsssp5yhfp8vtlsk0s7hr53s2960hzwv6gz7z9rt44r9ta2ggl2hlr3hsq9qxpqysgq8aa2d3mkh8g8h3x7m7ss0c43hxfgnl45jn9kyjehznd82jd4gma3rneq2npyrpxvq8m0mkdhq0uyc97p2n7tl9ymru36nzh8nlnnx0qqy0d5yx",
+            "status": "SUCCEEDED",
+            "value": "2500",
+            "value_msat": "2500000",
+            "value_sat": "2500"
+        },
+        "payment_hash": "025cea028e7cc7f8031c35888c63e642dd35e180dedc44619735c23454b88c39",
+        "preimage": "",
+        "settled_at": 0,
+        "type": "outgoing"
+    },
+    {
+        "amount": 2000000,
+        "created_at": 1748863885,
+        "description": "",
+        "description_hash": "",
+        "expires_at": 0,
+        "fees_paid": 10000,
+        "invoice": "lntbs20u1p5rmz8gpp5crk2p7d023qdxfuducy2kh6r5zp8g0jct8razgwan7hgwe6ayzcsdqqcqzzsxqrrsssp5d6nxflz3rsaf3x7y3fl8jdlxn3fdf4dsfwjj35jm9fjm2a7cvens9qxpqysgq8nnvv24gf2dc2c9ratzxw3ey8vhugz2xj3kyxes4qpwkm8fzpxuyecr89xnzwgr7g7x7nmwv2pmqwd4ulafj37mtz5jujykzvzpvtfqq2kzz4f",
+        "metadata": {
+            "creation_date": "1748863886",
+            "creation_time_ns": "1748863886850127600",
+            "failure_reason": "FAILURE_REASON_NONE",
+            "fee": "0",
+            "fee_msat": "0",
+            "fee_sat": "0",
+            "htlcs": [
+                {
+                    "attempt_id": "4106",
+                    "attempt_time_ns": "1748863886875967475",
+                    "failure": {
+                        "channel_update": {
+                            "base_fee": 0,
+                            "chain_hash": "",
+                            "chan_id": "",
+                            "channel_flags": 0,
+                            "extra_opaque_data": "",
+                            "fee_rate": 0,
+                            "htlc_maximum_msat": "",
+                            "htlc_minimum_msat": "",
+                            "message_flags": 0,
+                            "signature": "",
+                            "time_lock_delta": 0,
+                            "timestamp": 0
+                        },
+                        "cltv_expiry": 0,
+                        "code": "",
+                        "failure_source_index": 0,
+                        "flags": 0,
+                        "height": 0,
+                        "htlc_msat": "",
+                        "onion_sha_256": ""
+                    },
+                    "preimage": "KnI0NQW9A4RLfY4DPjVs8q8dgn8ALVUuHnGvybU2yJE=",
+                    "resolve_time_ns": "1748863887024971947",
+                    "route": {
+                        "hops": [
+                            {
+                                "amt_to": "",
+                                "amt_to_forward": "2000",
+                                "chan_capacity": "9000000",
+                                "chan_id": "227994731135959042",
+                                "expiry": 254640
+                            }
+                        ],
+                        "total_amt": "2000",
+                        "total_fees": "0",
+                        "total_fees_msat": "0",
+                        "total_time_lock": 254640
+                    },
+                    "status": "SUCCEEDED"
+                }
+            ],
+            "payment_hash": "c0eca0f9af5440d3278de608ab5f43a082743e5859c7d121dd9fae87675d20b1",
+            "payment_index": "4017",
+            "payment_preimage": "d9aef6df8df9d396ddd37f38e1beddf1ed37ddedf9e9c7f669fd5df36edfd34d9de79d9ed5eef569f73d6f9dfa73cf75",
+            "payment_request": "lntbs20u1p5rmz8gpp5crk2p7d023qdxfuducy2kh6r5zp8g0jct8razgwan7hgwe6ayzcsdqqcqzzsxqrrsssp5d6nxflz3rsaf3x7y3fl8jdlxn3fdf4dsfwjj35jm9fjm2a7cvens9qxpqysgq8nnvv24gf2dc2c9ratzxw3ey8vhugz2xj3kyxes4qpwkm8fzpxuyecr89xnzwgr7g7x7nmwv2pmqwd4ulafj37mtz5jujykzvzpvtfqq2kzz4f",
+            "status": "SUCCEEDED",
+            "value": "2000",
+            "value_msat": "2000000",
+            "value_sat": "2000"
+        },
+        "payment_hash": "c0eca0f9af5440d3278de608ab5f43a082743e5859c7d121dd9fae87675d20b1",
+        "preimage": "",
+        "settled_at": 0,
+        "type": "outgoing"
+    },
+    {
+        "amount": 20000000,
+        "created_at": 1748259473,
+        "description": "Checkout #cc8a6b3f-c5d8-4ce1-8288-9ae2e70fe5c4",
+        "description_hash": "Checkout #cc8a6b3f-c5d8-4ce1-8288-9ae2e70fe5c4",
+        "expires_at": 1800,
+        "fees_paid": 100000,
+        "invoice": "lntbs200u1p5rg55qpp5narqv6r2h4960f9cysksd78dnrdeqr3weag43hcal8s7yc5nw4pqdz2gd5x2cmtda6hggprvd3nscfkvgekvttrx4jrstf5vdjnztfcxgurstfev9jnyefhxpnx2dtrxscqzzsxqrpcgsp5h2sepapuwhfrs783qktzs78pr6zu972fsgypun6uwm084wzl3sps9qxpqysgq4qhzr869upq6scmhe5wtwpqn7tjymgjmulc2vkvga5v5w2mcspry757596xze4jguv88yxqpt387mset8qnf5ymfkgr73cmmmsh6stgpasgwks",
+        "metadata": null,
+        "payment_hash": "9f4606686abd4ba7a4b8242d06f8ed98db900e2ecf5158df1df9e1e262937542",
+        "preimage": "663184479f02d2a43615939eab63c060c716db40037aa7ed3c6ea581c69e282e",
+        "settled_at": 1748259473,
+        "type": "incoming"
+    },
+    {
+        "amount": 20000000,
+        "created_at": 1748259241,
+        "description": "Checkout #3487d57e-864d-4d16-930b-027b795c1166",
+        "description_hash": "Checkout #3487d57e-864d-4d16-930b-027b795c1166",
+        "expires_at": 1800,
+        "fees_paid": 100000,
+        "invoice": "lntbs200u1p5rg52tpp5gs4ds89v438xvcq82hngqhg6p8wysdwfp02xvc4qtehlvxgcfkhsdz2gd5x2cmtda6hggprxv6rsdmyx5mk2tfcxc6xgtf5vscnvtfexvcxytfsxgmkydeex43nzvfkxccqzzsxqrpcgsp5cfretgwpjq5vhpplcf046tkmnx0yauee8dmtumpxg66sc8d6gelq9qxpqysgqd9pjc06t6vrtrnywfdjy4zm4umxxphw272mgprxwzc6e0pncxwj3ew0d4w6m4y6cn4h7skqn26vd8p7w8defhe6alw0eylqdfmalnmqq6zfjkc",
+        "metadata": null,
+        "payment_hash": "442ad81cacac4e66600755e6805d1a09dc4835c90bd46662a05e6ff619184daf",
+        "preimage": "db44741d0513f820574c75ade68d34e982a9b7299636f1f5f429600a97b083b4",
+        "settled_at": 1748259241,
+        "type": "incoming"
+    },
+    {
+        "amount": 50000000,
+        "created_at": 1744917220,
+        "description": "Bitvora Invoice",
+        "description_hash": "Bitvora Invoice",
+        "expires_at": 3600,
+        "fees_paid": 250000,
+        "invoice": "lntbs500u1p5qz5khpp59y7c5gvxzjmazp0pa7w3kyjdcyv6qtcr9z60q76gaktr96xatzqsdqcgf5hgan0wfsjqjtwwehkjcm9cqzzsxqrrsssp5hy6ywux8c7luu0c4u9re7w5k3rlvdqsv20aa7xyvqfh5xu7xrlds9qxpqysgq5ep5xyf2xarjkc40n6tjj25rlalg3320gjm9slzwghe5ekvrrth8f9mq3zpl4l3p3hw09dljx6nh6tampfypf2s67tjc00p750ntdtcqf9j2k5",
+        "metadata": null,
+        "payment_hash": "293d8a218614b7d105e1ef9d1b124dc119a02f0328b4f07b48ed9632e8dd5881",
+        "preimage": "5d995f3ef64845c2f32204723f22d07c3fb3ef48569e369e8162de9f4d60f73e",
+        "settled_at": 1744917220,
+        "type": "incoming"
+    },
+    {
+        "amount": 50000000,
+        "created_at": 1744917193,
+        "description": "Bitvora Invoice",
+        "description_hash": "Bitvora Invoice",
+        "expires_at": 3600,
+        "fees_paid": 250000,
+        "invoice": "lntbs500u1p5qz54app5hkd7xncyyc8xpgj07sv8twpq08atek8ne4ydpal2m67wyqvs7mxsdqcgf5hgan0wfsjqjtwwehkjcm9cqzzsxqrrsssp5t5a2wfj7am5pvnuwwmsz0awz2y3tzmacvnrttdxqq07gcwejz03q9qxpqysgq3rtfk5l00nd6jpamrpje62n9euuwn4nz5ppyvwkcj43223nkyun845f72rzsg5jemzsj60cqwpnms2ehdryqewaht8yu5ue3xuc8svcqekl9gk",
+        "metadata": null,
+        "payment_hash": "bd9be34f04260e60a24ff41875b82079fabcd8f3cd48d0f7eadebce20190f6cd",
+        "preimage": "f54da287f6ff910571ce912fedd42c3f5d897f49986b94977d19dd53a7f71b40",
+        "settled_at": 1744917192,
+        "type": "incoming"
+    },
+    {
+        "amount": 100000,
+        "created_at": 1744913257,
+        "description": "Checkout #2f3f2959-44cd-4944-a075-340f726a9f2e",
+        "description_hash": "Checkout #2f3f2959-44cd-4944-a075-340f726a9f2e",
+        "expires_at": 1800,
+        "fees_paid": 500,
+        "invoice": "lntbs1u1p5qzskspp5pjgyluqklqkgupk3w4reezxaq5kc4zjak87equ58gk0dhqhrdymsdz2gd5x2cmtda6hggprxfnrxe3j8y6njtf5x33kgtf58y6rgttpxqmn2tfnxscxvdejxesnje3jv5cqzzsxqrpcgsp5umugvycwq2s6gtjhjp8ydpmwtcgzywze68q2j6vmryt2sdfej65s9qxpqysgqqnghgj43appc6jm58cpxc44c45ya0wrm0yuuja6qly23p00nlr79d8z72xsusv8km6regs4egypgkwcjwy9u3kewfjpaumz2lnpzkgqqsc9vvl",
+        "metadata": null,
+        "payment_hash": "0c904ff016f82c8e06d175479c88dd052d8a8a5db1fd907287459edb82e36937",
+        "preimage": "1754ea0a0e9b5cafe2a5ba3a74e0f127ce72bdf63045476938843dc30ac72e35",
+        "settled_at": 1744913256,
+        "type": "incoming"
+    },
+    {
+        "amount": 2000000,
+        "created_at": 1744907770,
+        "description": "Checkout #56d06427-e261-4415-9c07-5d2e475d42c2",
+        "description_hash": "Checkout #56d06427-e261-4415-9c07-5d2e475d42c2",
+        "expires_at": 1800,
+        "fees_paid": 10000,
+        "invoice": "lntbs20u1p5qz2tdpp5y8av9jwz0xe6fqhxvchpmnytfa0ctz6ah3dumla2v72p3td8666sdz2gd5x2cmtda6hggprx5mxgvpkxserwtt9xgmrztf5xscn2tfevvcrwtf4vsex2dphx4jrgvnrxgcqzzsxqrpcgsp5wehqjyq3mjnk7e7p0hgy78q4zyy7v2aq2qdtykwhgnzvre6wd3xs9qxpqysgqxpp8wmfvjn5s39gg78w2mt8vnrxpf8q7ct6fa5rfe4ejx3xcwtqql690hcllj4jrkvpxz6j3779kwker556y56c89uzjly8um80q43qp4djxvl",
+        "metadata": null,
+        "payment_hash": "21fac2c9c279b3a482e6662e1dcc8b4f5f858b5dbc5bcdffaa679418ada7d6b5",
+        "preimage": "e9b9a3e32a8396b209567c9f19239b8dfe6e763617c4a542a89aa418a88b2b66",
+        "settled_at": 1744907770,
+        "type": "incoming"
+    },
+    {
+        "amount": 100000,
+        "created_at": 1744814378,
+        "description": "Checkout #5d4f334f-3d20-4a0d-bf44-e4c311c1c91d",
+        "description_hash": "Checkout #5d4f334f-3d20-4a0d-bf44-e4c311c1c91d",
+        "expires_at": 1800,
+        "fees_paid": 500,
+        "invoice": "lntbs1u1pnlls86pp5t42u4c3l98afrapaj2d2fjp5la09tg0qphlmmpda8djmqa2j44jqdz2gd5x2cmtda6hggprx4jrge3nxv6xvtfnvserqtf5vycxgttzvc6rgtt9x33nxvf3vvckxwf3vscqzzsxqrpcgsp5k0dxprdum6sujjrah54dfgjugwxwgguw6syjcflk0uyhpppqd3ms9qxpqysgqvvr9lhggswah2673dhkwwtj334dgx060cl6wd98x7h2ccw7r4k2y4d48f8upplf7zmr62kh5vmnh6lmlw2eyclm3cgzasjwud3zzlrcppxddzn",
+        "metadata": null,
+        "payment_hash": "5d55cae23f29fa91f43d929aa4c834ff5e55a1e00dffbd85bd3b65b07552ad64",
+        "preimage": "c3c743c6f45ae54e1136c50574e1309055aaa0a659869302b7f1e4db93ff6f71",
+        "settled_at": 1744814378,
+        "type": "incoming"
+    },
+    {
+        "amount": 2000000,
+        "created_at": 1744654948,
+        "description": "Checkout #141aaf59-b17d-4819-a541-d06c85e76056",
+        "description_hash": "Checkout #141aaf59-b17d-4819-a541-d06c85e76056",
+        "expires_at": 1800,
+        "fees_paid": 10000,
+        "invoice": "lntbs20u1pnl65dxpp5lawwcljcn45c60qc9ckq77x5hh9q7295g6tuse0k59gl62ednqusdz2gd5x2cmtda6hggprxy6rzctpvc6njttzxymkgtf58qcnjttpx56rzttyxqmxxwp4v5mnvvp4xccqzzsxqrpcgsp5dhvrwlvxjx8tjhul5ujq9ms8trhwd07lztd3608mupsqgfdcj0as9qxpqysgqaqewl2rwz42m5gdd5927q6y4qdgarxnv2fkz6s9nc36dj0yguftqdrpph5x2kztgwyuh298fahcy0dp4vcducu5d4kzmy4wm2hnh8cgqpdkn4n",
+        "metadata": null,
+        "payment_hash": "ff5cec7e589d698d3c182e2c0f78d4bdca0f28b44697c865f6a151fd2b2d9839",
+        "preimage": "6ba962318afb6094055ddeebade40986e8e8701b9dbe947a8490d189d250e65a",
+        "settled_at": 1744654947,
+        "type": "incoming"
+    },
+    {
+        "amount": 0,
+        "created_at": 1744389500,
+        "description": "",
+        "description_hash": "",
+        "expires_at": 0,
+        "fees_paid": 0,
+        "invoice": "",
+        "metadata": null,
+        "payment_hash": "",
+        "preimage": "",
+        "settled_at": 0,
+        "type": "outgoing"
+    },
+    {
+        "amount": 250000000,
+        "created_at": 1744200096,
+        "description": "Bitvora Invoice",
+        "description_hash": "Bitvora Invoice",
+        "expires_at": 3600,
+        "fees_paid": 1250000,
+        "invoice": "lntbs2500u1pnlvctupp5kzystycjmraa2spz6zqyu4m3d6zzcf795dcyqmxacnsjk8854sgqdqcgf5hgan0wfsjqjtwwehkjcm9cqzzsxqrrsssp5qgd2qahha3ut8c4qmh5k9c6kk3u0q7uqncqdwr3dqwkrscp9fy8q9qxpqysgqla99nnu334m6mkt7rlczffvfmjcs2fy3sksm6ycytzl2najldh09k2tkk2s24ca8algeuz0g6vn4078rffk4a3czz0szkm5vxg9kejqqkedjr4",
+        "metadata": null,
+        "payment_hash": "b089059312d8fbd54022d0804e57716e842c27c5a370406cddc4e12b1cf4ac10",
+        "preimage": "05b46992104c8ad4c7859d178d8f57ec4b7b79651ce766fc1c3c478c34df5c35",
+        "settled_at": 1744200096,
+        "type": "incoming"
+    },
+    {
+        "amount": 100000,
+        "created_at": 1744199391,
+        "description": "Faucet",
+        "description_hash": "Faucet",
+        "expires_at": 86400,
+        "fees_paid": 500,
+        "invoice": "lntbs1u1pnlvhkupp5gjx2v2e0m8yx5qj6nkftclfx6zkv4mqslrv67unh0wa3fds7weaqdq2gesh2cm9wscqzzsxqyz5vqsp5mdr864nm05lu7564w2jkmf8du8mv4h6u8hjl8dp67vsju5kyl3ds9qxpqysgqdlvad2sfyayfurd03qy3up0w2uqumxu0760sn299nt96hwjh2kyn7jwdhwhxww2l634qgf0kzpasrkps9k037wl0ychnvgr6trp0r3cp2gf07a",
+        "metadata": null,
+        "payment_hash": "448ca62b2fd9c86a025a9d92bc7d26d0accaec10f8d9af72777bbb14b61e767a",
+        "preimage": "f506ae94bc62c914d2042150936e98375c598bbad669a64e099576e48ec5185d",
+        "settled_at": 1744199391,
+        "type": "incoming"
+    }
+]

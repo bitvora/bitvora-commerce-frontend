@@ -5,7 +5,7 @@ import { useParams } from 'next/navigation';
 import { getProductSubscription } from './actions';
 import { Subscription, SubscriptionStatus } from '@/types/subscriptions';
 import { useEffect, useState } from 'react';
-import Table from '@/components/Table';
+import Table from '@/components/tables';
 import { app_routes } from '@/lib/constants';
 import { Link } from '@/components/Links';
 import { MediumSmallerText, SemiboldSmallerText } from '@/components/Text';

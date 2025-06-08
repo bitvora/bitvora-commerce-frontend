@@ -13,7 +13,7 @@ import {
   // , EditSubscription
 } from './components';
 import { useSubscriptionContext } from './context';
-import Table from '@/components/Table';
+import Table from '@/components/tables';
 import {
   DeleteIcon
   // ,EditIcon

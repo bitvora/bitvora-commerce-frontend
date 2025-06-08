@@ -10,7 +10,7 @@ import {
   SemiboldSmallText
 } from '@/components/Text';
 import { ConnectWallet, WithdrawCrypto } from './components';
-import Table from '@/components/Table';
+import Table, { InfiniteTable } from '@/components/tables';
 import { ChangeEvent, useEffect, useMemo, useState } from 'react';
 import { DarkInput } from '@/components/Inputs';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -23,9 +23,12 @@ import { useAppContext } from '@/contexts';
 import clsx from 'clsx';
 import Image from 'next/image';
 import numeral from 'numeral';
+import { getWalletTransactions } from './actions';
+import { WalletTransaction } from '@/types/wallets';
+import { useQuery } from '@tanstack/react-query';
 
 export default function Page() {
-  const { wallets, isWalletLoading, balance } = useAppContext();
+  const { wallets, isWalletLoading, balance, currentAccount } = useAppContext();
 
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -157,9 +160,21 @@ export default function Page() {
     return wallets.length > 0 && wallets.some((wallet) => wallet.active);
   }, [wallets]);
 
-  // const connected_wallet = useMemo(() => {
-  //   return !isWalletLoading ? wallets.find((wallet) => wallet.active) : null;
-  // }, [wallets, isWalletLoading]);
+  const [offset, setOffset] = useState(0);
+  const [transactions, setTransactions] = useState<WalletTransaction[]>([]);
+  const limit = 15;
+
+  const { data, isLoading, isError, error, refetch, isFetching } = useQuery({
+    queryKey: ['transactions', currentAccount.id, offset],
+    queryFn: () => getWalletTransactions({ account_id: currentAccount.id, offset, limit }),
+    enabled: !!currentAccount?.id
+  });
+
+  useEffect(() => {
+    if (data && data?.success) {
+      setTransactions(data?.data?.result?.transactions);
+    }
+  }, [data]);
 
   return (
     <div className="flex flex-col gap-3 md:gap-8 bg-primary-50 md:bg-primary-150 px-0 sm:px-3 pt-6 lg:pt-0 pb-8 w-full">
@@ -288,7 +303,15 @@ export default function Page() {
       </div>
 
       <div className="w-full">
-        <Table
+        <InfiniteTable
+          columns={[{ header: 'Amount', accessor: 'amount' }]}
+          data={transactions}
+          offset={offset}
+          limit={limit}
+          onPrevious={() => setOffset((prev) => Math.max(prev - 1, 0))}
+          onNext={() => setOffset((prev) => prev + 1)}
+        />
+        {/* <Table
           tableContainerClassName="products-table"
           columns={columns}
           data={filteredWallets as unknown as Record<string, unknown>[]}
@@ -326,7 +349,7 @@ export default function Page() {
           }
           isLoading={isWalletLoading}
           emptyMessage={query ? 'No Wallets found' : 'No Wallets'}
-        />
+        /> */}
       </div>
     </div>
   );
