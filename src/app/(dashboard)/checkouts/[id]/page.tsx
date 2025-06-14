@@ -62,12 +62,12 @@ export default function Page(props: { params: Params }) {
   );
 
   const isExpired = useMemo(() => {
-    if (!checkout?.expires_at) return false;
+    if (!checkout?.expires_at) return true;
 
     const expiresAt = new Date(checkout.expires_at);
     const now = new Date();
 
-    return now > expiresAt && checkout.state === 'expired';
+    return checkout.state === 'expired' || now > expiresAt;
   }, [checkout.expires_at, checkout.state]);
 
   return (
