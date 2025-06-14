@@ -272,7 +272,7 @@ export default function Page() {
               </div>
             </div>
 
-            <WithdrawCrypto />
+            {is_wallet_connected && <WithdrawCrypto />}
           </div>
 
           <div className="max-w-1/3 md:min-w-1/3 justify-end float-right hidden sm:flex">
