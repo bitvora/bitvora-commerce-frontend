@@ -1,8 +1,10 @@
 'use client';
 
 import { SemiboldSmallerText, SemiboldSmallText } from '@/components/Text';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import clsx from 'clsx';
 import React, { ReactNode, useCallback } from 'react';
+import { faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons';
 
 type Column<T> = {
   header: string;
@@ -24,6 +26,7 @@ type InfiniteTableProps<T> = {
   emptyMessage?: string;
   rowOnClick?: (row: T) => void;
   tableContainerClassName?: string;
+  tableHeader?: ReactNode;
 };
 
 function InfiniteTable<T>({
@@ -37,7 +40,8 @@ function InfiniteTable<T>({
   actionColumn,
   emptyMessage = 'No data available',
   rowOnClick,
-  tableContainerClassName
+  tableContainerClassName,
+  tableHeader
 }: InfiniteTableProps<T>) {
   const handleRowClick = useCallback(
     (row: T) => {
@@ -56,12 +60,17 @@ function InfiniteTable<T>({
     );
   }, []);
 
+  const buttonClass =
+    'h-8 w-8 rounded-md flex justify-center items-center border-[0.5px] border-light-200';
+
   return (
     <div
       className={clsx(
         'overflow-x-auto w-full bg-primary-50 shadow-sm rounded-lg flex flex-col gap-8 h-full px-8 py-6',
         tableContainerClassName
       )}>
+      {tableHeader}
+
       <table className="w-full min-w-full border-separate border-spacing-y-2 rounded-lg">
         <thead className="h-12 bg-light-overlay-50">
           <tr>
@@ -147,24 +156,32 @@ function InfiniteTable<T>({
         </tbody>
       </table>
 
-      <div className="flex items-center justify-between px-2">
-        <button
-          onClick={onPrevious}
-          disabled={offset === 0}
-          className={`px-4 py-2 rounded bg-gray-200 ${
-            offset === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-300'
-          }`}>
-          Previous
-        </button>
+      <div className="flex justify-end items-center p-4 gap-8">
+        <div className="flex gap-2 items-center">
+          <button
+            onClick={onPrevious}
+            disabled={offset === 0}
+            className={clsx(buttonClass, 'text-light-500', {
+              'opacity-50 cursor-not-allowed': offset === 0,
+              'hover:text-light-700 hover:bg-light-overlay-100': offset > 0
+            })}>
+            <FontAwesomeIcon icon={faAngleLeft} />
+          </button>
 
-        <button
-          onClick={onNext}
-          disabled={data.length < limit}
-          className={`px-4 py-2 rounded bg-gray-200 ${
-            data.length < limit ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-300'
-          }`}>
-          Next
-        </button>
+          <button
+            onClick={onNext}
+            disabled={data.length < limit}
+            className={clsx(
+              buttonClass,
+              'text-light-500 hover:text-light-700 hover:bg-light-overlay-100',
+              {
+                'opacity-50 cursor-not-allowed': data.length < limit,
+                'hover:text-light-700 hover:bg-light-overlay-100': data.length > limit
+              }
+            )}>
+            <FontAwesomeIcon icon={faAngleRight} />
+          </button>
+        </div>
       </div>
     </div>
   );

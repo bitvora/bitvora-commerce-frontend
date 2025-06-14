@@ -199,7 +199,7 @@ export default function Table<T extends Record<string, unknown>>({
             <MediumSmallText className="text-light-700">{data.length}</MediumSmallText>
           </div>
 
-          <div className="flex gap-2">
+          <div className="flex gap-2 items-center">
             {currentPage > 1 && (
               <button
                 className={clsx(

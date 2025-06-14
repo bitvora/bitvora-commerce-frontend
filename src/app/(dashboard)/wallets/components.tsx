@@ -160,8 +160,8 @@ export const ConnectWallet = () => {
                     </div>
                   </div>
 
-                  <div className="flex flex-col gap-2 mt-6 fixed bottom-4 md:bottom-6 left-2 md:left-6 right-2 md:right-6">
-                    <div className="mt-4 pt-4 w-full rounded-lg px-2 lg:px-6">
+                  <div className="flex flex-col gap-2 mt-6 fixed bottom-4 md:bottom-10 left-4 md:left-10 right-4 md:right-10">
+                    <div className="mt-4 pt-4 w-full">
                       <PrimaryButton
                         className="w-full h-12"
                         loading={isSubmitting}

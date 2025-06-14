@@ -10,14 +10,14 @@ import {
   SemiboldSmallText
 } from '@/components/Text';
 import { ConnectWallet, WithdrawCrypto } from './components';
-import Table, { InfiniteTable } from '@/components/tables';
-import { ChangeEvent, useEffect, useMemo, useState } from 'react';
-import { DarkInput } from '@/components/Inputs';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMagnifyingGlass, faXmark } from '@fortawesome/free-solid-svg-icons';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { InfiniteTable } from '@/components/tables';
+import { useEffect, useMemo, useState } from 'react';
+// import { DarkInput } from '@/components/Inputs';
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// import { faMagnifyingGlass, faXmark } from '@fortawesome/free-solid-svg-icons';
+// import { useRouter, useSearchParams } from 'next/navigation';
 import { app_routes } from '@/lib/constants';
-import { formatDate, formatUUID } from '@/lib/helpers';
+import { formatDate } from '@/lib/helpers';
 import { Link } from '@/components/Links';
 import { useAppContext } from '@/contexts';
 import clsx from 'clsx';
@@ -30,127 +30,102 @@ import { useQuery } from '@tanstack/react-query';
 export default function Page() {
   const { wallets, isWalletLoading, balance, currentAccount } = useAppContext();
 
-  const router = useRouter();
-  const searchParams = useSearchParams();
+  // const router = useRouter();
+  // const searchParams = useSearchParams();
 
-  const initialQuery = searchParams.get('q') || '';
-  const initialPage = Number(searchParams.get('page')) || 1;
+  // const initialQuery = searchParams.get('q') || '';
+  // const initialPage = Number(searchParams.get('page')) || 1;
 
-  const [query, setQuery] = useState(initialQuery);
-  const [debouncedQuery, setDebouncedQuery] = useState(initialQuery);
-  const [currentPage, setCurrentPage] = useState(initialPage);
+  // const [query, setQuery] = useState(initialQuery);
+  // const [debouncedQuery, setDebouncedQuery] = useState(initialQuery);
+  // const [currentPage, setCurrentPage] = useState(initialPage);
 
-  useEffect(() => {
-    const params = new URLSearchParams();
-    if (debouncedQuery) params.set('q', debouncedQuery);
-    if (currentPage > 1) params.set('page', String(currentPage));
+  // useEffect(() => {
+  //   const params = new URLSearchParams();
+  //   if (debouncedQuery) params.set('q', debouncedQuery);
+  //   if (currentPage > 1) params.set('page', String(currentPage));
 
-    router.push(`${app_routes.wallet}?${params.toString()}`, { scroll: false });
-  }, [debouncedQuery, currentPage, router]);
+  //   router.push(`${app_routes.wallet}?${params.toString()}`, { scroll: false });
+  // }, [debouncedQuery, currentPage, router]);
 
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedQuery(query);
-    }, 500);
+  // useEffect(() => {
+  //   const handler = setTimeout(() => {
+  //     setDebouncedQuery(query);
+  //   }, 500);
 
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [query]);
+  //   return () => {
+  //     clearTimeout(handler);
+  //   };
+  // }, [query]);
 
-  const filteredWallets = useMemo(() => {
-    if (!debouncedQuery) return wallets;
+  // const filteredWallets = useMemo(() => {
+  //   if (!debouncedQuery) return wallets;
 
-    return wallets.filter((wallet) =>
-      Object.values(wallet).some((value) =>
-        String(value).toLowerCase().includes(debouncedQuery.toLowerCase())
-      )
-    );
-  }, [wallets, debouncedQuery]);
+  //   return wallets.filter((wallet) =>
+  //     Object.values(wallet).some((value) =>
+  //       String(value).toLowerCase().includes(debouncedQuery.toLowerCase())
+  //     )
+  //   );
+  // }, [wallets, debouncedQuery]);
 
-  const handleQueryChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setQuery(event.target.value);
-    setCurrentPage(1);
-  };
+  // const handleQueryChange = (event: ChangeEvent<HTMLInputElement>) => {
+  //   setQuery(event.target.value);
+  //   setCurrentPage(1);
+  // };
 
-  const clearQuery = () => {
-    setQuery('');
-    setCurrentPage(1);
-  };
+  // const clearQuery = () => {
+  //   setQuery('');
+  //   setCurrentPage(1);
+  // };
 
   const columns = [
     {
-      header: 'ID',
-      accessor: 'id',
+      header: 'Amount',
+      accessor: 'amount',
       render: (row) => (
-        <Link href={`${app_routes.wallet}/${row.id}`} className="text-inherit">
+        <Link href={`${app_routes.wallet}`}>
           <SemiboldSmallText className="truncate text-light-700 hover:text-light-900">
-            {formatUUID(row.id)}
+            {numeral(row.amount / 1000).format('0,0')} SATS
           </SemiboldSmallText>
         </Link>
       )
     },
     {
-      header: 'Permissions',
-      accessor: 'methods',
-      render: (row) => (
-        <Link href={`${app_routes.wallet}/${row.id}`}>
-          <SemiboldSmallText className="text-light-700 hover:text-light-900 hidden md:flex">
-            {row.methods?.length}
-          </SemiboldSmallText>
-          <SemiboldSmallerText className="truncate md:hidden text-light-700 hover:text-light-900">
-            {row.methods?.length}
-          </SemiboldSmallerText>
-        </Link>
-      )
-    },
-    {
-      header: 'Nostr Relay',
-      accessor: 'nostr_relay',
-      render: (row) => (
-        <Link href={`${app_routes.wallet}/${row.id}`}>
-          <SemiboldSmallText className="text-light-700 hover:text-light-900 hidden md:flex">
-            {row.nostr_relay}
-          </SemiboldSmallText>
-          <SemiboldSmallerText className="truncate md:hidden text-light-700 hover:text-light-900">
-            {row.nostr_relay}
-          </SemiboldSmallerText>
-        </Link>
-      )
-    },
-    {
-      header: 'Status',
-      accessor: 'active',
-      render: (row) => (
-        <Link href={`${app_routes.wallet}/${row.id}`}>
-          <SemiboldSmallText
-            className={clsx('hidden md:flex', {
-              'text-light-700 hover:text-light-900': !row.active,
-              'text-green-500 hover:text-green-700': row.active
-            })}>
-            {row.active ? 'Active' : 'Inactive'}
-          </SemiboldSmallText>
-          <SemiboldSmallerText
-            className={clsx('md:hidden', {
-              'text-light-700 hover:text-light-900': !row.active,
-              'text-green-500 hover:text-green-700': row.active
-            })}>
-            {row.active ? 'Active' : 'Inactive'}
-          </SemiboldSmallerText>
-        </Link>
-      )
-    },
-    {
-      header: 'Linked At',
+      header: 'Time',
       accessor: 'created_at',
       render: (row) => (
-        <Link href={`${app_routes.wallet}/${row.id}`}>
+        <Link href={`${app_routes.wallet}`}>
           <SemiboldSmallText className="text-light-700 hover:text-light-900 hidden md:flex">
-            {formatDate(row.created_at)}
+            {formatDate(new Date(row.created_at * 1000).toISOString())}
           </SemiboldSmallText>
           <SemiboldSmallerText className="truncate md:hidden text-light-700 hover:text-light-900">
-            {formatDate(row.created_at)}
+            {formatDate(new Date(row.created_at * 1000).toISOString())}
           </SemiboldSmallerText>
+        </Link>
+      )
+    },
+    {
+      header: 'Network',
+      accessor: 'invoice',
+      render: (row) => (
+        <Link href={`${app_routes.wallet}`}>
+          <Image
+            width={25}
+            height={25}
+            src={row.invoice ? '/currencies/sats.svg' : '/currencies/btc.svg'}
+            alt="network"
+          />
+        </Link>
+      )
+    },
+    {
+      header: 'Type',
+      accessor: 'type',
+      render: (row) => (
+        <Link href={`${app_routes.wallet}`}>
+          <SemiboldSmallText className="truncate text-light-700 hover:text-light-900">
+            {row.type === 'incoming' ? 'Deposit' : 'Withdrawal'}
+          </SemiboldSmallText>
         </Link>
       )
     }
@@ -164,14 +139,14 @@ export default function Page() {
   const [transactions, setTransactions] = useState<WalletTransaction[]>([]);
   const limit = 15;
 
-  const { data, isLoading, isError, error, refetch, isFetching } = useQuery({
+  const { data, isLoading, isFetching } = useQuery({
     queryKey: ['transactions', currentAccount.id, offset],
     queryFn: () => getWalletTransactions({ account_id: currentAccount.id, offset, limit }),
     enabled: !!currentAccount?.id
   });
 
   useEffect(() => {
-    if (data && data?.success) {
+    if (data && data?.success && data?.data?.result?.transactions) {
       setTransactions(data?.data?.result?.transactions);
     }
   }, [data]);
@@ -181,7 +156,7 @@ export default function Page() {
       <div className="flex flex-col-reverse md:flex-col gap-6 md:gap-8 w-full">
         <div className="bg-transparent xl:bg-primary-50 rounded-lg px-4 sm:px-8 py-2 lg:h-[80px] w-full flex items-center justify-between">
           <div className="sm:gap-4 md:gap-10 items-center hidden sm:flex">
-            <MediumHeader5>Wallets</MediumHeader5>
+            <MediumHeader5>Wallet Transactions</MediumHeader5>
 
             <div className="hidden md:flex">
               <Currency />
@@ -189,7 +164,7 @@ export default function Page() {
           </div>
 
           <div className="flex gap-2 sm:gap-4 items-center w-full sm:w-[auto] justify-between">
-            <div className="sm:hidden">
+            {/* <div className="sm:hidden">
               <DarkInput
                 value={query}
                 handleChange={handleQueryChange}
@@ -211,7 +186,7 @@ export default function Page() {
                 }
                 className="h-10"
               />
-            </div>
+            </div> */}
 
             <div>
               <ConnectWallet />
@@ -287,7 +262,7 @@ export default function Page() {
               </div>
             </div>
 
-            <WithdrawCrypto />
+            {is_wallet_connected && <WithdrawCrypto />}
           </div>
 
           <div className="max-w-1/3 md:min-w-1/3 justify-end float-right hidden sm:flex">
@@ -304,27 +279,18 @@ export default function Page() {
 
       <div className="w-full">
         <InfiniteTable
-          columns={[{ header: 'Amount', accessor: 'amount' }]}
+          columns={columns}
           data={transactions}
           offset={offset}
           limit={limit}
+          isLoading={isLoading || isWalletLoading || isFetching}
           onPrevious={() => setOffset((prev) => Math.max(prev - 1, 0))}
           onNext={() => setOffset((prev) => prev + 1)}
-        />
-        {/* <Table
-          tableContainerClassName="products-table"
-          columns={columns}
-          data={filteredWallets as unknown as Record<string, unknown>[]}
-          rowsPerPage={10}
-          currentPage={currentPage}
-          onPageChange={setCurrentPage}
           tableHeader={
             <div className="w-full hidden md:flex items-center justify-between">
-              <SemiboldBody className="text-light-900">
-                Wallets <span className="text-light-700">({filteredWallets.length})</span>
-              </SemiboldBody>
+              <SemiboldBody className="text-light-900">Wallet Transactions</SemiboldBody>
 
-              <DarkInput
+              {/* <DarkInput
                 value={query}
                 handleChange={handleQueryChange}
                 name="query"
@@ -344,12 +310,10 @@ export default function Page() {
                   )
                 }
                 className="h-10"
-              />
+              /> */}
             </div>
           }
-          isLoading={isWalletLoading}
-          emptyMessage={query ? 'No Wallets found' : 'No Wallets'}
-        /> */}
+        />
       </div>
     </div>
   );
