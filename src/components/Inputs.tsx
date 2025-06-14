@@ -38,6 +38,7 @@ interface InputProps extends HTMLAttributes<HTMLInputElement> {
   value: string;
   showLabel?: boolean;
   disabled?: boolean;
+  required?: boolean
 }
 
 export const Input = ({
@@ -51,7 +52,8 @@ export const Input = ({
   endIcon,
   value,
   showLabel = false,
-  disabled
+  disabled,
+  required
 }: InputProps) => {
   const [inputType, setInputType] = useState(type);
   const showError =
@@ -80,6 +82,7 @@ export const Input = ({
           placeholder={placeholder}
           type={inputType}
           disabled={disabled}
+          required={required}
           className={clsx(
             'border-[1px] rounded-md py-3.5 px-4 font-bold text-sm xl:text-base w-full',
             'placeholder:text-light-500 text-light-900 disabled:text-light-500 focus:outline-none bg-transparent',

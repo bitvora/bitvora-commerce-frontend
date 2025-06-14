@@ -36,7 +36,7 @@ export async function connectWallet(payload: { account_id: string; wallet_connec
   }
 }
 
-export async function withdrawCrypto(payload: {
+export async function withdrawBitcoin(payload: {
   account_id: string;
   recipient: string;
   amount: number;

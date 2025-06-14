@@ -31,7 +31,7 @@ import toast from 'react-hot-toast';
 import Drawer from 'react-modern-drawer';
 import { CloseIcon, PasteIcon, RefreshIcon } from '@/components/Icons';
 import { DarkInput } from '@/components/Inputs';
-import { connectWallet, withdrawCrypto } from './actions';
+import { connectWallet, withdrawBitcoin } from './actions';
 import {
   btcToSats,
   convertSatsToFiat,
@@ -197,7 +197,7 @@ interface IWithdrawal {
   amount: number;
 }
 
-export const WithdrawCrypto = () => {
+export const WithdrawBitcoin = () => {
   const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -213,7 +213,7 @@ export const WithdrawCrypto = () => {
   const [fiatAmount, setFiatAmount] = useState(0);
 
   useEffect(() => {
-    if (pathname === app_routes.wallet && searchParams.get('action') === 'withdraw-crypto') {
+    if (pathname === app_routes.wallet && searchParams.get('action') === 'withdraw-bitcoin') {
       setOpen(true);
     }
   }, [pathname, searchParams]);
@@ -226,7 +226,7 @@ export const WithdrawCrypto = () => {
 
   const handleOpen = () => {
     setOpen(true);
-    router.replace(`${app_routes.wallet}?action=withdraw-crypto`);
+    router.replace(`${app_routes.wallet}?action=withdraw-bitcoin`);
   };
 
   const formik = useFormik({
@@ -244,7 +244,7 @@ export const WithdrawCrypto = () => {
       }
 
       try {
-        const result = await withdrawCrypto(payload);
+        const result = await withdrawBitcoin(payload);
         if (!result.success) {
           toast.error(result.error || 'Error making withdrawal');
           return;
@@ -345,7 +345,7 @@ export const WithdrawCrypto = () => {
       <PrimaryButton
         className="h-10 md:h-14! lg:h-14! xl:h-14! 2xl:h-14! w-full min-w-[140px]"
         onClick={handleOpen}>
-        Withdraw Crypto
+        Withdraw Bitcoin
       </PrimaryButton>
 
       <Drawer

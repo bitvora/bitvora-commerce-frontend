@@ -9,7 +9,7 @@ import {
   SemiboldSmallerText,
   SemiboldSmallText
 } from '@/components/Text';
-import { ConnectWallet, WithdrawCrypto } from './components';
+import { ConnectWallet, WithdrawBitcoin } from './components';
 import Table from '@/components/Table';
 import { ChangeEvent, useEffect, useMemo, useState } from 'react';
 import { DarkInput } from '@/components/Inputs';
@@ -272,7 +272,7 @@ export default function Page() {
               </div>
             </div>
 
-            {is_wallet_connected && <WithdrawCrypto />}
+            <WithdrawBitcoin />
           </div>
 
           <div className="max-w-1/3 md:min-w-1/3 justify-end float-right hidden sm:flex">
