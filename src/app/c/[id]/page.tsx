@@ -51,6 +51,13 @@ export default function Page(props: { params: Params }) {
 
   const countdown = useCountdown(checkout.expires_at);
 
+  useEffect(() => {
+    if (countdown === 'Expired') {
+      toast.error('Checkout link expired');
+      router.push(app_routes.checkouts);
+    }
+  }, [countdown, router]);
+
   const { data: checkoutPollingData } = useQuery({
     queryKey: ['poll-checkout', id],
     queryFn: () => pollCheckout(id),

@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 
 export function useCountdown(expiresAt?: string) {
-  const [countdownText, setCountdownText] = useState<string>('Expired');
+  const [countdownText, setCountdownText] = useState<string>('');
 
   useEffect(() => {
     if (!expiresAt) return;
