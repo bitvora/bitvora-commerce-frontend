@@ -31,7 +31,7 @@ import toast from 'react-hot-toast';
 import Drawer from 'react-modern-drawer';
 import { CloseIcon, PasteIcon, RefreshIcon } from '@/components/Icons';
 import { DarkInput } from '@/components/Inputs';
-import { connectWallet, withdrawCrypto } from './actions';
+import { connectWallet, withdrawBitcoin } from './actions';
 import {
   btcToSats,
   convertSatsToFiat,
@@ -197,7 +197,7 @@ interface IWithdrawal {
   amount: number;
 }
 
-export const WithdrawCrypto = () => {
+export const WithdrawBitcoin = () => {
   const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -213,7 +213,7 @@ export const WithdrawCrypto = () => {
   const [fiatAmount, setFiatAmount] = useState(0);
 
   useEffect(() => {
-    if (pathname === app_routes.wallet && searchParams.get('action') === 'withdraw-crypto') {
+    if (pathname === app_routes.wallet && searchParams.get('action') === 'withdraw-bitcoin') {
       setOpen(true);
     }
   }, [pathname, searchParams]);
@@ -226,7 +226,7 @@ export const WithdrawCrypto = () => {
 
   const handleOpen = () => {
     setOpen(true);
-    router.replace(`${app_routes.wallet}?action=withdraw-crypto`);
+    router.replace(`${app_routes.wallet}?action=withdraw-bitcoin`);
   };
 
   const formik = useFormik({
@@ -244,7 +244,7 @@ export const WithdrawCrypto = () => {
       }
 
       try {
-        const result = await withdrawCrypto(payload);
+        const result = await withdrawBitcoin(payload);
         if (!result.success) {
           toast.error(result.error || 'Error making withdrawal');
           return;
@@ -331,14 +331,14 @@ export const WithdrawCrypto = () => {
 
       const response = await convertSatsToFiat({
         sats: withdrawalDetails.amount,
-        fiat: userCurrency.value === 'sats' ? 'usd' : userCurrency.value
+        fiat: userCurrency?.value === 'sats' ? 'usd' : userCurrency?.value
       });
 
       setFiatAmount(response?.fiat_amount || 0);
     };
 
     fetchFiatAmount();
-  }, [userCurrency.value, withdrawalDetails.amount]);
+  }, [userCurrency?.value, withdrawalDetails.amount]);
 
   return (
     <>
@@ -380,7 +380,7 @@ export const WithdrawCrypto = () => {
                   <SemiboldBody className="text-secondary-700 mt-2 uppercase">
                     {renderPrice({
                       amount: fiatAmount,
-                      currency: userCurrency.value === 'sats' ? 'usd' : userCurrency.value
+                      currency: userCurrency?.value === 'sats' ? 'usd' : userCurrency?.value
                     })}
                   </SemiboldBody>
                 </div>

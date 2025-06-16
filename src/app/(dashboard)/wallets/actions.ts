@@ -27,6 +27,7 @@ export async function connectWallet(payload: { account_id: string; wallet_connec
     }
 
     const data = await response.json();
+
     return { success: true, data };
   } catch (error) {
     return {
@@ -36,7 +37,7 @@ export async function connectWallet(payload: { account_id: string; wallet_connec
   }
 }
 
-export async function withdrawCrypto(payload: {
+export async function withdrawBitcoin(payload: {
   account_id: string;
   recipient: string;
   amount: number;
@@ -108,6 +109,7 @@ export async function getWalletTransactions({
     }
 
     const data = await response.json();
+
     return { success: true, data: data?.data };
   } catch (error) {
     return {

@@ -9,13 +9,13 @@ import {
   SemiboldSmallerText,
   SemiboldSmallText
 } from '@/components/Text';
-import { ConnectWallet, WithdrawCrypto } from './components';
-import { InfiniteTable } from '@/components/tables';
+import { ConnectWallet, WithdrawBitcoin } from './components';
+import Table from '@/components/tables';
 import { useEffect, useMemo, useState } from 'react';
 // import { DarkInput } from '@/components/Inputs';
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // import { faMagnifyingGlass, faXmark } from '@fortawesome/free-solid-svg-icons';
-// import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { app_routes } from '@/lib/constants';
 import { formatDate } from '@/lib/helpers';
 import { Link } from '@/components/Links';
@@ -26,9 +26,19 @@ import numeral from 'numeral';
 import { getWalletTransactions } from './actions';
 import { WalletTransaction } from '@/types/wallets';
 import { useQuery } from '@tanstack/react-query';
+import { useAllWalletTransactions } from '@/app/(dashboard)/wallets/hooks';
 
 export default function Page() {
   const { wallets, isWalletLoading, balance, currentAccount } = useAppContext();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const initialQuery = searchParams.get('q') || '';
+  const initialPage = Number(searchParams.get('page')) || 1;
+
+  const [query, setQuery] = useState(initialQuery);
+  const [debouncedQuery, setDebouncedQuery] = useState(initialQuery);
+  const [currentPage, setCurrentPage] = useState(initialPage);
 
   // const router = useRouter();
   // const searchParams = useSearchParams();
@@ -136,7 +146,7 @@ export default function Page() {
   }, [wallets]);
 
   const [offset, setOffset] = useState(0);
-  const [transactions, setTransactions] = useState<WalletTransaction[]>([]);
+  // const [transactions, setTransactions] = useState<WalletTransaction[]>([]);
   const limit = 15;
 
   const { data, isLoading, isFetching } = useQuery({
@@ -145,11 +155,13 @@ export default function Page() {
     enabled: !!currentAccount?.id
   });
 
-  useEffect(() => {
-    if (data && data?.success && data?.data?.result?.transactions) {
-      setTransactions(data?.data?.result?.transactions);
-    }
-  }, [data]);
+  // useEffect(() => {
+  //   if (data && data?.success && data?.data?.result?.transactions) {
+  //     setTransactions(data?.data?.result?.transactions);
+  //   }
+  // }, [data]);
+
+  const { transactions, loading, error } = useAllWalletTransactions(currentAccount?.id);
 
   return (
     <div className="flex flex-col gap-3 md:gap-8 bg-primary-50 md:bg-primary-150 px-0 sm:px-3 pt-6 lg:pt-0 pb-8 w-full">
@@ -262,7 +274,7 @@ export default function Page() {
               </div>
             </div>
 
-            {is_wallet_connected && <WithdrawCrypto />}
+            <WithdrawBitcoin />
           </div>
 
           <div className="max-w-1/3 md:min-w-1/3 justify-end float-right hidden sm:flex">
@@ -278,41 +290,20 @@ export default function Page() {
       </div>
 
       <div className="w-full">
-        <InfiniteTable
+        <Table
+          tableContainerClassName="products-table"
           columns={columns}
           data={transactions}
-          offset={offset}
-          limit={limit}
-          isLoading={isLoading || isWalletLoading || isFetching}
-          onPrevious={() => setOffset((prev) => Math.max(prev - 1, 0))}
-          onNext={() => setOffset((prev) => prev + 1)}
+          rowsPerPage={10}
+          currentPage={currentPage}
+          onPageChange={setCurrentPage}
           tableHeader={
             <div className="w-full hidden md:flex items-center justify-between">
               <SemiboldBody className="text-light-900">Wallet Transactions</SemiboldBody>
-
-              {/* <DarkInput
-                value={query}
-                handleChange={handleQueryChange}
-                name="query"
-                placeholder="Search Wallets"
-                startIcon={
-                  <div className="text-light-500">
-                    <FontAwesomeIcon icon={faMagnifyingGlass} />
-                  </div>
-                }
-                endIcon={
-                  query && (
-                    <button
-                      className="cursor-pointer z-10 text-light-700 hover:text-light-900 outline-none border-none"
-                      onClick={clearQuery}>
-                      <FontAwesomeIcon icon={faXmark} className="h-3 w-3" />
-                    </button>
-                  )
-                }
-                className="h-10"
-              /> */}
             </div>
           }
+          isLoading={loading}
+          emptyMessage={query ? 'No Wallets found' : 'No Wallets'}
         />
       </div>
     </div>
