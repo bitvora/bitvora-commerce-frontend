@@ -1,7 +1,7 @@
 'use client';
 
 import { useAppContext } from '@/contexts';
-import { PrimaryButton } from '@/components/Buttons';
+import { PrimaryButton, SecondaryButton } from '@/components/Buttons';
 import {
   MediumBody,
   MediumHeader5,
@@ -48,7 +48,7 @@ import Image from 'next/image';
 import lightBolt11Decoder from 'light-bolt11-decoder';
 import Tabs from '@/components/Tab';
 
-export const ConnectWallet = () => {
+export const SwitchWallet = () => {
   const { currentAccount, refetchWallet } = useAppContext();
 
   const pathname = usePathname();
@@ -75,11 +75,11 @@ export const ConnectWallet = () => {
 
   return (
     <>
-      <PrimaryButton
-        className="h-10 md:h-12 w-[140px] min-w-[140px] lg:w-[auto]"
+      <SecondaryButton
+        className="h-10 md:h-11 w-[140px] min-w-[140px] lg:w-[auto]"
         onClick={handleOpen}>
-        <SemiboldSmallText>Connect Wallet</SemiboldSmallText>
-      </PrimaryButton>
+        <SemiboldSmallText>Switch Wallet</SemiboldSmallText>
+      </SecondaryButton>
 
       <Drawer
         open={open}

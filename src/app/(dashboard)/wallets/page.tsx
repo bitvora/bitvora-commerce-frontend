@@ -9,7 +9,7 @@ import {
   SemiboldSmallerText,
   SemiboldSmallText
 } from '@/components/Text';
-import { ConnectWallet, WithdrawBitcoin } from './components';
+import { SwitchWallet, WithdrawBitcoin } from './components';
 import Table from '@/components/Table';
 import { ChangeEvent, useEffect, useMemo, useState } from 'react';
 import { DarkInput } from '@/components/Inputs';
@@ -198,8 +198,8 @@ export default function Page() {
               />
             </div>
 
-            <div>
-              <ConnectWallet />
+            <div className="flex items-center gap-2">
+              <SwitchWallet />
             </div>
           </div>
         </div>
