@@ -9,7 +9,7 @@ import {
 } from '@/components/Text';
 import { AddCustomer, DeleteCustomerModal, EditCustomer } from './components';
 import { useCustomerContext } from './context';
-import Table from '@/components/Table';
+import Table from '@/components/tables';
 import { DeleteIcon, EditIcon } from '@/components/Icons';
 import { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import { DarkInput } from '@/components/Inputs';

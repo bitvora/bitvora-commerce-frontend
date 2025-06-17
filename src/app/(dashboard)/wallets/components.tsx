@@ -331,19 +331,19 @@ export const WithdrawBitcoin = () => {
 
       const response = await convertSatsToFiat({
         sats: withdrawalDetails.amount,
-        fiat: userCurrency.value === 'sats' ? 'usd' : userCurrency.value
+        fiat: userCurrency?.value === 'sats' ? 'usd' : userCurrency?.value
       });
 
       setFiatAmount(response?.fiat_amount || 0);
     };
 
     fetchFiatAmount();
-  }, [userCurrency.value, withdrawalDetails.amount]);
+  }, [userCurrency?.value, withdrawalDetails.amount]);
 
   return (
     <>
       <PrimaryButton
-        className="h-10 md:h-14! lg:h-14! xl:h-14! 2xl:h-14! w-full min-w-[140px]"
+        className="h-10 md:h-12! lg:h-12! xl:h-12! 2xl:h-12! w-full min-w-[140px]"
         onClick={handleOpen}>
         Withdraw Bitcoin
       </PrimaryButton>
@@ -380,7 +380,7 @@ export const WithdrawBitcoin = () => {
                   <SemiboldBody className="text-secondary-700 mt-2 uppercase">
                     {renderPrice({
                       amount: fiatAmount,
-                      currency: userCurrency.value === 'sats' ? 'usd' : userCurrency.value
+                      currency: userCurrency?.value === 'sats' ? 'usd' : userCurrency?.value
                     })}
                   </SemiboldBody>
                 </div>

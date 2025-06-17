@@ -9,24 +9,36 @@ import {
   SemiboldSmallerText,
   SemiboldSmallText
 } from '@/components/Text';
+<<<<<<< HEAD
 import { SwitchWallet, WithdrawBitcoin } from './components';
 import Table from '@/components/Table';
 import { ChangeEvent, useEffect, useMemo, useState } from 'react';
 import { DarkInput } from '@/components/Inputs';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass, faXmark } from '@fortawesome/free-solid-svg-icons';
+=======
+import { ConnectWallet, WithdrawBitcoin } from './components';
+import Table from '@/components/tables';
+import { useEffect, useMemo, useState } from 'react';
+// import { DarkInput } from '@/components/Inputs';
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// import { faMagnifyingGlass, faXmark } from '@fortawesome/free-solid-svg-icons';
+>>>>>>> BE-624-FE-Wallet-Transactions-Table-and-Filter
 import { useRouter, useSearchParams } from 'next/navigation';
 import { app_routes } from '@/lib/constants';
-import { formatDate, formatUUID } from '@/lib/helpers';
+import { formatDate } from '@/lib/helpers';
 import { Link } from '@/components/Links';
 import { useAppContext } from '@/contexts';
 import clsx from 'clsx';
 import Image from 'next/image';
 import numeral from 'numeral';
+import { getWalletTransactions } from './actions';
+import { WalletTransaction } from '@/types/wallets';
+import { useQuery } from '@tanstack/react-query';
+import { useAllWalletTransactions } from '@/app/(dashboard)/wallets/hooks';
 
 export default function Page() {
-  const { wallets, isWalletLoading, balance } = useAppContext();
-
+  const { wallets, isWalletLoading, balance, currentAccount } = useAppContext();
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -37,117 +49,102 @@ export default function Page() {
   const [debouncedQuery, setDebouncedQuery] = useState(initialQuery);
   const [currentPage, setCurrentPage] = useState(initialPage);
 
-  useEffect(() => {
-    const params = new URLSearchParams();
-    if (debouncedQuery) params.set('q', debouncedQuery);
-    if (currentPage > 1) params.set('page', String(currentPage));
+  // const router = useRouter();
+  // const searchParams = useSearchParams();
 
-    router.push(`${app_routes.wallet}?${params.toString()}`, { scroll: false });
-  }, [debouncedQuery, currentPage, router]);
+  // const initialQuery = searchParams.get('q') || '';
+  // const initialPage = Number(searchParams.get('page')) || 1;
 
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedQuery(query);
-    }, 500);
+  // const [query, setQuery] = useState(initialQuery);
+  // const [debouncedQuery, setDebouncedQuery] = useState(initialQuery);
+  // const [currentPage, setCurrentPage] = useState(initialPage);
 
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [query]);
+  // useEffect(() => {
+  //   const params = new URLSearchParams();
+  //   if (debouncedQuery) params.set('q', debouncedQuery);
+  //   if (currentPage > 1) params.set('page', String(currentPage));
 
-  const filteredWallets = useMemo(() => {
-    if (!debouncedQuery) return wallets;
+  //   router.push(`${app_routes.wallet}?${params.toString()}`, { scroll: false });
+  // }, [debouncedQuery, currentPage, router]);
 
-    return wallets.filter((wallet) =>
-      Object.values(wallet).some((value) =>
-        String(value).toLowerCase().includes(debouncedQuery.toLowerCase())
-      )
-    );
-  }, [wallets, debouncedQuery]);
+  // useEffect(() => {
+  //   const handler = setTimeout(() => {
+  //     setDebouncedQuery(query);
+  //   }, 500);
 
-  const handleQueryChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setQuery(event.target.value);
-    setCurrentPage(1);
-  };
+  //   return () => {
+  //     clearTimeout(handler);
+  //   };
+  // }, [query]);
 
-  const clearQuery = () => {
-    setQuery('');
-    setCurrentPage(1);
-  };
+  // const filteredWallets = useMemo(() => {
+  //   if (!debouncedQuery) return wallets;
+
+  //   return wallets.filter((wallet) =>
+  //     Object.values(wallet).some((value) =>
+  //       String(value).toLowerCase().includes(debouncedQuery.toLowerCase())
+  //     )
+  //   );
+  // }, [wallets, debouncedQuery]);
+
+  // const handleQueryChange = (event: ChangeEvent<HTMLInputElement>) => {
+  //   setQuery(event.target.value);
+  //   setCurrentPage(1);
+  // };
+
+  // const clearQuery = () => {
+  //   setQuery('');
+  //   setCurrentPage(1);
+  // };
 
   const columns = [
     {
-      header: 'ID',
-      accessor: 'id',
+      header: 'Amount',
+      accessor: 'amount',
       render: (row) => (
-        <Link href={`${app_routes.wallet}/${row.id}`} className="text-inherit">
+        <Link href={`${app_routes.wallet}`}>
           <SemiboldSmallText className="truncate text-light-700 hover:text-light-900">
-            {formatUUID(row.id)}
+            {numeral(row.amount / 1000).format('0,0')} SATS
           </SemiboldSmallText>
         </Link>
       )
     },
     {
-      header: 'Permissions',
-      accessor: 'methods',
-      render: (row) => (
-        <Link href={`${app_routes.wallet}/${row.id}`}>
-          <SemiboldSmallText className="text-light-700 hover:text-light-900 hidden md:flex">
-            {row.methods?.length}
-          </SemiboldSmallText>
-          <SemiboldSmallerText className="truncate md:hidden text-light-700 hover:text-light-900">
-            {row.methods?.length}
-          </SemiboldSmallerText>
-        </Link>
-      )
-    },
-    {
-      header: 'Nostr Relay',
-      accessor: 'nostr_relay',
-      render: (row) => (
-        <Link href={`${app_routes.wallet}/${row.id}`}>
-          <SemiboldSmallText className="text-light-700 hover:text-light-900 hidden md:flex">
-            {row.nostr_relay}
-          </SemiboldSmallText>
-          <SemiboldSmallerText className="truncate md:hidden text-light-700 hover:text-light-900">
-            {row.nostr_relay}
-          </SemiboldSmallerText>
-        </Link>
-      )
-    },
-    {
-      header: 'Status',
-      accessor: 'active',
-      render: (row) => (
-        <Link href={`${app_routes.wallet}/${row.id}`}>
-          <SemiboldSmallText
-            className={clsx('hidden md:flex', {
-              'text-light-700 hover:text-light-900': !row.active,
-              'text-green-500 hover:text-green-700': row.active
-            })}>
-            {row.active ? 'Active' : 'Inactive'}
-          </SemiboldSmallText>
-          <SemiboldSmallerText
-            className={clsx('md:hidden', {
-              'text-light-700 hover:text-light-900': !row.active,
-              'text-green-500 hover:text-green-700': row.active
-            })}>
-            {row.active ? 'Active' : 'Inactive'}
-          </SemiboldSmallerText>
-        </Link>
-      )
-    },
-    {
-      header: 'Linked At',
+      header: 'Time',
       accessor: 'created_at',
       render: (row) => (
-        <Link href={`${app_routes.wallet}/${row.id}`}>
+        <Link href={`${app_routes.wallet}`}>
           <SemiboldSmallText className="text-light-700 hover:text-light-900 hidden md:flex">
-            {formatDate(row.created_at)}
+            {formatDate(new Date(row.created_at * 1000).toISOString())}
           </SemiboldSmallText>
           <SemiboldSmallerText className="truncate md:hidden text-light-700 hover:text-light-900">
-            {formatDate(row.created_at)}
+            {formatDate(new Date(row.created_at * 1000).toISOString())}
           </SemiboldSmallerText>
+        </Link>
+      )
+    },
+    {
+      header: 'Network',
+      accessor: 'invoice',
+      render: (row) => (
+        <Link href={`${app_routes.wallet}`}>
+          <Image
+            width={25}
+            height={25}
+            src={row.invoice ? '/currencies/sats.svg' : '/currencies/btc.svg'}
+            alt="network"
+          />
+        </Link>
+      )
+    },
+    {
+      header: 'Type',
+      accessor: 'type',
+      render: (row) => (
+        <Link href={`${app_routes.wallet}`}>
+          <SemiboldSmallText className="truncate text-light-700 hover:text-light-900">
+            {row.type === 'incoming' ? 'Deposit' : 'Withdrawal'}
+          </SemiboldSmallText>
         </Link>
       )
     }
@@ -157,16 +154,30 @@ export default function Page() {
     return wallets.length > 0 && wallets.some((wallet) => wallet.active);
   }, [wallets]);
 
-  // const connected_wallet = useMemo(() => {
-  //   return !isWalletLoading ? wallets.find((wallet) => wallet.active) : null;
-  // }, [wallets, isWalletLoading]);
+  const [offset, setOffset] = useState(0);
+  // const [transactions, setTransactions] = useState<WalletTransaction[]>([]);
+  const limit = 15;
+
+  const { data, isLoading, isFetching } = useQuery({
+    queryKey: ['transactions', currentAccount.id, offset],
+    queryFn: () => getWalletTransactions({ account_id: currentAccount.id, offset, limit }),
+    enabled: !!currentAccount?.id
+  });
+
+  // useEffect(() => {
+  //   if (data && data?.success && data?.data?.result?.transactions) {
+  //     setTransactions(data?.data?.result?.transactions);
+  //   }
+  // }, [data]);
+
+  const { transactions, loading, error } = useAllWalletTransactions(currentAccount?.id);
 
   return (
     <div className="flex flex-col gap-3 md:gap-8 bg-primary-50 md:bg-primary-150 px-0 sm:px-3 pt-6 lg:pt-0 pb-8 w-full">
       <div className="flex flex-col-reverse md:flex-col gap-6 md:gap-8 w-full">
         <div className="bg-transparent xl:bg-primary-50 rounded-lg px-4 sm:px-8 py-2 lg:h-[80px] w-full flex items-center justify-between">
           <div className="sm:gap-4 md:gap-10 items-center hidden sm:flex">
-            <MediumHeader5>Wallets</MediumHeader5>
+            <MediumHeader5>Wallet Transactions</MediumHeader5>
 
             <div className="hidden md:flex">
               <Currency />
@@ -174,7 +185,7 @@ export default function Page() {
           </div>
 
           <div className="flex gap-2 sm:gap-4 items-center w-full sm:w-[auto] justify-between">
-            <div className="sm:hidden">
+            {/* <div className="sm:hidden">
               <DarkInput
                 value={query}
                 handleChange={handleQueryChange}
@@ -196,7 +207,7 @@ export default function Page() {
                 }
                 className="h-10"
               />
-            </div>
+            </div> */}
 
             <div className="flex items-center gap-2">
               <SwitchWallet />
@@ -291,40 +302,16 @@ export default function Page() {
         <Table
           tableContainerClassName="products-table"
           columns={columns}
-          data={filteredWallets as unknown as Record<string, unknown>[]}
+          data={transactions}
           rowsPerPage={10}
           currentPage={currentPage}
           onPageChange={setCurrentPage}
           tableHeader={
             <div className="w-full hidden md:flex items-center justify-between">
-              <SemiboldBody className="text-light-900">
-                Wallets <span className="text-light-700">({filteredWallets.length})</span>
-              </SemiboldBody>
-
-              <DarkInput
-                value={query}
-                handleChange={handleQueryChange}
-                name="query"
-                placeholder="Search Wallets"
-                startIcon={
-                  <div className="text-light-500">
-                    <FontAwesomeIcon icon={faMagnifyingGlass} />
-                  </div>
-                }
-                endIcon={
-                  query && (
-                    <button
-                      className="cursor-pointer z-10 text-light-700 hover:text-light-900 outline-none border-none"
-                      onClick={clearQuery}>
-                      <FontAwesomeIcon icon={faXmark} className="h-3 w-3" />
-                    </button>
-                  )
-                }
-                className="h-10"
-              />
+              <SemiboldBody className="text-light-900">Wallet Transactions</SemiboldBody>
             </div>
           }
-          isLoading={isWalletLoading}
+          isLoading={loading}
           emptyMessage={query ? 'No Wallets found' : 'No Wallets'}
         />
       </div>
