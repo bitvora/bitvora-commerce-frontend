@@ -210,3 +210,53 @@ export const getAmountFromString = (str: string): number => {
 
   return Number(splitString[1]);
 };
+
+interface DateRangeProps {
+  start: Date;
+  end: Date;
+}
+
+export const getToday = (): DateRangeProps => {
+  const now = new Date();
+
+  const start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const end = now;
+
+  return { start, end };
+};
+
+export const getYesterday = (): DateRangeProps => {
+  const now = new Date();
+
+  const start = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
+  const end = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, -1);
+
+  return { start, end };
+};
+
+export const getThisMonth = (): DateRangeProps => {
+  const now = new Date();
+
+  const start = new Date(now.getFullYear(), now.getMonth(), 1);
+  const end = now;
+
+  return { start, end };
+};
+
+export const getThisYear = (): DateRangeProps => {
+  const now = new Date();
+
+  const start = new Date(now.getFullYear(), 0, 1);
+  const end = now;
+
+  return { start, end };
+};
+
+export const getAllTime = (): DateRangeProps => {
+  const now = new Date();
+
+  const start = new Date('2024-01-01');
+  const end = now;
+
+  return { start, end };
+};

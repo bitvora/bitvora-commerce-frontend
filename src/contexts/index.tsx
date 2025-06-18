@@ -84,7 +84,7 @@ export default function ContextProvider({ children }: { children: React.ReactNod
   } = useQuery({
     queryKey: ['balance', currentAccount?.id],
     queryFn: () => getBalance(currentAccount?.id),
-    refetchOnWindowFocus: true,
+    refetchOnWindowFocus: 'always',
     enabled: !!currentAccount?.id
   });
 

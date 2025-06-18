@@ -49,3 +49,11 @@ export const PasteIcon = ({ height = 22, width = 22 }: { width?: number; height?
 export const RefreshIcon = ({ height = 22, width = 22 }: { width?: number; height?: number }) => {
   return <Image src="/icons/refresh.svg" alt="refresh" width={width} height={height} />;
 };
+
+export const GoldFilterIcon = () => {
+  return <Image src="/icons/filter-gold.svg" alt="filter" width={20} height={20} />;
+};
+
+export const FilterIcon = () => {
+  return <Image src="/icons/filter.svg" alt="filter" width={20} height={20} />;
+};

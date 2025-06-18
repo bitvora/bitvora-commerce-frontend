@@ -9,7 +9,7 @@ import {
 } from '@/components/Text';
 import { AddPaymentLink, DeletePaymentLink, EditPaymentLink } from './components';
 import { usePaymentLinkContext } from './context';
-import Table from '@/components/Table';
+import Table from '@/components/tables';
 import { DeleteIcon, EditIcon } from '@/components/Icons';
 import { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import { DarkInput } from '@/components/Inputs';

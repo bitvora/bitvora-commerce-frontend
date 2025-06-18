@@ -1,6 +1,6 @@
 'use client';
 
-import Table from '@/components/Table';
+import Table from '@/components/tables';
 import { SemiboldSmallerText } from '@/components/Text';
 import { formatDate, formatUUID, formatWebhookEvent } from '@/lib/helpers';
 import { useQuery } from '@tanstack/react-query';

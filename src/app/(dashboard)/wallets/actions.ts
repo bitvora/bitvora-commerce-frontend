@@ -27,6 +27,7 @@ export async function connectWallet(payload: { account_id: string; wallet_connec
     }
 
     const data = await response.json();
+
     return { success: true, data };
   } catch (error) {
     return {
@@ -67,6 +68,49 @@ export async function withdrawBitcoin(payload: {
 
     const data = await response.json();
     return { success: true, data };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Something went wrong'
+    };
+  }
+}
+
+export async function getWalletTransactions({
+  account_id,
+  limit,
+  offset
+}: {
+  account_id: string;
+  limit: number;
+  offset: number;
+}) {
+  try {
+    const session = await getSessionFromServer();
+
+    const response = await api.fetch(
+      `/wallet/transactions?account_id=${account_id}&limit=${limit}&offset=${offset}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      },
+      session
+    );
+
+    if (!response) {
+      return { success: false, error: 'Session expired or unauthorized' };
+    }
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      return { success: false, error: errorData.message || 'Failed to get wallet transactions' };
+    }
+
+    const data = await response.json();
+
+    return { success: true, data: data?.data };
   } catch (error) {
     return {
       success: false,

@@ -10,3 +10,14 @@ export interface Wallet {
   updated_at: string;
   methods: string[];
 }
+
+export interface WalletTransaction {
+  amount: number;
+  created_at: number;
+  description: string;
+  fees_paid: number;
+  invoice: string;
+  payment_hash: string;
+  settled_at: number;
+  type: string;
+}

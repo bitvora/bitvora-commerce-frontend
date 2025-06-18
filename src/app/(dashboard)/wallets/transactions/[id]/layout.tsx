@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import { Suspense } from 'react';
 
 export const metadata: Metadata = {
-  title: 'Wallets'
+  title: 'Wallet Transactions'
 };
 
 export default async function Layout({ children }: { children: React.ReactNode }) {
