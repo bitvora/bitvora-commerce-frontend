@@ -9,22 +9,9 @@ import {
   SemiboldSmallerText,
   SemiboldSmallText
 } from '@/components/Text';
-<<<<<<< HEAD
-import { SwitchWallet, WithdrawBitcoin } from './components';
-import Table from '@/components/Table';
-import { ChangeEvent, useEffect, useMemo, useState } from 'react';
-import { DarkInput } from '@/components/Inputs';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMagnifyingGlass, faXmark } from '@fortawesome/free-solid-svg-icons';
-=======
-import { ConnectWallet, WithdrawBitcoin } from './components';
+import { SwitchWallet, WithdrawBitcoin, WalletTransactionsFilter } from './components';
 import Table from '@/components/tables';
-import { useEffect, useMemo, useState } from 'react';
-// import { DarkInput } from '@/components/Inputs';
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-// import { faMagnifyingGlass, faXmark } from '@fortawesome/free-solid-svg-icons';
->>>>>>> BE-624-FE-Wallet-Transactions-Table-and-Filter
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useMemo, useState } from 'react';
 import { app_routes } from '@/lib/constants';
 import { formatDate } from '@/lib/helpers';
 import { Link } from '@/components/Links';
@@ -32,77 +19,20 @@ import { useAppContext } from '@/contexts';
 import clsx from 'clsx';
 import Image from 'next/image';
 import numeral from 'numeral';
-import { getWalletTransactions } from './actions';
-import { WalletTransaction } from '@/types/wallets';
-import { useQuery } from '@tanstack/react-query';
-import { useAllWalletTransactions } from '@/app/(dashboard)/wallets/hooks';
+import { useWalletTransactions } from '@/contexts/wallet';
 
 export default function Page() {
-  const { wallets, isWalletLoading, balance, currentAccount } = useAppContext();
-  const router = useRouter();
-  const searchParams = useSearchParams();
+  const { wallets, balance } = useAppContext();
 
-  const initialQuery = searchParams.get('q') || '';
-  const initialPage = Number(searchParams.get('page')) || 1;
-
-  const [query, setQuery] = useState(initialQuery);
-  const [debouncedQuery, setDebouncedQuery] = useState(initialQuery);
-  const [currentPage, setCurrentPage] = useState(initialPage);
-
-  // const router = useRouter();
-  // const searchParams = useSearchParams();
-
-  // const initialQuery = searchParams.get('q') || '';
-  // const initialPage = Number(searchParams.get('page')) || 1;
-
-  // const [query, setQuery] = useState(initialQuery);
-  // const [debouncedQuery, setDebouncedQuery] = useState(initialQuery);
-  // const [currentPage, setCurrentPage] = useState(initialPage);
-
-  // useEffect(() => {
-  //   const params = new URLSearchParams();
-  //   if (debouncedQuery) params.set('q', debouncedQuery);
-  //   if (currentPage > 1) params.set('page', String(currentPage));
-
-  //   router.push(`${app_routes.wallet}?${params.toString()}`, { scroll: false });
-  // }, [debouncedQuery, currentPage, router]);
-
-  // useEffect(() => {
-  //   const handler = setTimeout(() => {
-  //     setDebouncedQuery(query);
-  //   }, 500);
-
-  //   return () => {
-  //     clearTimeout(handler);
-  //   };
-  // }, [query]);
-
-  // const filteredWallets = useMemo(() => {
-  //   if (!debouncedQuery) return wallets;
-
-  //   return wallets.filter((wallet) =>
-  //     Object.values(wallet).some((value) =>
-  //       String(value).toLowerCase().includes(debouncedQuery.toLowerCase())
-  //     )
-  //   );
-  // }, [wallets, debouncedQuery]);
-
-  // const handleQueryChange = (event: ChangeEvent<HTMLInputElement>) => {
-  //   setQuery(event.target.value);
-  //   setCurrentPage(1);
-  // };
-
-  // const clearQuery = () => {
-  //   setQuery('');
-  //   setCurrentPage(1);
-  // };
+  const [currentPage, setCurrentPage] = useState(1);
+  const { loading, transactions } = useWalletTransactions();
 
   const columns = [
     {
       header: 'Amount',
       accessor: 'amount',
       render: (row) => (
-        <Link href={`${app_routes.wallet}`}>
+        <Link href={`${app_routes.wallet}/transactions/${row.payment_hash}`}>
           <SemiboldSmallText className="truncate text-light-700 hover:text-light-900">
             {numeral(row.amount / 1000).format('0,0')} SATS
           </SemiboldSmallText>
@@ -113,7 +43,7 @@ export default function Page() {
       header: 'Time',
       accessor: 'created_at',
       render: (row) => (
-        <Link href={`${app_routes.wallet}`}>
+        <Link href={`${app_routes.wallet}/transactions/${row.payment_hash}`}>
           <SemiboldSmallText className="text-light-700 hover:text-light-900 hidden md:flex">
             {formatDate(new Date(row.created_at * 1000).toISOString())}
           </SemiboldSmallText>
@@ -127,7 +57,7 @@ export default function Page() {
       header: 'Network',
       accessor: 'invoice',
       render: (row) => (
-        <Link href={`${app_routes.wallet}`}>
+        <Link href={`${app_routes.wallet}/transactions/${row.payment_hash}`}>
           <Image
             width={25}
             height={25}
@@ -141,7 +71,7 @@ export default function Page() {
       header: 'Type',
       accessor: 'type',
       render: (row) => (
-        <Link href={`${app_routes.wallet}`}>
+        <Link href={`${app_routes.wallet}/transactions/${row.payment_hash}`}>
           <SemiboldSmallText className="truncate text-light-700 hover:text-light-900">
             {row.type === 'incoming' ? 'Deposit' : 'Withdrawal'}
           </SemiboldSmallText>
@@ -153,24 +83,6 @@ export default function Page() {
   const is_wallet_connected = useMemo(() => {
     return wallets.length > 0 && wallets.some((wallet) => wallet.active);
   }, [wallets]);
-
-  const [offset, setOffset] = useState(0);
-  // const [transactions, setTransactions] = useState<WalletTransaction[]>([]);
-  const limit = 15;
-
-  const { data, isLoading, isFetching } = useQuery({
-    queryKey: ['transactions', currentAccount.id, offset],
-    queryFn: () => getWalletTransactions({ account_id: currentAccount.id, offset, limit }),
-    enabled: !!currentAccount?.id
-  });
-
-  // useEffect(() => {
-  //   if (data && data?.success && data?.data?.result?.transactions) {
-  //     setTransactions(data?.data?.result?.transactions);
-  //   }
-  // }, [data]);
-
-  const { transactions, loading, error } = useAllWalletTransactions(currentAccount?.id);
 
   return (
     <div className="flex flex-col gap-3 md:gap-8 bg-primary-50 md:bg-primary-150 px-0 sm:px-3 pt-6 lg:pt-0 pb-8 w-full">
@@ -185,30 +97,6 @@ export default function Page() {
           </div>
 
           <div className="flex gap-2 sm:gap-4 items-center w-full sm:w-[auto] justify-between">
-            {/* <div className="sm:hidden">
-              <DarkInput
-                value={query}
-                handleChange={handleQueryChange}
-                name="query"
-                placeholder="Search Wallets"
-                startIcon={
-                  <div className="text-light-500">
-                    <FontAwesomeIcon icon={faMagnifyingGlass} />
-                  </div>
-                }
-                endIcon={
-                  query && (
-                    <button
-                      className="cursor-pointer z-10 text-light-700 hover:text-light-900 outline-none border-none"
-                      onClick={clearQuery}>
-                      <FontAwesomeIcon icon={faXmark} className="h-3 w-3" />
-                    </button>
-                  )
-                }
-                className="h-10"
-              />
-            </div> */}
-
             <div className="flex items-center gap-2">
               <SwitchWallet />
             </div>
@@ -309,10 +197,12 @@ export default function Page() {
           tableHeader={
             <div className="w-full hidden md:flex items-center justify-between">
               <SemiboldBody className="text-light-900">Wallet Transactions</SemiboldBody>
+
+              <WalletTransactionsFilter />
             </div>
           }
           isLoading={loading}
-          emptyMessage={query ? 'No Wallets found' : 'No Wallets'}
+          emptyMessage="No Transactions"
         />
       </div>
     </div>

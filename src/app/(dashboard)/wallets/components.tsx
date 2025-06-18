@@ -5,6 +5,7 @@ import { PrimaryButton, SecondaryButton } from '@/components/Buttons';
 import {
   MediumBody,
   MediumHeader5,
+  MediumSmallText,
   RegularSmallerText,
   SemiboldBody,
   SemiboldHeader3,
@@ -29,14 +30,19 @@ import { Formik, Form, FormikTouched, FormikErrors, useFormik } from 'formik';
 import * as Yup from 'yup';
 import toast from 'react-hot-toast';
 import Drawer from 'react-modern-drawer';
-import { CloseIcon, PasteIcon, RefreshIcon } from '@/components/Icons';
+import { CloseIcon, FilterIcon, PasteIcon, RefreshIcon } from '@/components/Icons';
 import { DarkInput } from '@/components/Inputs';
 import { connectWallet, withdrawBitcoin } from './actions';
 import {
   btcToSats,
   convertSatsToFiat,
   formatDate,
+  getAllTime,
   getAmountFromString,
+  getThisMonth,
+  getThisYear,
+  getToday,
+  getYesterday,
   isLightningInvoice,
   pasteToClipboard,
   renderPrice,
@@ -749,6 +755,84 @@ export const WithdrawalDetailsItem = ({ label, value }: { label: string; value: 
 
       <div className="w-full sm:max-w-2/3 text-start sm:text-end flex flex-wrap items-center gap-2 break-words overflow-visible md:justify-end">
         <SemiboldBody className="break-words overflow-visible w-full">{value}</SemiboldBody>
+      </div>
+    </div>
+  );
+};
+
+const TODAY = 'Today';
+const YESTERDAY = 'Yesterday';
+const THIS_MONTH = 'This Month';
+const THIS_YEAR = 'This Year';
+const ALL_TIME = 'All Time';
+const CUSTOM = 'Custom';
+
+const options = [
+  {
+    label: TODAY,
+    func: getToday
+  },
+  {
+    label: YESTERDAY,
+    func: getYesterday
+  },
+  {
+    label: THIS_MONTH,
+    func: getThisMonth
+  },
+  {
+    label: THIS_YEAR,
+    func: getThisYear
+  },
+  {
+    label: ALL_TIME,
+    func: getAllTime
+  },
+  {
+    label: CUSTOM
+  }
+];
+
+export const WalletTransactionsFilter = () => {
+  const [open, setOpen] = useState(false);
+  const [type, setType] = useState('');
+  const [startDate, setStartDate] = useState(new Date('2024-07-01'));
+  const [endDate, setEndDate] = useState(new Date());
+  const [filterCount, setFilterCount] = useState(0);
+  const [dates, setDates] = useState({
+    start: new Date(),
+    end: new Date()
+  });
+
+  const handleDate = (key: 'start' | 'end', value: Date): void => {
+    setDates({
+      ...dates,
+      [key]: value
+    });
+  };
+
+  return (
+    <div className="flex items-center">
+      <div>
+        <div className="flex items-center gap-2 bg-outlined border-outlined px-4 py-3 rounded-lg cursor-pointer text-light-700 hover:text-light-900 bg-light-overlay-50">
+          <FilterIcon />
+
+          {type === CUSTOM ? (
+            <div className="flex items-center gap-2">
+              <MediumSmallText className="text-inherit font-medium">
+                {formatDate(startDate?.toString(), 'MMM DD, YYYY')}
+              </MediumSmallText>
+              <MediumSmallText className="text-inherit text-base">-</MediumSmallText>
+              <MediumSmallText className="text-inherit font-medium">
+                {formatDate(endDate?.toString(), 'MMM DD, YYYY')}
+              </MediumSmallText>
+            </div>
+          ) : (
+            <MediumSmallText className="text-inherit font-medium capitalize">
+              {type !== '' ? type : 'Select Date'}
+            </MediumSmallText>
+          )}
+        </div>
       </div>
     </div>
   );
