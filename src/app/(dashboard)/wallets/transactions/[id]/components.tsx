@@ -24,7 +24,7 @@ export const TransactionDetails = ({
 
       {id ? (
         <div className="w-full sm:max-w-2/3 text-start sm:text-end justify-start sm:justify-end flex flex-wrap items-center break-words overflow-visible gap-2">
-          <SemiboldBody>{formattedValue}</SemiboldBody>
+          <SemiboldBody className="text-light-900">{formattedValue}</SemiboldBody>
 
           {id && (
             <button
@@ -36,7 +36,9 @@ export const TransactionDetails = ({
         </div>
       ) : (
         <div className="w-full sm:max-w-2/3 text-start sm:text-end flex flex-wrap items-center gap-2 break-words overflow-visible">
-          <SemiboldBody className="break-words overflow-visible w-full">{value}</SemiboldBody>
+          <SemiboldBody className="break-words overflow-visible w-full text-light-900">
+            {value}
+          </SemiboldBody>
         </div>
       )}
     </div>

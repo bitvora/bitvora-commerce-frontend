@@ -2,6 +2,7 @@
 
 import { isServer, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import ScrollTop from '@/components/ScrollTop';
 
 function makeQueryClient() {
   return new QueryClient({
@@ -31,7 +32,8 @@ export default function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {children}
+      <ScrollTop>{children}</ScrollTop>
+
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );

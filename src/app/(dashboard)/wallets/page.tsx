@@ -9,7 +9,7 @@ import {
   SemiboldSmallerText,
   SemiboldSmallText
 } from '@/components/Text';
-import { SwitchWallet, WithdrawBitcoin, WalletTransactionsFilter } from './components';
+import { SwitchWallet, WithdrawBitcoin, WalletTransactionsFilter, WalletHeaderSkeleton } from './components';
 import Table from '@/components/tables';
 import { useMemo, useState } from 'react';
 import { app_routes } from '@/lib/constants';
@@ -22,7 +22,7 @@ import numeral from 'numeral';
 import { useWalletTransactions } from '@/contexts/wallet';
 
 export default function Page() {
-  const { wallets, balance } = useAppContext();
+  const { wallets, balance, isWalletLoading } = useAppContext();
 
   const [currentPage, setCurrentPage] = useState(1);
   const { loading, transactions } = useWalletTransactions();
@@ -89,7 +89,7 @@ export default function Page() {
       <div className="flex flex-col-reverse md:flex-col gap-6 md:gap-8 w-full">
         <div className="bg-transparent xl:bg-primary-50 rounded-lg px-4 sm:px-8 py-2 lg:h-[80px] w-full flex items-center justify-between">
           <div className="sm:gap-4 md:gap-10 items-center hidden sm:flex">
-            <MediumHeader5>Wallet Transactions</MediumHeader5>
+            <MediumHeader5 className="text-light-900">Wallet Transactions</MediumHeader5>
 
             <div className="hidden md:flex">
               <Currency />
@@ -103,87 +103,91 @@ export default function Page() {
           </div>
         </div>
 
-        <div
-          id="wallet-header"
-          className={clsx(
-            'flex w-full items-center justify-between px-6 sm:px-8 py-6 gap-2 md:gap-8 rounded-lg h-[220px] sm:h-[200px] lg:h-[250px] xl:h-[250px]'
-          )}>
-          <div className="flex flex-col justify-between h-full gap-2">
-            <div
-              className={clsx(
-                'flex text-center justify-center items-center px-4 py-0.5 rounded-2xl w-fit',
-                {
-                  'bg-green-50': is_wallet_connected,
-                  'bg-red-50': !is_wallet_connected
-                }
-              )}>
-              <SemiboldSmallText
-                className={clsx('hidden md:flex lg:hidden xl:flex', {
-                  'text-green-700': is_wallet_connected,
-                  'text-red-700': !is_wallet_connected
-                })}>
-                {is_wallet_connected ? 'Wallet Connected' : 'No Wallet Connected'}
-              </SemiboldSmallText>
+        {isWalletLoading ? (
+          <WalletHeaderSkeleton />
+        ) : (
+          <div
+            id="wallet-header"
+            className={clsx(
+              'flex w-full items-center justify-between px-6 sm:px-8 py-6 gap-2 md:gap-8 rounded-lg h-[220px] sm:h-[200px] lg:h-[250px] xl:h-[250px]'
+            )}>
+            <div className="flex flex-col justify-between h-full gap-2">
+              <div
+                className={clsx(
+                  'flex text-center justify-center items-center px-4 py-0.5 rounded-2xl w-fit',
+                  {
+                    'bg-green-50': is_wallet_connected,
+                    'bg-red-50': !is_wallet_connected
+                  }
+                )}>
+                <SemiboldSmallText
+                  className={clsx('hidden md:flex lg:hidden xl:flex', {
+                    'text-green-700': is_wallet_connected,
+                    'text-red-700': !is_wallet_connected
+                  })}>
+                  {is_wallet_connected ? 'Wallet Connected' : 'No Wallet Connected'}
+                </SemiboldSmallText>
 
-              <SemiboldCaption
-                className={clsx('md:hidden lg:flex xl:hidden', {
-                  'text-green-700': is_wallet_connected,
-                  'text-red-700': !is_wallet_connected
-                })}>
-                {is_wallet_connected ? 'Wallet Connected' : 'No Wallet Connected'}
-              </SemiboldCaption>
-            </div>
-
-            <div className="flex flex-col gap-1">
-              {is_wallet_connected ? (
-                <>
-                  <BoldSmallText className="text-light-900 md:hidden lg:flex xl:hidden">
-                    Wallet Connected
-                  </BoldSmallText>
-                  <MediumHeader5 className="text-light-900 hidden md:flex lg:hidden xl:flex">
-                    Wallet Connected
-                  </MediumHeader5>
-                </>
-              ) : (
-                <>
-                  <BoldSmallText className="text-light-900 md:hidden lg:flex xl:hidden">
-                    Connect Wallet
-                  </BoldSmallText>
-                  <MediumHeader5 className="text-light-900 hidden md:flex lg:hidden xl:flex">
-                    Connect Wallet
-                  </MediumHeader5>
-                </>
-              )}
-
-              <SemiboldSmallText className="text-light-700">
-                Balance:
-                <span className="text-secondary-700 ml-1 font-bold">
-                  {numeral(balance).format('0,0')} SATS
-                </span>
-              </SemiboldSmallText>
-
-              <div>
-                {!is_wallet_connected && (
-                  <SemiboldSmallerText className="text-light-700">
-                    Set up a wallet connection by clicking the connect wallet
-                  </SemiboldSmallerText>
-                )}
+                <SemiboldCaption
+                  className={clsx('md:hidden lg:flex xl:hidden', {
+                    'text-green-700': is_wallet_connected,
+                    'text-red-700': !is_wallet_connected
+                  })}>
+                  {is_wallet_connected ? 'Wallet Connected' : 'No Wallet Connected'}
+                </SemiboldCaption>
               </div>
+
+              <div className="flex flex-col gap-1">
+                {is_wallet_connected ? (
+                  <>
+                    <BoldSmallText className="text-light-900 md:hidden lg:flex xl:hidden">
+                      Wallet Connected
+                    </BoldSmallText>
+                    <MediumHeader5 className="text-light-900 hidden md:flex lg:hidden xl:flex">
+                      Wallet Connected
+                    </MediumHeader5>
+                  </>
+                ) : (
+                  <>
+                    <BoldSmallText className="text-light-900 md:hidden lg:flex xl:hidden">
+                      Connect Wallet
+                    </BoldSmallText>
+                    <MediumHeader5 className="text-light-900 hidden md:flex lg:hidden xl:flex">
+                      Connect Wallet
+                    </MediumHeader5>
+                  </>
+                )}
+
+                <SemiboldSmallText className="text-light-700">
+                  Balance:
+                  <span className="text-secondary-700 ml-1 font-bold">
+                    {numeral(balance).format('0,0')} SATS
+                  </span>
+                </SemiboldSmallText>
+
+                <div>
+                  {!is_wallet_connected && (
+                    <SemiboldSmallerText className="text-light-700">
+                      Set up a wallet connection by clicking the connect wallet
+                    </SemiboldSmallerText>
+                  )}
+                </div>
+              </div>
+
+              <WithdrawBitcoin />
             </div>
 
-            <WithdrawBitcoin />
+            <div className="max-w-1/3 md:min-w-1/3 justify-end float-right hidden sm:flex">
+              <Image
+                src="/img/wallet-connect.svg"
+                alt="wallet-connect"
+                width={200}
+                height={200}
+                className="w-[200px] h-[200px] object-contain"
+              />
+            </div>
           </div>
-
-          <div className="max-w-1/3 md:min-w-1/3 justify-end float-right hidden sm:flex">
-            <Image
-              src="/img/wallet-connect.svg"
-              alt="wallet-connect"
-              width={200}
-              height={200}
-              className="w-[200px] h-[200px] object-contain"
-            />
-          </div>
-        </div>
+        )}
       </div>
 
       <div className="w-full">
@@ -195,10 +199,10 @@ export default function Page() {
           currentPage={currentPage}
           onPageChange={setCurrentPage}
           tableHeader={
-            <div className="w-full hidden md:flex items-center justify-between">
+            <div className="w-full flex items-center justify-between">
               <SemiboldBody className="text-light-900">Wallet Transactions</SemiboldBody>
 
-              <WalletTransactionsFilter />
+              {!loading && <WalletTransactionsFilter />}
             </div>
           }
           isLoading={loading}

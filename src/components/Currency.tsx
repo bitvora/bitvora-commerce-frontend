@@ -41,7 +41,7 @@ export default function Currency() {
       content={
         <div className="flex flex-col">
           <div className="px-7 py-5 border-light-400 border-b-[1px]">
-            <SemiboldSmallText>Currency</SemiboldSmallText>
+            <SemiboldSmallText className="text-light-900">Currency</SemiboldSmallText>
           </div>
 
           <div className="px-3 py-1">

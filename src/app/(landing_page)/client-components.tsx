@@ -62,7 +62,12 @@ export const NavLinks = () => {
               className={`text-light-900 hover:text-secondary-700 uppercase ${
                 isActive ? 'text-secondary-700' : ''
               }`}>
-              <SemiboldSmallText>{link.label}</SemiboldSmallText>
+              <SemiboldSmallText
+                className={`text-light-900 hover:text-secondary-700 uppercase ${
+                  isActive ? 'text-secondary-700' : ''
+                }`}>
+                {link.label}
+              </SemiboldSmallText>
             </Link>
 
             {index < links.length - 1 && (

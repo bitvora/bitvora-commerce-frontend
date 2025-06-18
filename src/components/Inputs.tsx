@@ -38,7 +38,7 @@ interface InputProps extends HTMLAttributes<HTMLInputElement> {
   value: string;
   showLabel?: boolean;
   disabled?: boolean;
-  required?: boolean
+  required?: boolean;
 }
 
 export const Input = ({
@@ -711,11 +711,11 @@ export const ReadonlyInput = ({
       <div className="rounded-md px-4 py-3 h-14 flex items-center border-[0.5px] border-light-600 w-full justify-between gap-4 relative">
         <div className="flex items-center w-full overflow-x-scroll pr-10 mr-10">
           {hidden ? (
-            <SemiboldSmallText className={!isShown && 'pt-1'}>
+            <SemiboldSmallText className={`${!isShown && 'pt-1'} text-light-900`}>
               {isShown ? value : maskString(value)}
             </SemiboldSmallText>
           ) : (
-            <SemiboldSmallText>{value}</SemiboldSmallText>
+            <SemiboldSmallText className="text-light-900">{value}</SemiboldSmallText>
           )}
         </div>
 
@@ -763,11 +763,11 @@ export const DarkReadonlyInput = ({
       <div className="rounded-md px-4 py-3 h-14 flex items-center bg-dark border-[0.5px] border-light-600 w-full justify-between gap-4 relative">
         <div className="flex items-center w-full overflow-x-scroll pr-10 mr-10">
           {hidden ? (
-            <SemiboldSmallText className={!isShown && 'pt-1'}>
+            <SemiboldSmallText className={`${!isShown && 'pt-1'} text-light-900`}>
               {isShown ? value : maskString(value)}
             </SemiboldSmallText>
           ) : (
-            <SemiboldSmallText>{value}</SemiboldSmallText>
+            <SemiboldSmallText className="text-light-900">{value}</SemiboldSmallText>
           )}
         </div>
 

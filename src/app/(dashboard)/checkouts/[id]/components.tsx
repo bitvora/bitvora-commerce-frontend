@@ -45,10 +45,10 @@ export const CheckoutDetailsItem = ({
         <div className="w-full max-w-1/2 sm:max-w-2/3 text-end justify-end flex items-center gap-2">
           {url ? (
             <Link href={url} target="_blank" referrerPolicy="same-origin">
-              <SemiboldBody className="underline">{formattedValue}</SemiboldBody>
+              <SemiboldBody className="underline text-light-900">{formattedValue}</SemiboldBody>
             </Link>
           ) : (
-            <SemiboldBody>{formattedValue}</SemiboldBody>
+            <SemiboldBody className="text-light-900">{formattedValue}</SemiboldBody>
           )}
 
           {id && (
@@ -62,11 +62,15 @@ export const CheckoutDetailsItem = ({
       ) : (
         <div className="w-full max-w-1/2 sm:max-w-2/3 text-end flex flex-wrap items-center gap-2 break-words overflow-visible justify-end">
           {url ? (
-            <Link href={url} target="_blank" referrerPolicy="same-origin">
-              <SemiboldBody className="underline">{formattedValue}</SemiboldBody>
+            <Link
+              href={url}
+              target="_blank"
+              referrerPolicy="same-origin"
+              className="text-light-900">
+              <SemiboldBody className="underline text-light-900">{formattedValue}</SemiboldBody>
             </Link>
           ) : (
-            <SemiboldBody className="break-words overflow-visible w-full">
+            <SemiboldBody className="break-words overflow-visible w-full text-light-900">
               {formattedValue}
             </SemiboldBody>
           )}

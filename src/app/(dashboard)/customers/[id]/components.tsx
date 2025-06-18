@@ -34,7 +34,7 @@ export const CustomerDetailsItem = ({
       </div>
 
       <div className="w-full sm:max-w-2/3 text-start sm:text-end justify-start sm:justify-end flex items-center gap-2">
-        <SemiboldBody>{id ? formatUUID(value) : value}</SemiboldBody>
+        <SemiboldBody className="text-light-900">{id ? formatUUID(value) : value}</SemiboldBody>
         {id && (
           <button
             className="border-none outline-none text-secondary-700 hover:text-secondary-500 cursor-pointer"

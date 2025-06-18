@@ -9,6 +9,7 @@ import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 import '@/styles/globals.css';
 import '@/styles/landing.css';
+
 import { Toaster } from 'react-hot-toast';
 import Providers from './providers';
 
