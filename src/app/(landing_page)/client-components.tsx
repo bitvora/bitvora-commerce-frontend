@@ -147,9 +147,7 @@ export const AppLogo = () => (
   <div className="flex items-center gap-2 text-light-700 hover:text-light-800">
     <Logo url={app_routes.home} />
     <Link href={app_routes.home}>
-      <MediumSmallerText className="text-inherit mt-2 hidden md:flex text-light-700 hover:text-light-800">
-        Commerce
-      </MediumSmallerText>
+      <MediumSmallerText className="text-inherit mt-2 hidden md:flex">Commerce</MediumSmallerText>
     </Link>
   </div>
 );

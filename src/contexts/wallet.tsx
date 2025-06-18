@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode, useMemo } from 'react';
 import { WalletTransaction } from '@/types/wallets';
 import { getWalletTransactions } from '@/app/(dashboard)/wallets/actions';
 import { useAppContext } from '@/contexts';
@@ -10,6 +10,10 @@ type WalletTransactionsContextType = {
   loading: boolean;
   error: string | null;
   refetch: () => void;
+  startDate: Date;
+  endDate: Date;
+  setStartDate: (date: Date) => void;
+  setEndDate: (date: Date) => void;
 };
 
 const WalletTransactionsContext = createContext<WalletTransactionsContextType | undefined>(
@@ -18,14 +22,14 @@ const WalletTransactionsContext = createContext<WalletTransactionsContextType | 
 
 export function WalletTransactionsProvider({ children }: { children: ReactNode }) {
   const { currentAccount } = useAppContext();
-  const [transactions, setTransactions] = useState<WalletTransaction[]>([]);
+  const account_id = currentAccount?.id;
+
+  const [rawTransactions, setRawTransactions] = useState<WalletTransaction[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
   const [startDate, setStartDate] = useState(new Date('2025-01-01'));
   const [endDate, setEndDate] = useState(new Date());
-  const [filterCount, setFilterCount] = useState(0);
-
-  const account_id = currentAccount?.id;
 
   const fetchAllTransactions = async (
     limit = 10,
@@ -44,7 +48,7 @@ export function WalletTransactionsProvider({ children }: { children: ReactNode }
     const allData = [...accumulated, ...currentData];
 
     if (currentData.length < limit) {
-      setTransactions(allData);
+      setRawTransactions(allData);
       setLoading(false);
     } else {
       fetchAllTransactions(limit, offset + limit, allData);
@@ -54,19 +58,38 @@ export function WalletTransactionsProvider({ children }: { children: ReactNode }
   const refetch = () => {
     setLoading(true);
     setError(null);
-    setTransactions([]);
+    setRawTransactions([]);
     fetchAllTransactions();
   };
 
   useEffect(() => {
     if (!account_id) return;
-    fetchAllTransactions();
-
+    refetch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [account_id]);
 
+  const transactions = useMemo(() => {
+    const start = new Date(startDate.setHours(0, 0, 0, 0));
+    const end = new Date(endDate.setHours(23, 59, 59, 999));
+
+    return rawTransactions.filter((tx) => {
+      const txDate = new Date(tx.created_at * 1000);
+      return txDate >= start && txDate <= end;
+    });
+  }, [rawTransactions, startDate, endDate]);
+
   return (
-    <WalletTransactionsContext.Provider value={{ transactions, loading, error, refetch }}>
+    <WalletTransactionsContext.Provider
+      value={{
+        transactions,
+        loading,
+        error,
+        refetch,
+        startDate,
+        endDate,
+        setStartDate,
+        setEndDate
+      }}>
       {children}
     </WalletTransactionsContext.Provider>
   );

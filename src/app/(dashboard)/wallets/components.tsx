@@ -55,6 +55,7 @@ import lightBolt11Decoder from 'light-bolt11-decoder';
 import Tabs from '@/components/Tab';
 import { Dropdown, DropdownProps } from 'antd';
 import Calendar from 'react-calendar';
+import { useWalletTransactions } from '@/contexts/wallet';
 
 export const SwitchWallet = () => {
   const { currentAccount, refetchWallet } = useAppContext();
@@ -798,9 +799,7 @@ const options = [
 export const WalletTransactionsFilter = () => {
   const [open, setOpen] = useState(false);
   const [type, setType] = useState('');
-  const [startDate, setStartDate] = useState(new Date('2024-07-01'));
-  const [endDate, setEndDate] = useState(new Date());
-  const [filterCount, setFilterCount] = useState(0);
+
   const [dates, setDates] = useState({
     start: new Date(),
     end: new Date()
@@ -818,6 +817,8 @@ export const WalletTransactionsFilter = () => {
       setOpen(nextOpen);
     }
   };
+
+  const { endDate, setEndDate, setStartDate, startDate } = useWalletTransactions();
 
   return (
     <div className="flex items-center gap-4">
@@ -956,10 +957,92 @@ export const WalletTransactionsFilter = () => {
         </div>
       </Dropdown>
 
-      <div className="flex items-center gap-2 bg-outlined border-outlined px-4 py-3 rounded-lg cursor-pointer text-light-700 bg-light-overlay-50">
+      <ExportTransactions />
+
+      {/* <div className="flex items-center gap-2 bg-outlined border-outlined px-4 py-3 rounded-lg cursor-pointer text-light-700 bg-light-overlay-50">
         <FilterIcon />
 
         <MediumSmallText className="text-inherit font-medium capitalize">Filter</MediumSmallText>
+      </div> */}
+    </div>
+  );
+};
+
+export const ExportTransactions = () => {
+  const { transactions } = useWalletTransactions();
+
+  const [loading, setLoading] = useState(false);
+
+  const exportToCSV = (): void => {
+    setLoading(true);
+    const headers = [
+      'Payment Hash',
+      'Amount',
+      'Description',
+      'Fees Paid',
+      'Recipient',
+      'Created At'
+    ];
+    const rows = transactions.map((transaction) => [
+      transaction.payment_hash,
+      `${renderPrice({ amount: transaction?.amount / 1000, currency: 'sats' })}`,
+      transaction.description,
+      `${renderPrice({ amount: transaction?.fees_paid / 1000, currency: 'sats' })}`,
+      transaction.invoice,
+      formatDate(new Date(transaction?.created_at * 1000).toISOString())
+    ]);
+
+    let csvContent = `data:text/csv;charset=utf-8,${headers.join(',')}\n`;
+
+    rows.forEach((row) => {
+      csvContent += row.join(',') + '\n';
+    });
+
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', 'transactions.csv');
+    document.body.appendChild(link);
+
+    link.click();
+    document.body.removeChild(link);
+    setLoading(false);
+  };
+
+  return (
+    <>
+      <PrimaryButton
+        loading={loading}
+        disabled={!transactions || transactions.length < 1}
+        onClick={exportToCSV}
+        className="px-5 py-3 h-11 w-36">
+        Export
+      </PrimaryButton>
+    </>
+  );
+};
+
+export const WalletHeaderSkeleton = () => {
+  return (
+    <div
+      id="wallet-header"
+      className="flex w-full items-center justify-between px-6 sm:px-8 py-6 gap-2 md:gap-8 rounded-lg h-[220px] sm:h-[200px] lg:h-[250px] xl:h-[250px] animate-pulse bg-primary-150">
+      <div className="flex flex-col justify-between h-full gap-2 w-full max-w-[70%]">
+        <div className="flex items-center px-4 py-0.5 rounded-2xl w-fit bg-light-300">
+          <div className="h-4 w-32 bg-light-100 rounded" />
+        </div>
+
+        <div className="flex flex-col gap-1">
+          <div className="h-5 w-40 bg-light-300 rounded-md" />
+          <div className="h-4 w-48 bg-light-200 rounded" />
+          <div className="h-4 w-64 bg-light-200 rounded mt-1" />
+        </div>
+
+        <div className="h-10 w-36 bg-light-300 rounded-md" />
+      </div>
+
+      <div className="max-w-1/3 md:min-w-1/3 justify-end float-right hidden sm:flex">
+        <div className="w-[200px] h-[200px] bg-light-300 rounded-lg" />
       </div>
     </div>
   );
