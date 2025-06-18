@@ -87,17 +87,21 @@ export default function Page(props: { params: Params }) {
             <div className="rounded-lg px-5 lg:px-5 py-5 lg:py-6 bg-primary-150 w-full overflow-auto flex flex-col gap-6">
               <SubscriptionDetailsItem label="Subscription ID" value={subscription?.id} id={true} />
 
-              <SubscriptionDetailsItem
-                label="Customer"
-                value={customer?.name}
-                url={customer?.customer_link}
-              />
+              {customer?.name && (
+                <SubscriptionDetailsItem
+                  label="Customer"
+                  value={customer?.name}
+                  url={customer?.customer_link}
+                />
+              )}
 
-              <SubscriptionDetailsItem
-                label="Product"
-                value={product?.name}
-                url={product?.product_link}
-              />
+              {product?.name && (
+                <SubscriptionDetailsItem
+                  label="Product"
+                  value={product?.name}
+                  url={product?.product_link}
+                />
+              )}
 
               <SubscriptionDetailsItem
                 label="Billing Start Date"

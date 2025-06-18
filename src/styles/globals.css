@@ -106,7 +106,7 @@
 
 body {
   background: var(--background);
-  color: var(--foreground);
+  color: var(--foreground) !important;
   font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -384,4 +384,33 @@ input[type='tel']:hover {
 .react-json-view {
   background: transparent !important;
   background-color: transparent !important;
+}
+
+.wallet-transactions-date-picker .ant-dropdown-menu.ant-dropdown-menu-root {
+  background: var(--color-primary-250) !important;
+}
+
+.wallet-transactions-date-picker .react-calendar {
+  border: unset !important;
+}
+
+.wallet-transactions-date-picker .react-calendar__navigation,
+.wallet-transactions-date-picker .react-calendar__navigation__arrow,
+.wallet-transactions-date-picker .react-calendar__navigation__label,
+.wallet-transactions-date-picker .react-calendar__month-view__days,
+.wallet-transactions-date-picker .react-calendar__month-view__weekdays {
+  background: var(--color-primary-250) !important;
+  color: var(--color-light-900) !important;
+}
+
+.wallet-transactions-date-picker .react-calendar__navigation {
+  margin-bottom: unset !important;
+  padding-bottom: 10px !important;
+}
+
+.wallet-transactions-date-picker .react-calendar__navigation:hover,
+.wallet-transactions-date-picker .react-calendar__navigation__arrow:hover,
+.wallet-transactions-date-picker .react-calendar__navigation__label:hover {
+  background: var(--color-primary-250) !important;
+  color: var(--color-light-700) !important;
 }

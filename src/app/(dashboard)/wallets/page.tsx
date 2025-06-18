@@ -89,7 +89,7 @@ export default function Page() {
       <div className="flex flex-col-reverse md:flex-col gap-6 md:gap-8 w-full">
         <div className="bg-transparent xl:bg-primary-50 rounded-lg px-4 sm:px-8 py-2 lg:h-[80px] w-full flex items-center justify-between">
           <div className="sm:gap-4 md:gap-10 items-center hidden sm:flex">
-            <MediumHeader5>Wallet Transactions</MediumHeader5>
+            <MediumHeader5 className="text-light-900">Wallet Transactions</MediumHeader5>
 
             <div className="hidden md:flex">
               <Currency />
@@ -195,10 +195,10 @@ export default function Page() {
           currentPage={currentPage}
           onPageChange={setCurrentPage}
           tableHeader={
-            <div className="w-full hidden md:flex items-center justify-between">
+            <div className="w-full flex items-center justify-between">
               <SemiboldBody className="text-light-900">Wallet Transactions</SemiboldBody>
 
-              <WalletTransactionsFilter />
+              {!loading && <WalletTransactionsFilter />}
             </div>
           }
           isLoading={loading}

@@ -116,7 +116,7 @@ export default function Sidebar() {
       <div className="sticky top-0 left-0 bg-primary-100">
         <div className="flex items-center gap-2 text-light-700 hover:text-light-800">
           <Logo url={app_routes.dashboard} />
-          <Link href={app_routes.dashboard}>
+          <Link href={app_routes.dashboard} className="text-inherit!">
             <MediumSmallerText className="text-inherit mt-2">Commerce</MediumSmallerText>
           </Link>
         </div>

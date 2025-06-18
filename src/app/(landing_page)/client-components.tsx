@@ -62,7 +62,12 @@ export const NavLinks = () => {
               className={`text-light-900 hover:text-secondary-700 uppercase ${
                 isActive ? 'text-secondary-700' : ''
               }`}>
-              <SemiboldSmallText>{link.label}</SemiboldSmallText>
+              <SemiboldSmallText
+                className={`text-light-900 hover:text-secondary-700 uppercase ${
+                  isActive ? 'text-secondary-700' : ''
+                }`}>
+                {link.label}
+              </SemiboldSmallText>
             </Link>
 
             {index < links.length - 1 && (
@@ -142,7 +147,9 @@ export const AppLogo = () => (
   <div className="flex items-center gap-2 text-light-700 hover:text-light-800">
     <Logo url={app_routes.home} />
     <Link href={app_routes.home}>
-      <MediumSmallerText className="text-inherit mt-2 hidden md:flex">Commerce</MediumSmallerText>
+      <MediumSmallerText className="text-inherit mt-2 hidden md:flex text-light-700 hover:text-light-800">
+        Commerce
+      </MediumSmallerText>
     </Link>
   </div>
 );

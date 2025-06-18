@@ -21,6 +21,9 @@ export function WalletTransactionsProvider({ children }: { children: ReactNode }
   const [transactions, setTransactions] = useState<WalletTransaction[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [startDate, setStartDate] = useState(new Date('2025-01-01'));
+  const [endDate, setEndDate] = useState(new Date());
+  const [filterCount, setFilterCount] = useState(0);
 
   const account_id = currentAccount?.id;
 

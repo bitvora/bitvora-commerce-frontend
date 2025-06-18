@@ -53,6 +53,8 @@ import numeral from 'numeral';
 import Image from 'next/image';
 import lightBolt11Decoder from 'light-bolt11-decoder';
 import Tabs from '@/components/Tab';
+import { Dropdown, DropdownProps } from 'antd';
+import Calendar from 'react-calendar';
 
 export const SwitchWallet = () => {
   const { currentAccount, refetchWallet } = useAppContext();
@@ -811,10 +813,129 @@ export const WalletTransactionsFilter = () => {
     });
   };
 
+  const handleOpenDatePicker: DropdownProps['onOpenChange'] = (nextOpen, info) => {
+    if (info.source === 'trigger' || nextOpen) {
+      setOpen(nextOpen);
+    }
+  };
+
   return (
-    <div className="flex items-center">
-      <div>
-        <div className="flex items-center gap-2 bg-outlined border-outlined px-4 py-3 rounded-lg cursor-pointer text-light-700 hover:text-light-900 bg-light-overlay-50">
+    <div className="flex items-center gap-4">
+      {open && <div className="fixed inset-0 bg-black/10 backdrop-blur-sm z-40"></div>}
+      <Dropdown
+        menu={{
+          items: [
+            {
+              key: '1',
+              label: (
+                <div className={`grid w-full ${type === CUSTOM ? 'grid-cols-5' : 'grid-cols-1'}`}>
+                  <div
+                    className={`col-span-1 ${
+                      type === CUSTOM
+                        ? 'border-light border-opacity-15 border-r-[1px] py-8 px-3'
+                        : 'py-4 px-4'
+                    }`}>
+                    {options.map(({ label, func }) => {
+                      const onClick = (): void => {
+                        if (func) {
+                          const { start, end } = func();
+                          setStartDate(start);
+                          setEndDate(end);
+                          setOpen(false);
+                        }
+                        setType(label);
+                      };
+                      return (
+                        <div className="mb-3" key={label}>
+                          <button className="cursor-pointer" type="button">
+                            <SemiboldSmallText
+                              className={`${
+                                label === type ? 'text-light-900' : 'text-light-700'
+                              }  text-sm font-normal bg-transparent hover:text-light-900`}
+                              onClick={onClick}>
+                              {label}
+                            </SemiboldSmallText>
+                          </button>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  {type === CUSTOM && (
+                    <div className="col-span-4">
+                      <div className="flex items-center px-4 py-4 gap-2">
+                        <div className="border-light border-opacity-5 border-r-[1px]">
+                          <Calendar
+                            onChange={(event) => {
+                              handleDate('start', new Date(event.toString()));
+                            }}
+                            value={dates.start}
+                            maxDate={new Date()}
+                            className="transaction-date"
+                          />
+                        </div>
+
+                        <div>
+                          <Calendar
+                            onChange={(event) => {
+                              handleDate('end', new Date(event.toString()));
+                            }}
+                            value={dates.end}
+                            minDate={new Date(dates.start.getTime() + 86400000)}
+                            maxDate={new Date()}
+                            className="transaction-date"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="border-light border-opacity-15 border-t-[1px] py-3 px-3 flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                          <SemiboldSmallText className="text-light-700 px-4 py-3 rounded-lg border-[0.5px] border-light-500">
+                            {formatDate(dates.start.toString(), 'MMM DD, YYYY')}
+                          </SemiboldSmallText>
+
+                          <SemiboldSmallText className="text-light-700 text-base">
+                            -
+                          </SemiboldSmallText>
+
+                          <SemiboldSmallText className="text-light-700 px-4 py-3 rounded-lg border-[0.5px] border-light-500">
+                            {formatDate(dates.end.toString(), 'MMM DD, YYYY')}
+                          </SemiboldSmallText>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          <SecondaryButton
+                            className="py-1 h-12 px-4"
+                            onClick={() => {
+                              setOpen(false);
+                            }}>
+                            Cancel
+                          </SecondaryButton>
+
+                          <PrimaryButton
+                            className="px-5 py-2 h-12"
+                            onClick={() => {
+                              setStartDate(dates.start);
+                              setEndDate(dates.end);
+                              setOpen(false);
+                            }}>
+                            Apply
+                          </PrimaryButton>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )
+            }
+          ]
+        }}
+        trigger={['click']}
+        rootClassName="wallet-transactions-date-picker"
+        placement="bottom"
+        onOpenChange={handleOpenDatePicker}
+        open={open}>
+        <div className="flex items-center gap-2 bg-outlined border-outlined px-4 py-3 rounded-lg cursor-pointer text-light-700 bg-light-overlay-50">
           <FilterIcon />
 
           {type === CUSTOM ? (
@@ -833,6 +954,12 @@ export const WalletTransactionsFilter = () => {
             </MediumSmallText>
           )}
         </div>
+      </Dropdown>
+
+      <div className="flex items-center gap-2 bg-outlined border-outlined px-4 py-3 rounded-lg cursor-pointer text-light-700 bg-light-overlay-50">
+        <FilterIcon />
+
+        <MediumSmallText className="text-inherit font-medium capitalize">Filter</MediumSmallText>
       </div>
     </div>
   );
