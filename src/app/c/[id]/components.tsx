@@ -142,11 +142,11 @@ export const RegularCheckout = ({
 
             <div className="flex flex-col gap-1 lg:gap-2 lg:w-[unset]">
               <SemiboldHeader3 className="text-light-900 hidden lg:flex">
-                $ {numeral(usdAmount).format('0,0.00')}
+                $ {numeral(usdAmount).format(usdAmount < 0.01 ? '0,0.000' : '0,0.00')}
               </SemiboldHeader3>
 
               <SemiboldBody className="text-light-900 lg:hidden">
-                $ {numeral(usdAmount).format('0,0.00')}
+                $ {numeral(usdAmount).format(usdAmount < 0.01 ? '0,0.000' : '0,0.00')}
               </SemiboldBody>
 
               <div className="flex gap-2 md:px-4 py-2 md:bg-light-overlay-100 rounded-3xl">
@@ -363,11 +363,11 @@ export const SubscriptionCheckout = ({
                 <div className="flex items-center gap-1">
                   <div>
                     <SemiboldHeader3 className="text-light-900 hidden lg:flex">
-                      $ {numeral(usdAmount).format('0,0.00')}{' '}
+                      $ {numeral(usdAmount).format(usdAmount < 0.01 ? '0,0.000' : '0,0.00')}
                     </SemiboldHeader3>
 
                     <SemiboldBody className="text-light-900 lg:hidden">
-                      $ {numeral(usdAmount).format('0,0.00')}
+                      $ {numeral(usdAmount).format(usdAmount < 0.01 ? '0,0.000' : '0,0.00')}
                     </SemiboldBody>
                   </div>
 
