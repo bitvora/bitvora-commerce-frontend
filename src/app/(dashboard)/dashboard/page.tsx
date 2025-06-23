@@ -27,7 +27,9 @@ export default function Page() {
             <SemiboldSmallText>Payment Link</SemiboldSmallText>
           </PrimaryButton>
 
-          <Link href={`${app_routes.products}?action=new-product`}>
+          <Link
+            href={`${app_routes.products}?action=new-product`}
+            className="h-10 sm:h-12 md:h-12 w-full xl:w-[auto]">
             <PrimaryButton className="h-10 sm:h-12 md:h-12 w-full xl:w-[auto]">
               <SemiboldSmallText>Add Product</SemiboldSmallText>
             </PrimaryButton>

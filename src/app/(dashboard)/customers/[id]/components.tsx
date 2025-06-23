@@ -1,9 +1,18 @@
 'use client';
 
-import { MediumBody, SemiboldBody } from '@/components/Text';
-import { copyToClipboard, formatUUID } from '@/lib/helpers';
+import { getCustomerSubscription } from './actions';
+import { Link } from '@/components/Links';
+import Table from '@/components/tables';
+import { MediumBody, MediumSmallerText, SemiboldBody, SemiboldSmallerText } from '@/components/Text';
+import { app_routes } from '@/lib/constants';
+import { copyToClipboard, formatDate, formatUUID } from '@/lib/helpers';
+import { Subscription, SubscriptionStatus } from '@/types/subscriptions';
 import { faCopy } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useQuery } from '@tanstack/react-query';
+import clsx from 'clsx';
+import { useParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 export const Skeleton = () => {
   return (
@@ -43,6 +52,100 @@ export const CustomerDetailsItem = ({
           </button>
         )}
       </div>
+    </div>
+  );
+};
+
+export const Subscriptions = () => {
+  const { id } = useParams<{ id: string }>();
+  const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const { data } = useQuery({
+    queryKey: ['customer-subscription', id],
+    queryFn: () => getCustomerSubscription(id),
+    enabled: !!id
+  });
+
+  useEffect(() => {
+    if (data?.data) {
+      setSubscriptions(data?.data);
+      setLoading(false);
+    }
+  }, [data]);
+
+  const renderStatus = (status: SubscriptionStatus) => {
+    let className = '';
+
+    switch (status) {
+      case 'suspended':
+        className = `${className} bg-secondary-50 text-secondary-500`;
+        break;
+
+      case 'cancelled':
+        className = `${className} bg-red-50 text-red-500`;
+        break;
+
+      case 'active':
+        className = `${className} bg-green-50 text-green-500`;
+        break;
+
+      default:
+    }
+
+    return (
+      <div
+        className={clsx(
+          'h-6 w-fit px-4 py-1.5 rounded-lg flex text-center justify-center items-center',
+          className
+        )}>
+        <SemiboldSmallerText className="text-inherit capitalize">{status}</SemiboldSmallerText>
+      </div>
+    );
+  };
+
+  const columns = [
+    {
+      header: 'ID',
+      accessor: 'id',
+      render: (row) => (
+        <Link href={`${app_routes.subscriptions}/${row.id}`}>
+          <MediumSmallerText className="text-light-700 hover:text-light-900">
+            {formatUUID(row.id)}
+          </MediumSmallerText>
+        </Link>
+      )
+    },
+    {
+      header: 'Status',
+      accessor: 'status',
+      render: (row) => (
+        <Link href={`${app_routes.subscriptions}/${row.id}`}>{renderStatus(row.status)}</Link>
+      )
+    },
+    {
+      header: 'Date',
+      accessor: 'created_at',
+      render: (row) => (
+        <Link href={`${app_routes.subscriptions}/${row.id}`}>
+          <MediumSmallerText className="text-light-700 hover:text-light-900">
+            {formatDate(row.created_at, 'MMM DD, YYYY')}
+          </MediumSmallerText>
+        </Link>
+      )
+    }
+  ];
+
+  return (
+    <div className="w-full mt-2">
+      <Table
+        tableContainerClassName="products-subscription-table"
+        columns={columns}
+        data={subscriptions}
+        rowsPerPage={5}
+        isLoading={loading}
+        emptyMessage="No Subscriptions"
+      />
     </div>
   );
 };

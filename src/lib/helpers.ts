@@ -29,7 +29,15 @@ export const formatWithCommas = (num: string) => {
   return num.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 };
 
-export const renderPrice = ({ amount, currency }: { amount: number; currency?: string }) => {
+export const renderPrice = ({
+  amount,
+  currency,
+  isSmall
+}: {
+  amount: number;
+  currency?: string;
+  isSmall?: boolean;
+}) => {
   let price;
 
   switch (currency) {
@@ -71,7 +79,9 @@ export const renderPrice = ({ amount, currency }: { amount: number; currency?: s
 
     case 'usd':
     default:
-      price = `$ ${numeral(amount).format('0,0.00')}`;
+      price = isSmall
+        ? `$ ${numeral(amount).format(amount < 0.01 ? '0,0.000' : '0,0.00')}`
+        : `$ ${numeral(amount).format('0,0.00')}`;
   }
 
   return price;
