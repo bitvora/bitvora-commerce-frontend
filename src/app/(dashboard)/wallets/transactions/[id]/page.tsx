@@ -84,7 +84,7 @@ export default function Page(props: { params: Params }) {
 
               <div>
                 <SemiboldBody className="text-secondary-500">
-                  {renderPrice({ amount: fiatAmount, currency: fiatCurrency })}
+                  {renderPrice({ amount: fiatAmount, currency: fiatCurrency, isSmall: true })}
                 </SemiboldBody>
               </div>
             </div>

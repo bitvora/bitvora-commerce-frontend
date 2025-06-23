@@ -11,11 +11,12 @@ import { SemiboldBody, SemiboldTitle } from '@/components/Text';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import Accordion from '@/components/Accordion';
-import { CustomerDetailsItem, Skeleton } from './components';
+import { CustomerDetailsItem, Skeleton, Subscriptions } from './components';
 import { countNonEmptyFields, formatDate } from '@/lib/helpers';
 import { RedButton, SecondaryButton } from '@/components/Buttons';
 import { DeleteCustomerModal, EditCustomer } from '@/app/(dashboard)/customers/components';
 import { Link } from '@/components/Links';
+import Tabs from '@/components/Tab';
 
 type Params = Promise<{ id: string }>;
 
@@ -190,7 +191,7 @@ export default function Page(props: { params: Params }) {
               </Link>
             </div>
 
-            <div className="rounded-lg px-5 lg:px-5 py-5 lg:py-6 bg-primary-150 w-full overflow-auto mb-12">
+            <div className="rounded-lg px-5 lg:px-5 py-5 lg:py-6 bg-primary-150 w-full mb-12">
               <Accordion
                 contentClassName="w-full mt-2 pt-2"
                 triggerClassName=""
@@ -199,7 +200,11 @@ export default function Page(props: { params: Params }) {
               />
             </div>
 
-            <div className="flex gap-4 items-center border-none outline-none fixed bottom-4 md:bottom-10 left-4 md:left-10 right-4 md:right-10">
+            <div className="w-full mt-5 lg:mt-1 bg-primary-150 rounded-lg px-3 md:px-4 py-3">
+              <Tabs tabs={[{ label: 'Subscriptions', content: <Subscriptions /> }]} />
+            </div>
+
+            <div className="flex gap-4 items-center border-none outline-none">
               <SecondaryButton className="h-11 w-full" onClick={() => toggleEditModal(true)}>
                 Edit Customer
               </SecondaryButton>
